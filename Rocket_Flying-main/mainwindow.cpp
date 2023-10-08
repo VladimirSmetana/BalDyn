@@ -34,10 +34,10 @@ MainWindow::~MainWindow()
     block first;
     block second;
 // Исходные данные РН
-    double mpn=1000;
-    double mb[2] {34055, 7440};
-    double s[2] {7, 9};
-    double D = 1.7;
+    double mpn=15000;
+    double mb[2] {391000, 107000};
+    double s[2] {7, 10};
+    double D = 4.1;
     double Imp[2] {3300, 3700};
     double T_sep[2] {3, 3};
     double Ratio = 3.5;
@@ -131,18 +131,18 @@ void MainWindow::on_action_triggered()
         double m_fuel[2];
         double m_dry[2];
         double T_fuel[2];
-        double m_furet = 2500/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
+        double m_furet = 33200/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
         M_Rocket=mpn;
         first.m_t = M_Rocket;
         second.m_t = M_Rocket;
     //
     // Время действия тормозных импульсов
-        double k1 = 400;
-        double k2 = 430;
-        double k3 = 440;
-        double k4 = 470;
+        double k1 = 360;
+        double k2 = 383;
+        double k3 = 405;
+        double k4 = 440;
         double kk1 = 0.2;
-        double kk2 = 0.195;
+        double kk2 = 0.22;
 
 
 
@@ -222,8 +222,8 @@ void MainWindow::on_action_triggered()
         S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
         first.S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
         first.S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
-        second.S_reO = M.fun_S (M.K[9 ]-6, M.K[10]-6, m_reO);
-        second.S_reC = M.fun_S (M.K[11]-6, M.K[13]-6, m_reC);
+        second.S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
+        second.S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
 
         first.Ssumm  = M.get_SGO() + first.S_dry[0] + first.S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first.S_reO + first.S_reC;
         Sx = first.Ssumm;
@@ -243,8 +243,8 @@ void MainWindow::on_action_triggered()
         I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
         first.I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
         first.I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
-        second.I_reO = M.fun_I (M.K[9 ]-6, M.K[10]-6, m_reO, D);
-        second.I_reC = M.fun_I (M.K[11]-6, M.K[13]-6, m_reC, D);
+        second.I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
+        second.I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
         first.Isumm  = M.get_IGO() + first.I_dry[0] + first.I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first.I_reO + first.I_reC - M_Rocket*pow(gl_cmax,2);
         Iz = first.Isumm;
         Izmax = Iz;
@@ -277,7 +277,6 @@ void MainWindow::on_action_triggered()
     //while (second.tY>=0.5 && second.V>=0.5) second.tY>=0.5
     while (second.tY>0 && second.V>0)
     {
-
         airforce Qus_1 (Mah_1);
         airforce Qus_2 (Mah_2);
 
@@ -348,8 +347,6 @@ void MainWindow::on_action_triggered()
                  first.Ssumm  = M.get_SGO() + first.S_dry[0] + first.S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first.S_reO + first.S_reC;
                  second.Ssumm = M.get_SGO() + first.S_dry[0] + first.S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first.S_reO + first.S_reC;
                  first.gl_c = first.Ssumm/first.m_t;
-                 first.gl_c = first.gl_c/2;
-                 second.gl_c = second.gl_c/2;
                  second.gl_c = second.Ssumm/second.m_t;
 
                  I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], D);
@@ -357,8 +354,6 @@ void MainWindow::on_action_triggered()
                  first.Isumm  = M.get_IGO() + first.I_dry[0] + first.I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first.I_reC +first.I_reO - first.m_t*pow (first.gl_c,2);
 
                  second.Isumm = M.get_IGO() + first.I_dry[0] + first.I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first.I_reC +first.I_reO - second.m_t*pow(second.gl_c,2);
-                 first.Isumm = first.Isumm/60;
-                 second.Isumm = second.Isumm/60;
                  Ix = first.m_t * pow(D/2, 2);
                  //}
                  //else T_fuel[0] = time;
@@ -387,8 +382,6 @@ void MainWindow::on_action_triggered()
                  second.Ssumm = second.S_dry[0] + second.S_reC + second.S_reO;
                  first.gl_c = first.Ssumm/first.m_t;
                  second.gl_c = second.Ssumm/second.m_t;
-                 first.gl_c = first.gl_c/2;
-                 second.gl_c = second.gl_c/2;
                  first.L = Lmax - L1;
                  second.L = L1;
                  CILCON = 3.42;
@@ -417,7 +410,7 @@ void MainWindow::on_action_triggered()
                  S_c[1] = M.fun_S (M.K[5]+d_C[1], M.K[6], m_C[1]);
                  first.Ssumm = M.get_SGO() + first.S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
 
-                 std::cout << CF*h *Ratio/(1100*Smid)/(Ratio+1) << CF << std::endl;
+                // std::cout << CF*h *Ratio/(1100*Smid)/(Ratio+1) << CF << std::endl;
 
                  second.Ssumm = second.S_dry[0] + second.S_reC + second.S_reO;
                  first.gl_c = first.Ssumm/first.m_t;
@@ -428,8 +421,8 @@ void MainWindow::on_action_triggered()
                  I_c[1] = M.fun_I (M.K[5]+d_C[1], M.K[6], m_C[1], D);
                  first.Isumm = M.get_IGO() +first.I_dry[1]+ I_o[0] + I_c[0] + I_o[1] + I_c[1]- first.m_t*pow(first.gl_c,2);
                  second.Isumm = second.I_dry[0] + second.I_reC + second.I_reO - second.m_t*pow(second.gl_c,2);
-                 first.Isumm = first.Isumm/60;
-                 second.Isumm = second.Isumm/60;
+                 first.Isumm = first.Isumm;
+                 second.Isumm = second.Isumm;
                  Ix = first.m_t * pow(D/2, 2);
                  first.L = Lmax - L1;
                  second.L = L1;
@@ -453,8 +446,6 @@ void MainWindow::on_action_triggered()
                  second.Ssumm = second.S_dry[0] + second.S_reC + second.S_reO;
                  first.gl_c = first.Ssumm/first.m_t;
                  second.gl_c = second.Ssumm/second.m_t;
-                 first.gl_c = first.gl_c/2;
-                 second.gl_c = second.gl_c/2;
                  first.L = Lmax - L1 - L2;
                  second.L = L1;
 
@@ -475,8 +466,6 @@ void MainWindow::on_action_triggered()
                  first.Ssumm = M.get_SGO() + S_o[0] + S_c[0] + S_o[1] + S_c[1];
                  second.Ssumm = second.S_dry[0] + second.S_reC + second.S_reO;
                  first.gl_c = first.Ssumm/first.m_t;
-                 first.gl_c = first.gl_c/2;
-                 second.gl_c = second.gl_c/2;
                  first.L = Lmax - L1 - L2;
                  second.L = L1;
                  CILCON = 1.4;
@@ -504,14 +493,13 @@ void MainWindow::on_action_triggered()
                    second.S_reC = M.fun_S (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC);
                    second.Ssumm = second.S_dry[0] + second.S_reC + second.S_reO;
                    second.gl_c = second.Ssumm/second.m_t;
-                   second.gl_c = second.gl_c/2;
                    second.I_reO = M.fun_I (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO, D);
                    second.I_reC = M.fun_I (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC, D);
                    second.Isumm = second.I_dry[0] + second.I_reC + second.I_reO - second.m_t*pow(second.gl_c,2);
-                   second.Isumm = second.Isumm/60;
+                   second.Isumm = second.Isumm;
                    second.L = L1;
                    second.focus = 0.7*second.L;
-                   X_oneC = second.gl_c/ - second.focus;
+                   X_oneC = second.gl_c - second.focus;
                    X_twoC = second.L - second.gl_c;
                  };
 
@@ -1038,8 +1026,8 @@ void MainWindow::on_action_5_triggered()
     ui->widget->graph(0)->setPen(QPen(Qt::green));
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Отклонение по тангажу, м");
-    ui->widget->xAxis->setRange(440, 470);
-    ui->widget->yAxis->setRange(-5, 5);
+    ui->widget->xAxis->setRange(405, 440);
+    ui->widget->yAxis->setRange(-20, 20);
     ui->widget->replot();
         //    query_2.exec("SELECT time, con_thrust, mass, coef_cy, thrust, dy_pressure, X1, inerz, velocity, X2, wind FROM ballistic_data");
 }

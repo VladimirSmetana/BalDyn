@@ -25,12 +25,17 @@ public:
     }
     float signal(float input)
     {
-        double Err = input - Goal;
-        double P = Err * Kp;
+        float dErr;
+        float P, I, D;
+
+        Err = input - Goal;
         Summ_Err += Err * h;
-        double I = Summ_Err * Ki;
-        double D = (Err - prev_Err) / h * Kd;
+        dErr = (Err - prev_Err) / h;
         prev_Err = Err;
+
+        P = Err * Kp;
+        I = Summ_Err * Ki;
+        D = dErr * Kd;
 
         return P + I + D;
     }

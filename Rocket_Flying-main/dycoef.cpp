@@ -5,6 +5,11 @@ double DC::PI()
     return 3.1415926535;
 };
 
+void DC::print(double ct, double t)
+{
+    std::cout << ct <<" at the moment "<< t << std::endl;
+}
+
 void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H2,
                   QVector<double> w, QVector<double> mass_2, QVector<double> P2,
                   QVector<double> pc2, QVector<double> yu_2, QVector<double> ALI_2,
@@ -14,8 +19,8 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 {
 
             double PI = 3.1415926535;
-            double const D = 1.7;
-            double const L = 25;
+            double const D = 4.1;
+            double const L = 64.4;
             double S = PI*pow(D,2)/4;
             int kkk = 0;
             double ms;
@@ -51,7 +56,6 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
         for(int i=0;i<xn.size();i++)
         {
 
-
             Cbs.push_back(pc2[i]/mass_2[i]);
             Cyws.push_back(-(P2[i]+cy2[i]/57.3*yu_2[i]*S)/mass_2[i]);
             Cwws.push_back((-cy2[i]/57.3*yu_2[i]*S*dyn1[i])/jinn2[i]);
@@ -69,21 +73,12 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
             vels.push_back(v_2[i]);
 
 
-            if (xn[i] <= 150)
-            {ms = masss[0];
-            W[0].push_back(10*ms/masss[i]);
-            W[1].push_back(30.9*ms/masss[i]);
-            W[2].push_back(118.7*ms/masss[i]);
-            W[3].push_back(324.4*ms/masss[i]);
-            W[4].push_back(723.9*ms/masss[i]);
-            }
-            else {ms = masss[1445];
+            ms = masss[1293];
             W[0].push_back(10.84*ms/masss[i]);
             W[1].push_back(29.87*ms/masss[i]);
             W[2].push_back(58.57*ms/masss[i]);
             W[3].push_back(96.8*ms/masss[i]);
             W[4].push_back(144.61*ms/masss[i]);
-            }
 
 
             CW[0].push_back(Csbs[i]);
@@ -101,12 +96,12 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
             //std::cout << (Cyws[i]) << std::endl;//*yu_2[i]*S*dyn1[i]);///jinn2[i]/v_2[i] << std::endl;
 
-            if (kkk==100 || kkk==0)
-            {
-            std::cout << W[0][i] << std::endl;
-                kkk=0;
-            }
-                        kkk+=1;
+//            if (kkk==100 || kkk==0)
+//            {
+//            std::cout << W[0][i] << std::endl;
+//                kkk=0;
+//            }
+//                        kkk+=1;
         }
 
 
@@ -123,7 +118,7 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
         double goal = 0;
         PID pid(P, I, D, h, goal);
 
-        double bmax = 5 / 57.3;
+        double bmax = 7 / 57.3;
 
         double s[5];
         double ds[5];
@@ -160,16 +155,15 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
         double Qw = 0; //= 3.4*pow(10, -11);
         double Qv = 0; //= 3.64*pow(10, -8);
 
-        for (int i=4500;i<dypresss.size();i++)
+        for (int i=4050;i<4373;i++)
         {
             uc = pid.signal(wu);
             if (uc >= bmax) uc = bmax;
             if (uc <=-bmax) uc =-bmax;
-            uc*=5;
 
-                    Qs = dypresss[i]*(-3.89*pow(10, -11));
-                    Qw = dypresss[i]*(-2.67*pow(10, -13));
-                    Qv = dypresss[i]*(4.97*pow(10, -8));
+            Qs = 0; //dypresss[i]*(-3.89*pow(10, -11));
+            Qw = 0; //dypresss[i]*(-2.67*pow(10, -13));
+            Qv = 0; // = dypresss[i]*(4.97*pow(10, -8));
 
                 Summ_Cws = CW[0][i]*s[0] + CW[1][i]*s[1] + CW[2][i]*s[2] + CW[3][i]*s[3] + CW[4][i]*s[4];
                 Summ_Cvs = CY[0][i]*s[0] + CY[1][i]*s[1] + CY[2][i]*s[2] + CY[3][i]*s[3] + CY[4][i]*s[4];
@@ -178,7 +172,7 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
                 KS[0] = 0;   KS[1] = 0;   KS[2] = 0;         KS  [3] = 0;      KS[4]  = 0;
                 KdS[0] = 0;  KdS[1] = 0;  KdS[2] = 0;        KdS [3] = 0;      KdS[4] = 0;
-                KddS[0] = 0; KddS[1] = 0; KddS[2] = 3;       KddS[3] =10;       KddS[4]= 13;
+                KddS[0] = 0; KddS[1] = 0; KddS[2] = 0;       KddS[3] =0;       KddS[4]= 0;
 
                 for (int j = 0; j < 5; j++)
                 {
@@ -186,8 +180,12 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
                         Summ_S += s[j];
                 }
 
-                dv =  - Cyws[i] * wu - Cyys[i] * v  + Cbs[i] * uc  - Summ_Cvs ; //+ Cyws[i] * Wind[i]/100
-                ddw =  - Cwws[i] * wu - Cwbs[i] * uc -Summ_Cws - Cwys[i] * v + Cwys[i] * Wind[i];
+                dv =  - Cyws[i] * wu - Cyys[i] * v  + Cbs[i] * uc  + Cyws[i] * Wind[i];
+                ddw =  - Cwws[i] * wu - Cwbs[i] * uc  - Cwys[i] * v + Cwys[i] * Wind[i];
+
+
+                //dv =  - Cyws[i] * wu - Cyys[i] * v  + Cbs[i] * uc  - Summ_Cvs + Cyws[i] * Wind[i];
+                //ddw =  - Cwws[i] * wu - Cwbs[i] * uc -Summ_Cws - Cwys[i] * v + Cwys[i] * Wind[i];
 
                 dds[0] = -h * sqrt(W[0][i]) / PI * ds[0] - W[0][i] * s[0] + Csbs[i] * uc - Summ_KS[0];
                 dds[1] = -h * sqrt(W[1][i]) / PI * ds[1] - W[1][i] * s[1] - Csbs[i] * uc - Summ_KS[1];
@@ -210,7 +208,11 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
                 u += h * du;
 
                 get_t.push_back(times[i]);
-                get_v.push_back(wu*57.3);
+                DC::print(v/1000,times[i]);
+                get_v.push_back(v/1000);
+
+
+
                 //get_v.push_back(uc*57.3);wu*57.3
                 //std::cout << times[i]<<"_____"<< cy_2[i] <<std::endl;
 

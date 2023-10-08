@@ -34,6 +34,7 @@ public:
     QVector<double> get_w; QVector<double> get_W();
     QVector<double> get_s; QVector<double> get_S();
 
+    void print(double ct, double t);
     void data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H2,
                       QVector<double> w, QVector<double> mass_2, QVector<double> P2,
                       QVector<double> pc2, QVector<double> yu_2, QVector<double> ALI_2,
