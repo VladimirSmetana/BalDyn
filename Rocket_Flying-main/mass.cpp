@@ -17,13 +17,12 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         s[0] = s1; s[1] = s2;
         Peng[0] = P1; Peng[1] = P2;
 
-        w_headunit = 5.5;
+        w_headunit = 80;
 
         m_instrument = 0.0008*M_Rocket;
         w_instrument = m_instrument/150;
         W_Rocket = w_headunit+w_instrument;
-        L_headunit = 3.4;
-        L_instrument = 0.1;
+
         L_Rocket += L_headunit + L_instrument;
 
         for (int i=0;i<=1;i++)
@@ -62,25 +61,16 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
 
         // Геометрические исходные данные
 
-        L_spO[1] = 0.3;
-
-        L_O[1] = 1.1;
-
-        L_spC[1] = 0.3;
-
-        L_C[1] = 1.1  ;
-
-        L_engine[1] =2.5;
-
-        L_spO[0] = 0;
-
-        L_O[0] = 7.3;
-
-        L_spC[0] = 0.5;
-
-        L_C[0] = 6.2;
-
-        L_engine[0] = 2.2;
+        L_spO[1] = 0.6;
+        L_O[1] = 4.8;
+        L_spC[1] = 0.6;
+        L_C[1] = 4.1+0.6;
+        L_engine[1] =3.2-0.6;
+        L_spO[0] = 1;
+        L_O[0] = 17.3;
+        L_spC[0] = 2.7;
+        L_C[0] = 13.2;
+        L_engine[0] = 4.9;
         // Координаты граничных точек РН
         K[0] = 0;
         K[1] = K[0] + L_headunit;
@@ -94,7 +84,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         K[9] = K[8] + L_O[0];
         K[10]= K[9] + L_spC[0];
         K[11]= K[10]+ L_C[0];
-        K[13]= K[11]+ 0.2;
+        K[13]= K[11]+ 1.3;
         K[12]= K[11]+ L_engine[0];
 
 
@@ -110,7 +100,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         S_dry[1] = fun_S (K[1], K[6], m_dry[1]);
         S_o[1] = fun_S (K[3], K[4], m_O[1]);
         S_c[1] = fun_S (K[5], K[6], m_C[1]);
-        S_headunit = fun_S (K[0], K[1], 1100);
+        S_headunit = fun_S (K[0], K[1], 16500);
         //S_Rocket = S_instrument + S_Rocket;
 
         I_dry[0] = fun_I (K[6], K[12], m_dry[0], D);
@@ -119,7 +109,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         I_dry[1] = fun_I (K[1], K[6], m_dry[1], D);
         I_o[1] = fun_I (K[5], K[6], m_O[1], D);
         I_c[1] = fun_I (K[3], K[4], m_C[1], D);
-        I_headunit = fun_I (K[0], K[1], 1100, D);
+        I_headunit = fun_I (K[0], K[1], 16500, D);
 
 
         m_center = S_Rocket/M_Rocket;

@@ -1,5 +1,5 @@
 QT       += core gui printsupport
-QT       += sql
+
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 CONFIG += c++17
@@ -9,11 +9,9 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    DyEq.cpp \
     airforce.cpp \
     alpha.cpp \
     atmosphere.cpp \
-    dycoef.cpp \
     eastwind.cpp \
     equations.cpp \
     focus.cpp \
@@ -28,14 +26,11 @@ HEADERS += \
     alpha.h \
     atmosphere.h \
     block.h \
-    dycoef.h \
-    dynamic.h \
     eastwind.h \
     equations.h \
     focus.h \
     mainwindow.h \
     mass.h \
-    pid_file.h \
     qcustomplot.h
 
 FORMS += \

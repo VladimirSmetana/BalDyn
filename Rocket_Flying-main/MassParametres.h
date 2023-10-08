@@ -32,8 +32,8 @@ private:
     double L_spC[2], L_spO[2];
     double L_b[2];
 
-    double L_headunit = 3.5;
-    double L_instrument = 0.1;
+    double L_headunit = 11;
+    double L_instrument = 1;
 
     double W_Rocket;
     double L_Rocket;

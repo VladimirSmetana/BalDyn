@@ -4,13 +4,10 @@
 class block
 {
 public:
-    double L;
     double m_t;
     double V;
     double Peng_t;
-    double Peng_control;
     double alpha;
-    double focus;
     double tY;
     double tX;
     double anY;

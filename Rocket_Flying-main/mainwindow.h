@@ -52,12 +52,6 @@ private slots:
 
     void on_pushButton_14_clicked();
 
-    void on_fokusButton_clicked();
-
-    void on_action_5_triggered();
-
-    void on_action_7_triggered();
-
 private:
     Ui::MainWindow *ui;
     QCustomPlot *wGraphic;
