@@ -556,16 +556,6 @@ void MainWindow::on_action_triggered()
             Wind1 = W1.WSol();
             Wind2 = W2.WSol();
 
-           //if (time>T_fuel[0])1`
-           // {
-             //   ten+=1;
-             //   if (ten==5) {qDebug()<<second.V; ten = 0;};
-
-
-
-
-            //}
- //ten = 0;
             if (time<120 &&  HSP_1<HSP_p_1 && e<1)
             {
 
