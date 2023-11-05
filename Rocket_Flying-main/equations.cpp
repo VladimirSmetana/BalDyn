@@ -19,6 +19,25 @@
         return  F_P/m -  F_X/m - g * sin(ii);
     }
 
+    double equations::dVX(double vv, double ii, double N)
+    {
+        F_P = PENG * cos( (M_PI * alpha) / 180 - ii);
+        F_X = CX * S * po * pow(vv, 2) / 2 * cos(ii);
+        F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * sin(ii);
+        F_G = m*g*sin(N);
+        return (F_P - F_X - F_Y - F_G)/m;
+    }
+
+    double equations::dVY(double vv, double ii, double N)
+    {
+        F_P = PENG * sin( (M_PI * alpha) / 180 - ii);
+        F_X = CX * S * po * pow(vv, 2) / 2 * sin(ii);
+        F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * cos(ii);
+        F_G = m*g*cos(N);
+        return (F_P - F_X + F_Y - F_G)/m;
+    }
+
+
     double equations::fdY(double hh, double vv, double ii)
     {
         F_P = (PENG * sin((M_PI * alpha) / 180));

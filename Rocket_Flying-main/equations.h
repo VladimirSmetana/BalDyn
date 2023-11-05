@@ -10,7 +10,7 @@ class equations
     double g, m, I;
     double CX, CY;
     double PENG, alpha;
-    double F_P, F_Y, F_X;
+    double F_P, F_Y, F_X, F_G;
     double const  R = 6371000;
 
     public: 
@@ -23,6 +23,8 @@ class equations
     double fdN(double hh, double vv, double ii);
     double fdH(double vv, double ii);
 
+    double dVX(double vv, double ii, double N);
+    double dVY(double vv, double ii, double N);
 };
 
 #endif // EQUATIONS_H

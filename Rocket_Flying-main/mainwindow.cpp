@@ -182,6 +182,9 @@ void MainWindow::on_action_triggered()
             double V2=0, Y2=0, H22=0, X2=0;
     double X_oneC;
     double X_twoC;
+
+    double xXY = 0, yXY = 0, VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
+
     //
     // Создание объектов
 
@@ -577,6 +580,16 @@ void MainWindow::on_action_triggered()
             if (first.m_t>mpn)
             {
 
+            std::cout << B_1.dVY(first.V, trjXY, norXY) << std::endl;
+            VX += h*B_1.dVX(first.V, trjXY, norXY);
+            VY += h*B_1.dVY(first.V, trjXY, norXY);
+            velXY = sqrt(VX*VX+VY*VY);
+            trjXY = acos(VX/first.V);
+            xXY += h*VX;
+            yXY += h*VY;
+            norXY = atan(xXY/(6371000+yXY));
+
+
             first.tY += (first.V* sin(first.anY) + H11)/2*h;
             first.V   += (B_1.fdV(first.V, first.anY) + V1)/2*h;
             first.anY += (B_1.fdY(first.tY, first.V, first.anY)+Y1)/2*h;
@@ -586,7 +599,6 @@ void MainWindow::on_action_triggered()
             Y1 = B_1.fdY(first.tY, first.V, first.anY);
             H11 = first.V* sin(first.anY);
             //
-
 
 
 /*
