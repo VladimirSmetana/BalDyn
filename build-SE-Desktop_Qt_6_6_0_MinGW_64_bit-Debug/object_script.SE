@@ -1,0 +1,12 @@
+DyEq.o
+airforce.o
+alpha.o
+atmosphere.o
+dycoef.o
+eastwind.o
+equations.o
+focus.o
+main.o
+mainwindow.o
+mass.o
+qcustomplot.o

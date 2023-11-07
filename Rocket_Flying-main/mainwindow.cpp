@@ -183,7 +183,8 @@ void MainWindow::on_action_triggered()
     double X_oneC;
     double X_twoC;
 
-    double xXY = 0, yXY = 0, VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
+    double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
+    double zXY = 0, VZ  = 0.3;
 
     //
     // Создание объектов
@@ -542,8 +543,8 @@ void MainWindow::on_action_triggered()
            CY_2=Qus_2.getCY();
            bpr = ((Atm_1.get_density()/2*pow(first.V,2))*Smid*first.L*CY_1*first.alpha)/(first.Peng_t*(first.L-first.gl_c));
 
-           equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), first.m_t, CX_1, CY_1, first.Peng_t, alph_1.A());
-           equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), second.m_t, CX_2, CY_2, second.Peng_t, alph_2.A());
+           equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), first.m_t, CX_1, CY_1, first.Peng_t, alph_1.A(), Wind1);
+           equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), second.m_t, CX_2, CY_2, second.Peng_t, alph_2.A(), Wind2);
 
            //dV = B_1.fdV(First.V, First.anY);
            dN = B_1.fdN(first.tY, first.V, first.anY);
@@ -556,6 +557,8 @@ void MainWindow::on_action_triggered()
 
            X1 = first.V* cos(first.anY);
            X2 = second.V* cos(second.anY);
+
+
             Wind1 = W1.WSol();
             Wind2 = W2.WSol();
 
@@ -580,14 +583,6 @@ void MainWindow::on_action_triggered()
             if (first.m_t>mpn)
             {
 
-            std::cout << B_1.dVY(first.V, trjXY, norXY) << std::endl;
-            VX += h*B_1.dVX(first.V, trjXY, norXY);
-            VY += h*B_1.dVY(first.V, trjXY, norXY);
-            velXY = sqrt(VX*VX+VY*VY);
-            trjXY = acos(VX/first.V);
-            xXY += h*VX;
-            yXY += h*VY;
-            norXY = atan(xXY/(6371000+yXY));
 
 
             first.tY += (first.V* sin(first.anY) + H11)/2*h;
@@ -598,6 +593,17 @@ void MainWindow::on_action_triggered()
             V1 = B_1.fdV(first.V, first.anY);
             Y1 = B_1.fdY(first.tY, first.V, first.anY);
             H11 = first.V* sin(first.anY);
+
+            std::cout << zXY/1000  << std::endl;
+            VX += h*B_1.dVX(velXY, Ott, Na);
+            VY += h*B_1.dVY(velXY, Ott, Na);
+            VZ += h*B_1.dVZ(velXY, Ott, Na);
+            velXY = sqrt(VX*VX+VY*VY+VZ*VZ);
+            trjXY = acos(VX/velXY);
+            xXY += h*VX * cos(first.anY) / cos(Ott);
+            yXY += h*VY * sin(first.anY) / sin(Ott);
+            zXY += h*VZ;
+            norXY = atan(xXY/(6371000+yXY));
             //
 
 

@@ -1,5 +1,5 @@
 #include "equations.h"
-    equations::equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha)
+    equations::equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind)
     {
         this->po = po;
         this->S = S;
@@ -9,6 +9,7 @@
         this->CY= CY;
         this->PENG = PENG;
         this->alpha = alpha;
+        this->wind = wind;
     }
 
     // Баллистические уравнения
@@ -21,7 +22,7 @@
 
     double equations::dVX(double vv, double ii, double N)
     {
-        F_P = PENG * cos( (M_PI * alpha) / 180 - ii);
+        F_P = PENG * cos( (M_PI * alpha) / 180 + ii);
         F_X = CX * S * po * pow(vv, 2) / 2 * cos(ii);
         F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * sin(ii);
         F_G = m*g*sin(N);
@@ -30,13 +31,18 @@
 
     double equations::dVY(double vv, double ii, double N)
     {
-        F_P = PENG * sin( (M_PI * alpha) / 180 - ii);
+        F_P = PENG * sin( (M_PI * alpha) / 180 + ii);
         F_X = CX * S * po * pow(vv, 2) / 2 * sin(ii);
         F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * cos(ii);
         F_G = m*g*cos(N);
         return (F_P - F_X + F_Y - F_G)/m;
     }
 
+    double equations::dVZ(double vv, double ii, double N)
+    {
+        F_Z = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * cos(8/180*M_PI);
+        return -F_Z/m;
+    }
 
     double equations::fdY(double hh, double vv, double ii)
     {

@@ -10,11 +10,12 @@ class equations
     double g, m, I;
     double CX, CY;
     double PENG, alpha;
-    double F_P, F_Y, F_X, F_G;
+    double F_P, F_Z, F_Y, F_X, F_G;
+    double wind;
     double const  R = 6371000;
 
     public: 
-    equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha);
+    equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind);
     // Баллистические уравнения
     double fdV(double vv, double ii);
     double fdY(double hh, double vv, double ii);
@@ -25,6 +26,7 @@ class equations
 
     double dVX(double vv, double ii, double N);
     double dVY(double vv, double ii, double N);
+    double dVZ(double vv, double ii, double N);
 };
 
 #endif // EQUATIONS_H
