@@ -1,9 +1,8 @@
 QT       += core gui printsupport
 QT       += sql
 QT       += core gui widgets
-#greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
-CONFIG += staticlib c++11
 CONFIG += c++17
+CONFIG += staticlib c++11
 QMAKE_CXXFLAGS += -Wa,-mbig-obj
 # You can make your code fail to compile if it uses deprecated APIs.
 # In order to do so, uncomment the following line.
@@ -24,7 +23,6 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
-    MassParametres.h \
     airforce.h \
     alpha.h \
     atmosphere.h \

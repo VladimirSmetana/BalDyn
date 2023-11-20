@@ -1,7 +1,7 @@
 #ifndef MACENIN_H
 #define MACENIN_H
 #include <cmath>
-#include "MassParametres.h"
+//#include "MassParametres.h"
 
 class  mass
 {
