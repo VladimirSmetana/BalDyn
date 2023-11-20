@@ -22,26 +22,34 @@
 
     double equations::dVX(double vv, double ii, double N)
     {
+        double J = 8*M_PI/180;
         F_P = PENG * cos( (M_PI * alpha) / 180 + ii);
-        F_X = CX * S * po * pow(vv, 2) / 2 * cos(ii);
-        F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * sin(ii);
+        F_X = CX * S * po * pow(vv, 2) / 2 * cos(ii) * cos(J);
+        F_Y = (CY  * S * (po * pow(vv, 2)) / 2) * sin(ii);
+        F_Z = - CY * S * po * pow(vv, 2) / 2 * cos(ii) * sin(J);
         F_G = m*g*sin(N);
         return (F_P - F_X - F_Y - F_G)/m;
     }
 
     double equations::dVY(double vv, double ii, double N)
     {
+        double J = 8*M_PI/180;
         F_P = PENG * sin( (M_PI * alpha) / 180 + ii);
-        F_X = CX * S * po * pow(vv, 2) / 2 * sin(ii);
-        F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * cos(ii);
+        F_X = -CX * S * po * pow(vv, 2) / 2 * sin(ii) * cos(J);
+        F_Y = (CY * S * (po * pow(vv, 2)) / 2) * cos(ii);
+        F_Z = CY * S * po * pow(vv, 2) / 2 * sin(ii) * sin(J);
         F_G = m*g*cos(N);
         return (F_P - F_X + F_Y - F_G)/m;
     }
 
     double equations::dVZ(double vv, double ii, double N)
     {
-        F_Z = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2) * cos(8/180*M_PI);
-        return -F_Z/m;
+        double J = 8*M_PI/180;
+        F_X = -CX * S * po * pow(vv, 2) / 2 * sin(ii) * cos(J);
+        F_Z = (CY * S * (po * pow(vv, 2)) / 2) * cos(J);
+        F_W = (CY * S * (po * pow(wind, 2)) / 2);
+        F_G = m*sin(N);
+        return (F_X+F_Z-F_G-F_W)/m;
     }
 
     double equations::fdY(double hh, double vv, double ii)

@@ -10,7 +10,7 @@ class equations
     double g, m, I;
     double CX, CY;
     double PENG, alpha;
-    double F_P, F_Z, F_Y, F_X, F_G;
+    double F_P, F_Z, F_Y, F_X, F_G, F_W;
     double wind;
     double const  R = 6371000;
 
