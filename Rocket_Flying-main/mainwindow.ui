@@ -466,7 +466,7 @@ color: black;</string>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout">
       <item>
-       <widget class="QPushButton" name="heightButton">
+       <widget class="QPushButton" name="height_Button">
         <property name="contextMenuPolicy">
          <enum>Qt::CustomContextMenu</enum>
         </property>
@@ -492,7 +492,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="trjButton">
+       <widget class="QPushButton" name="trj_Button">
         <property name="styleSheet">
          <string notr="true">background-color:  rgb(102, 13, 19);
 color: white;
@@ -505,7 +505,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="distanceButton">
+       <widget class="QPushButton" name="distance_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -516,7 +516,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="velButton">
+       <widget class="QPushButton" name="velocity_Button">
         <property name="styleSheet">
          <string notr="true">background-color:  rgb(102, 13, 19);
 color: white;
@@ -529,7 +529,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="alphaButton">
+       <widget class="QPushButton" name="alpha_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -540,7 +540,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="angleButton">
+       <widget class="QPushButton" name="T_angle_Button">
         <property name="styleSheet">
          <string notr="true">background-color:  rgb(102, 13, 19);
 color: white;
@@ -553,7 +553,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="vhButton">
+       <widget class="QPushButton" name="Q_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -564,7 +564,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="centerButton">
+       <widget class="QPushButton" name="center_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -575,7 +575,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_11">
+       <widget class="QPushButton" name="thrust_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -586,7 +586,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="massButton">
+       <widget class="QPushButton" name="mass_Button">
         <property name="styleSheet">
          <string notr="true">background-color:  rgb(102, 13, 19);
 color: white;
@@ -600,7 +600,7 @@ color: white;
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="pushButton_14">
+       <widget class="QPushButton" name="NX_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -611,7 +611,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="fokusButton">
+       <widget class="QPushButton" name="fokus_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -622,7 +622,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="staticButton">
+       <widget class="QPushButton" name="static_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -633,7 +633,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="YZmomentButton">
+       <widget class="QPushButton" name="YZmoment_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -644,7 +644,7 @@ color: white</string>
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="XmomentButton">
+       <widget class="QPushButton" name="Xmoment_Button">
         <property name="styleSheet">
          <string notr="true">background-color: rgb(0, 0, 88);
 color: white</string>
@@ -733,7 +733,7 @@ color: rgb(0, 0, 88);</string>
     <property name="title">
      <string>Файл</string>
     </property>
-    <addaction name="action_4"/>
+    <addaction name="action_exit"/>
    </widget>
    <addaction name="menu_2"/>
    <addaction name="menu"/>
@@ -756,7 +756,7 @@ color: rgb(0, 0, 88);</string>
     <string>Динамика</string>
    </property>
   </action>
-  <action name="action_4">
+  <action name="action_exit">
    <property name="text">
     <string>Выход</string>
    </property>

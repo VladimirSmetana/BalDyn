@@ -99,48 +99,54 @@ public:
     double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
     double zXY = 0, VZ  = 0.3;
 
+    void drawing(QVector<double> Y1,
+                 QVector<double> Y2, double y0,  double yk,
+                 QVector<double> X1,
+                 QVector<double> X2, double x0 , double xk);
+
+    void drawing(QVector<double> Y1, double y0,  double yk,
+                 QVector<double> X1, double x0 , double xk);
+
 private slots:
 
 
     void on_action_triggered();
 
-    void on_action_4_triggered();
-
-    void on_action_6_triggered();
-
-    void on_heightButton_clicked();
-
-    void on_distanceButton_clicked();
-
-    void on_trjButton_clicked();
-
-    void on_velButton_clicked();
-
-    void on_alphaButton_clicked();
-
-    void on_angleButton_clicked();
-
-    void on_vhButton_clicked();
-
-    void on_centerButton_clicked();
-
-    void on_staticButton_clicked();
-
-    void on_YZmomentButton_clicked();
-
-    void on_XmomentButton_clicked();
-
-    void on_massButton_clicked();
-
-    void on_pushButton_11_clicked();
-
-    void on_pushButton_14_clicked();
-
-    void on_fokusButton_clicked();
-
     void on_action_5_triggered();
 
-    void on_action_7_triggered();
+    void on_NX_Button_clicked();
+
+    void on_height_Button_clicked();
+
+    void on_trj_Button_clicked();
+
+    void on_distance_Button_clicked();
+
+    void on_velocity_Button_clicked();
+
+    void on_alpha_Button_clicked();
+
+    void on_T_angle_Button_clicked();
+
+    void on_Q_Button_clicked();
+
+    void on_center_Button_clicked();
+
+
+
+    void on_thrust_Button_clicked();
+
+    void on_mass_Button_clicked();
+
+    void on_action_exit_triggered();
+
+    void on_fokus_Button_clicked();
+
+    void on_static_Button_clicked();
+
+    void on_YZmoment_Button_clicked();
+
+    void on_Xmoment_Button_clicked();
 
 private:
     Ui::MainWindow *ui;

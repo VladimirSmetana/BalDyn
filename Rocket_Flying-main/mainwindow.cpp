@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 
 
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -46,6 +44,38 @@ QVector<double> cy2(0);
 QVector<double> dyn1(0), dyn2(0);
 //
 // Кнопка "Трасса полета"
+
+void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
+             QVector<double> X1, double x0 , double xk)
+{
+    ui->widget->clearGraphs();
+    ui->widget->addGraph();
+    ui->widget->graph(0)->setData(X1, Y1);
+    ui->widget->graph(0)->setPen(QPen(Qt::red));
+    ui->widget->xAxis->setRange(x0, xk);
+    ui->widget->yAxis->setRange(y0, yk);
+    ui->widget->replot();
+}
+
+void MainWindow::drawing(QVector<double> Y1,
+                         QVector<double> Y2, double y0,  double yk,
+                         QVector<double> X1,
+                         QVector<double> X2, double x0 , double xk)
+{
+    ui->widget->clearGraphs();
+    ui->widget->addGraph();
+    ui->widget->graph(0)->setData(X1, Y1);
+    ui->widget->graph(0)->setPen(QPen(Qt::red));
+    ui->widget->xAxis->setRange(x0, xk);
+    ui->widget->yAxis->setRange(y0, yk);
+    ui->widget->replot();
+
+    ui->widget->addGraph();
+    ui->widget->graph(1)->setData(X2, Y2);
+    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
+    ui->widget->replot();
+}
+
 void MainWindow::on_action_triggered()
 {
     // Параметры тяги и угла атаки
@@ -575,306 +605,135 @@ void MainWindow::on_action_triggered()
 
 
     ui->action_2->setEnabled(true);
-
-
 }
 
-void MainWindow::on_action_4_triggered()
+// График перегрузки
+void MainWindow::on_NX_Button_clicked()
 {
-        close();
-}
-
-
-void MainWindow::on_action_6_triggered()
-{
-    QVector<double> qu(0), x(0), iner(0);
-
-    for (int i=0;i<=count;i++)
-
-    {
-    x.push_back(i*h);
-    }
-    ui->lineEdit  ->hide();
-    ui->lineEdit_2->hide();
-    ui->lineEdit_3->hide();
-    ui->lineEdit_6->hide();
-    ui->lineEdit_7->hide();
-
-    ui->lineEdit_4->hide();
-    ui->lineEdit_5->hide();
-    ui->label_4->hide();
-    ui->label_5->hide();
-
-
-    ui->label_2->hide();
-    ui->label_3->hide();
-    ui->label  ->hide();
-    ui->label_8->hide();
-    ui->label_9->hide();
-
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(x, ALI_1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Угол атаки, град");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(-5, 30);
-    ui->widget->replot();
-
-
-
-    ui->label_10->setText("Угол траектории (1), град");
-    ui->label_11->setText("Угол траектории (2), град");
-}
-
-void MainWindow::on_heightButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn,H1);
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Высота, км");
-    ui->widget->xAxis->setRange(0, count*h+50);
-    ui->widget->yAxis->setRange(0, 230);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn,H2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-
-void MainWindow::on_distanceButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn,Long_1);
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Дальность, км");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, 1600);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn,Long_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-
-void MainWindow::on_trjButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(Long_1,H1);
-    ui->widget->xAxis->setLabel("Дальность, км");
-    ui->widget->yAxis->setLabel("Высота, км");
-    ui->widget->xAxis->setRange(0, 1600);
-    ui->widget->yAxis->setRange(0, 230);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(Long_2,H2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-
-}
-
-void MainWindow::on_velButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn,v_1);
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Скорость, м/с");
-    ui->widget->xAxis->setRange(0, count*h+10);
-    ui->widget->yAxis->setRange(0, first->V+10);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn,v_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-void MainWindow::on_alphaButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, ALI_1);
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Угол атаки, град");
-    ui->widget->xAxis->setRange(0, count*h+20);
-    ui->widget->yAxis->setRange(-5, 91);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, ALI_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-void MainWindow::on_angleButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, TET_1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    ui->widget->xAxis->setRange(0, count*h+10);
-    ui->widget->yAxis->setRange(-90, 90);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, TET_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-void MainWindow::on_vhButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, yu_1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Максимальный скоростной напор, Па");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, *std::max_element(yu_2.begin(),yu_2.end()));
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, yu_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-void MainWindow::on_centerButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, center_1);
-    ui->widget->graph(0)->setPen(QPen(Qt::green));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Центр масс РН, м");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, *std::max_element(center_1.begin(),center_1.end()));
-    ui->widget->replot();
-}
-
-void MainWindow::on_staticButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, sinn);
-    ui->widget->graph(0)->setPen(QPen(Qt::green));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Стат момент X, кг м");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, Sx);
-    ui->widget->replot();
-}
-
-void MainWindow::on_YZmomentButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, jinn);
-    ui->widget->graph(0)->setPen(QPen(Qt::green));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Момент инерции Y/Z,   кг м2");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, Iz);
-    ui->widget->replot();
-}
-
-void MainWindow::on_XmomentButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, lin);
-    ui->widget->graph(0)->setPen(QPen(Qt::green));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Момент инерции X, кг м2");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, Ixmax);
-    ui->widget->replot();
-}
-
-void MainWindow::on_massButton_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, mass_1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Масса, кг");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, *std::max_element(mass_1.begin(),mass_1.end()));
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, mass_2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-
-void MainWindow::on_pushButton_11_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, P1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Тяга ДУ, кН");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, *std::max_element(P1.begin(),P1.end()));
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, P2);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
-}
-
-
-void MainWindow::on_pushButton_14_clicked()
-{
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, Lon);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Продольная перегрузка");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, 10);
-    ui->widget->replot();
-
-    ui->widget->addGraph();
-    ui->widget->graph(1)->setData(xn, Lonre);
-    ui->widget->graph(1)->setPen(QPen(Qt::PenStyle::DashLine));
-    ui->widget->replot();
+    drawing(Lon, Lonre, 0, 10, xn, xn, 0, count*h);
 }
 
-
-void MainWindow::on_fokusButton_clicked()
+// График траектории
+void MainWindow::on_height_Button_clicked()
 {
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(xn, f1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Высота, км");
+    drawing(H1, H2, 0, 230, xn, xn, 0, count*h+50);
+}
+
+// График высоты
+void MainWindow::on_trj_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Дальность, км");
+    ui->widget->yAxis->setLabel("Высота, км");
+    drawing(H1, H2, 0, 230, Long_1, Long_2, 0, 1600);
+}
+
+// График дальности
+void MainWindow::on_distance_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Дальность, км");
+    drawing(Long_1, Long_2, 0, 1600, xn, xn, 0, count*h);
+}
+
+// График скорости
+void MainWindow::on_velocity_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Скорость, м/с");
+    drawing(v_1, v_2, 0, first->V+10, xn, xn, 0, count*h+10);
+}
+
+// График угла атаки
+void MainWindow::on_alpha_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Угол атаки, град");
+    drawing(ALI_1, ALI_2, -5, 91, xn, xn, 0, count*h+20);
+}
+
+// График угла наклона траектории
+void MainWindow::on_T_angle_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Угол наклона траектории, град");
+    drawing(TET_1, TET_2, -90, 90, xn, xn, 0, count*h+10);
+}
+
+// График скоростного напора
+void MainWindow::on_Q_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Максимальный скоростной напор, Па");
+    drawing(yu_1, yu_2, 0, *std::max_element(yu_2.begin(),yu_2.end()), xn, xn, 0, count*h);
+}
+
+// График центра масс
+void MainWindow::on_center_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Центр масс РН, м");
+    drawing(center_1, 0, *std::max_element(center_1.begin(),center_1.end()), xn, 0, count*h);
+}
+
+// График тяги
+void MainWindow::on_thrust_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Тяга ДУ, кН");
+    drawing(P1, P2, 0, *std::max_element(P1.begin(),P1.end()), xn, xn, 0, count*h);
+}
+
+// График массы
+void MainWindow::on_mass_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Масса, кг");
+    drawing(mass_1, mass_2, 0, *std::max_element(mass_1.begin(),mass_1.end()), xn, xn, 0, count*h);
+}
+
+// Файл->Выход
+void MainWindow::on_action_exit_triggered()
+{
+    close();
+}
+
+// График фокуса
+void MainWindow::on_fokus_Button_clicked()
+{
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Фокус, м");
-    ui->widget->xAxis->setRange(0, count*h);
-    ui->widget->yAxis->setRange(0, 5);
-    ui->widget->replot();
+    drawing(f1, 0, 15, xn, 0, count*h);
 }
 
+// График стат момента
+void MainWindow::on_static_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Стат момент X, кг м");
+    drawing(sinn, 0, Sx, xn, 0, count*h);
+}
 
+// График момента инерции Y или Z
+void MainWindow::on_YZmoment_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Момент инерции Y/Z,   кг м2");
+    drawing(jinn, 0, Iz, xn, 0, count*h);
+}
+
+// График момента инерции Х
+void MainWindow::on_Xmoment_Button_clicked()
+{
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Момент инерции X, кг м2");
+    drawing(lin, 0, Ixmax, xn, 0, count*h);
+}
+
+// Управление ПИД
 void MainWindow::on_action_5_triggered()
 {
     DC d;
@@ -887,20 +746,8 @@ void MainWindow::on_action_5_triggered()
     d.get_V().clear();
     d.data_calculating(P, I, D);
 
-    ui->widget->clearGraphs();
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(d.get_T(), d.get_V());
-    ui->widget->graph(0)->setPen(QPen(Qt::green));
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Отклонение по тангажу, м");
-    ui->widget->xAxis->setRange(405, 440);
-    ui->widget->yAxis->setRange(-20, 20);
-    ui->widget->replot();
+
+    drawing(d.get_V(), -20, 20, d.get_T(), 405, 440);
 }
-
-
-void MainWindow::on_action_7_triggered()
-{
-
-}
-
