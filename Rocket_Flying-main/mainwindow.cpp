@@ -487,8 +487,7 @@ void MainWindow::on_action_triggered()
 
             //double me = first->anY;
 
-            first->tY += (first->V* sin(first->anY) + H11)/2*h;
-
+            first->tY += first->V* sin(first->anY) *h;
 
             K1 = B_1.fdV(first->V, first->anY);
             K2 = B_1.fdV(first->V+h/2*K1, first->anY+h/2);
@@ -496,13 +495,14 @@ void MainWindow::on_action_triggered()
             K4 = B_1.fdV(first->V+h*K3, first->anY+h);
             first->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
 
-
+            K1 = B_1.fdY(first->tY, first->V, first->anY);
+            K2 = B_1.fdY(first->tY+h/2, first->V+h/2, first->anY+h/2*K1);
+            K3 = B_1.fdY(first->tY+h/2, first->V+h/2, first->anY+h/2*K2);
+            K4 = B_1.fdY(first->tY+h, first->V+h, first->anY+h*K3);
+            first->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
 
             //first->V += Runge_Kutt(&B_1.fdV, first->V, first->anY, h);
-
-
-
-            first->anY += (B_1.fdY(first->tY, first->V, first->anY)+Y1)/2*h;
+            //first->anY += (B_1.fdY(first->tY, first->V, first->anY)+Y1)/2*h;
 
 
             H11 = first->V* sin(first->anY);
