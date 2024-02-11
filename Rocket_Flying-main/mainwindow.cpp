@@ -42,9 +42,8 @@ QVector<double> Lon(0), Lonre(0);
 QVector<double> w(0), pc2(0);
 QVector<double> cy2(0);
 QVector<double> dyn1(0), dyn2(0);
-//
-// Кнопка "Трасса полета"
 
+// Перегруженная функция отрисовки
 void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
              QVector<double> X1, double x0 , double xk)
 {
@@ -56,7 +55,7 @@ void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
     ui->widget->yAxis->setRange(y0, yk);
     ui->widget->replot();
 }
-
+// -
 void MainWindow::drawing(QVector<double> Y1,
                          QVector<double> Y2, double y0,  double yk,
                          QVector<double> X1,
@@ -76,6 +75,19 @@ void MainWindow::drawing(QVector<double> Y1,
     ui->widget->replot();
 }
 
+double  Runge_Kutt(double func(double, double),
+                  double XX, double YY,
+                  double h)
+{
+    double K1 = func(XX, YY);
+    double K2 = func(XX+h/2*K1, YY+h/2);
+    double K3 = func(XX+h/2*K2, YY+h/2);
+    double K4 = func(XX+h*K3, YY+h);
+
+    return (K1 + K2*2 + K3*2 + K4)/6*h;
+}
+
+// Кнопка "Баллистика"
 void MainWindow::on_action_triggered()
 {
     // Параметры тяги и угла атаки
@@ -202,6 +214,7 @@ void MainWindow::on_action_triggered()
     int i = 0;
     int value = 0;
     d_O[1] = 0;
+    double K1, K2, K3, K4;
     //while (second->tY>=0.5 && second->V>=0.5) second->tY>=0.5
     while (second->tY>0 && second->V>0)
     {
@@ -472,16 +485,30 @@ void MainWindow::on_action_triggered()
             if (first->m_t>mpn)
             {
 
-
+            //double me = first->anY;
 
             first->tY += (first->V* sin(first->anY) + H11)/2*h;
-            first->V   += (B_1.fdV(first->V, first->anY) + V1)/2*h;
+
+
+            K1 = B_1.fdV(first->V, first->anY);
+            K2 = B_1.fdV(first->V+h/2*K1, first->anY+h/2);
+            K3 = B_1.fdV(first->V+h/2*K2, first->anY+h/2);
+            K4 = B_1.fdV(first->V+h*K3, first->anY+h);
+            first->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
+
+
+
+            //first->V += Runge_Kutt(&B_1.fdV, first->V, first->anY, h);
+
+
+
             first->anY += (B_1.fdY(first->tY, first->V, first->anY)+Y1)/2*h;
 
 
+            H11 = first->V* sin(first->anY);
             V1 = B_1.fdV(first->V, first->anY);
             Y1 = B_1.fdY(first->tY, first->V, first->anY);
-            H11 = first->V* sin(first->anY);
+
 
             std::cout << zXY/1000  << std::endl;
             VX += h*B_1.dVX(velXY, Ott, Na);
@@ -497,13 +524,7 @@ void MainWindow::on_action_triggered()
 
 
 /*
- *          Рунге-Кутт4:
- *          double h1 = first->anY - Y1;
-            double K1 = B_1.fdV(first->V, first->anY);
-            double K2 = B_1.fdV(first->V+h1/2*K1, first->anY+h1/2);
-            double K3 = B_1.fdV(first->V+h1/2*K2, first->anY+h1/2);
-            double K4 = B_1.fdV(first->V+h1*K3, first->anY+h1);
-            first->V += h1/6*(K1+K2*2+K3*2+K4);
+
 */
 
             }

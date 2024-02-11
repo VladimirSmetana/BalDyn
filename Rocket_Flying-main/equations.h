@@ -27,6 +27,7 @@ class equations
     double dVX(double vv, double ii, double N);
     double dVY(double vv, double ii, double N);
     double dVZ(double vv, double ii, double N);
+
 };
 
 #endif // EQUATIONS_H
