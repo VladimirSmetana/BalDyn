@@ -20,6 +20,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mass.cpp \
+    pitch.cpp \
     qcustomplot.cpp
 
 HEADERS += \
@@ -35,6 +36,7 @@ HEADERS += \
     mainwindow.h \
     mass.h \
     pid_file.h \
+    pitch.h \
     qcustomplot.h
 
 FORMS += \

@@ -11,6 +11,7 @@
 #include "alpha.h"
 #include "focus.h"
 #include "dycoef.h"
+#include "pitch.h"
 #include <thread>
 #include <QtSql>
 #include <QDebug>
@@ -28,11 +29,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-
 public:
     // Создание объектов
     std::unique_ptr<block> first = std::make_unique<block>();
     std::unique_ptr<block> second = std::make_unique<block>();
+    std::unique_ptr<pitch> P = std::make_unique<pitch>();
     //block first;
 //    block second;
     // Исходные данные РН
@@ -75,7 +76,7 @@ public:
     double S_o[2], S_c[2];
     double I_o[2], I_c[2];
     double Imp_t, CF;
-    double pitch;
+    double pitch_angle;
     double bpr;
     double HSP_1, HSP_p_1, VHSP_1;
     double HSP_2, HSP_p_2;
@@ -159,5 +160,6 @@ private:
     QCustomPlot *wGraphic;
     QCPCurve *verticalLine;
     QCPItemTracer *tracer;
+
 };
 #endif // MAINWINDOW_H

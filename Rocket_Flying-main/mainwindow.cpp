@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "pitch.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -14,38 +15,11 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-// Глобальные векторы
-QVector<double>lin(0);
-QVector<double>sinn(0);
-QVector<double> jinn(0), jinn2(0);
-QVector<double>CM(0);
-QVector<double>ALI_1(0);
-QVector<double>ALI_2(0);
-QVector<double>res(0);
-QVector<double>TET_1(0);
-QVector<double>TET_2(0);
-QVector<double>center_1(0);
-QVector<double>center_2(0);
-QVector<double>be(0);
-QVector<double>pi(0);
-QVector<double>yu_1(0);
-QVector<double>yu_2(0);
-QVector<double>mass_1(0);
-QVector<double>mass_2(0);
-QVector<double> xn(0);
-QVector<double> v_1(0), v_2(0), v_3(0);
-QVector<double> Long_1(0), Long_2(0), H1(0), H2(0), H3(0);
-QVector<double> angle(0), b1(0), b2(0);
-QVector<double> P1(0), P2(0);
-QVector<double> f1(0);
-QVector<double> Lon(0), Lonre(0);
-QVector<double> w(0), pc2(0);
-QVector<double> cy2(0);
-QVector<double> dyn1(0), dyn2(0);
+
 
 // Перегруженная функция отрисовки
 void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
-             QVector<double> X1, double x0 , double xk)
+QVector<double> X1, double x0 , double xk)
 {
     ui->widget->clearGraphs();
     ui->widget->addGraph();
@@ -205,9 +179,9 @@ void MainWindow::on_action_triggered()
         second->tY = 1;
     //
     // Итеративный расчет
-    H1.clear();
-    H2.clear();
-    xn.clear();
+    P->H1.clear();
+    P->H2.clear();
+    P->xn.clear();
     count = 0;
     first->tY = 0;
     second->tX = 0;
@@ -452,7 +426,7 @@ void MainWindow::on_action_triggered()
            dN = B_1.fdN(first->tY, first->V, first->anY);
 
            Ott = first->anY-Na;
-           pitch = Ott-first->alpha/57.3;
+           pitch_angle = Ott-first->alpha/57.3;
 
            first->tX += h * (first->V* cos(first->anY)+X1)/2;
            second->tX += h * (second->V* cos(second->anY)+X2)/2;
@@ -557,46 +531,46 @@ void MainWindow::on_action_triggered()
             }
 
         //qDebug()<<second->tY;
-                xn.push_back(time);
-                yu_1.push_back(HSP_1);
-                yu_2.push_back(HSP_2);
-                center_1.push_back(first->gl_c);
-                center_2.push_back(second->gl_c);
-                v_1.push_back(first->V);
-                v_2.push_back(second->V);
-                sinn.push_back(first->Ssumm);
-                jinn.push_back(first->Isumm);
-                jinn2.push_back(second->Isumm);
-                CM.push_back(first->Ssumm/first->m_t);
-                mass_1.push_back(first->m_t);
-                mass_2.push_back(second->m_t);
-                Long_1.push_back(first->tX/1000);
-                Long_2.push_back(second->tX/1000);
-                w.push_back(Wind2);
-                H1.push_back(first->tY/1000);
-                H2.push_back(second->tY/1000);
-                angle.push_back(pitch*57.3);
-                b1.push_back(HSP_1*Smid*CX_1);
-                b2.push_back(HSP_2*Smid*CX_2);
-                lin.push_back(Ix);
-                ALI_1.push_back(alph_1.A());
-                ALI_2.push_back(alph_2.A());
+                P->xn.push_back(time);
+                P->yu_1.push_back(HSP_1);
+                P->yu_2.push_back(HSP_2);
+                P->center_1.push_back(first->gl_c);
+                P->center_2.push_back(second->gl_c);
+                P->v_1.push_back(first->V);
+                P->v_2.push_back(second->V);
+                P->sinn.push_back(first->Ssumm);
+                P->jinn.push_back(first->Isumm);
+                P->jinn2.push_back(second->Isumm);
+                P->CM.push_back(first->Ssumm/first->m_t);
+                P->mass_1.push_back(first->m_t);
+                P->mass_2.push_back(second->m_t);
+                P->Long_1.push_back(first->tX/1000);
+                P->Long_2.push_back(second->tX/1000);
+                P->w.push_back(Wind2);
+                P->H1.push_back(first->tY/1000);
+                P->H2.push_back(second->tY/1000);
+                P->angle.push_back(pitch_angle*57.3);
+                P->b1.push_back(HSP_1*Smid*CX_1);
+                P->b2.push_back(HSP_2*Smid*CX_2);
+                P->lin.push_back(Ix);
+                P->ALI_1.push_back(alph_1.A());
+                P->ALI_2.push_back(alph_2.A());
                 //ALI.push_back(first->Peng_t/ (first->m_t*Atm_1.get_AOG()));
-                res.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
-                TET_1.push_back(first->anY*57.3);
-                TET_2.push_back(second->anY*57.3);
-                be.push_back(bpr*57.3);
-                pi.push_back(pitch*57.3);
-                P1.push_back(first->Peng_t);
-                P2.push_back(second->Peng_t);
-                f1.push_back(first->focus);
-                Lon.push_back(first->Peng_t/(first->m_t*Atm_1.get_AOG()));
-                Lonre.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
-                pc2.push_back(second->Peng_control);
-                cy2.push_back(CY_2);
+                P->res.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
+                P->TET_1.push_back(first->anY*57.3);
+                P->TET_2.push_back(second->anY*57.3);
+                P->be.push_back(bpr*57.3);
+                P->pi.push_back(pitch_angle*57.3);
+                P->P1.push_back(first->Peng_t);
+                P->P2.push_back(second->Peng_t);
+                P->f1.push_back(first->focus);
+                P->Lon.push_back(first->Peng_t/(first->m_t*Atm_1.get_AOG()));
+                P->Lonre.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
+                P->pc2.push_back(second->Peng_control);
+                P->cy2.push_back(CY_2);
                 //std::cout << CY_2 << std::endl;
-                dyn1.push_back(X_oneC);
-                dyn2.push_back(X_twoC);
+                P->dyn1.push_back(X_oneC);
+                P->dyn2.push_back(X_twoC);
 
                 //std::cout<<first->gl_c<<std::endl;
         amax = alph_1.A();
@@ -633,7 +607,7 @@ void MainWindow::on_NX_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Продольная перегрузка");
-    drawing(Lon, Lonre, 0, 10, xn, xn, 0, count*h);
+    drawing(P->Lon, P->Lonre, 0, 10, P->xn, P->xn, 0, count*h);
 }
 
 // График траектории
@@ -641,7 +615,7 @@ void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(H1, H2, 0, 230, xn, xn, 0, count*h+50);
+    drawing(P->H1, P->H2, 0, 230, P->xn, P->xn, 0, count*h+50);
 }
 
 // График высоты
@@ -649,7 +623,7 @@ void MainWindow::on_trj_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Дальность, км");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(H1, H2, 0, 230, Long_1, Long_2, 0, 1600);
+    drawing(P->H1, P->H2, 0, 230, P->Long_1, P->Long_2, 0, 1600);
 }
 
 // График дальности
@@ -657,7 +631,7 @@ void MainWindow::on_distance_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Дальность, км");
-    drawing(Long_1, Long_2, 0, 1600, xn, xn, 0, count*h);
+    drawing(P->Long_1, P->Long_2, 0, 1600, P->xn, P->xn, 0, count*h);
 }
 
 // График скорости
@@ -665,7 +639,7 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    drawing(v_1, v_2, 0, first->V+10, xn, xn, 0, count*h+10);
+    drawing(P->v_1, P->v_2, 0, first->V+10, P->xn, P->xn, 0, count*h+10);
 }
 
 // График угла атаки
@@ -673,7 +647,7 @@ void MainWindow::on_alpha_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол атаки, град");
-    drawing(ALI_1, ALI_2, -5, 91, xn, xn, 0, count*h+20);
+    drawing(P->ALI_1, P->ALI_2, -5, 91, P->xn, P->xn, 0, count*h+20);
 }
 
 // График угла наклона траектории
@@ -681,7 +655,7 @@ void MainWindow::on_T_angle_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    drawing(TET_1, TET_2, -90, 90, xn, xn, 0, count*h+10);
+    drawing(P->TET_1, P->TET_2, -90, 90, P->xn, P->xn, 0, count*h+10);
 }
 
 // График скоростного напора
@@ -689,7 +663,7 @@ void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Максимальный скоростной напор, Па");
-    drawing(yu_1, yu_2, 0, *std::max_element(yu_2.begin(),yu_2.end()), xn, xn, 0, count*h);
+    drawing(P->yu_1, P->yu_2, 0, *std::max_element(P->yu_2.begin(),P->yu_2.end()), P->xn, P->xn, 0, count*h);
 }
 
 // График центра масс
@@ -697,7 +671,7 @@ void MainWindow::on_center_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Центр масс РН, м");
-    drawing(center_1, 0, *std::max_element(center_1.begin(),center_1.end()), xn, 0, count*h);
+    drawing(P->center_1, 0, *std::max_element(P->center_1.begin(),P->center_1.end()), P->xn, 0, count*h);
 }
 
 // График тяги
@@ -705,7 +679,7 @@ void MainWindow::on_thrust_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Тяга ДУ, кН");
-    drawing(P1, P2, 0, *std::max_element(P1.begin(),P1.end()), xn, xn, 0, count*h);
+    drawing(P->P1, P->P2, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, P->xn, 0, count*h);
 }
 
 // График массы
@@ -713,7 +687,7 @@ void MainWindow::on_mass_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Масса, кг");
-    drawing(mass_1, mass_2, 0, *std::max_element(mass_1.begin(),mass_1.end()), xn, xn, 0, count*h);
+    drawing(P->mass_1, P->mass_2, 0, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, P->xn, 0, count*h);
 }
 
 // Файл->Выход
@@ -727,7 +701,7 @@ void MainWindow::on_fokus_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Фокус, м");
-    drawing(f1, 0, 15, xn, 0, count*h);
+    drawing(P->f1, 0, 15, P->xn, 0, count*h);
 }
 
 // График стат момента
@@ -735,7 +709,7 @@ void MainWindow::on_static_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Стат момент X, кг м");
-    drawing(sinn, 0, Sx, xn, 0, count*h);
+    drawing(P->sinn, 0, Sx, P->xn, 0, count*h);
 }
 
 // График момента инерции Y или Z
@@ -743,7 +717,7 @@ void MainWindow::on_YZmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции Y/Z,   кг м2");
-    drawing(jinn, 0, Iz, xn, 0, count*h);
+    drawing(P->jinn, 0, Iz, P->xn, 0, count*h);
 }
 
 // График момента инерции Х
@@ -751,14 +725,14 @@ void MainWindow::on_Xmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции X, кг м2");
-    drawing(lin, 0, Ixmax, xn, 0, count*h);
+    drawing(P->lin, 0, Ixmax, P->xn, 0, count*h);
 }
 
 // Управление ПИД
 void MainWindow::on_action_5_triggered()
 {
     DC d;
-    d.data_writing(xn, v_2, H2, w, mass_2, P2, pc2, yu_2, ALI_2, cy2, dyn1, dyn2, jinn2);
+    d.data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
 
     QString k14=ui->lineEdit_14->text(); double P = k14.toDouble();
     QString k15=ui->lineEdit_15->text(); double I = k15.toDouble();
