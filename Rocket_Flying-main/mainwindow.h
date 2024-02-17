@@ -11,7 +11,7 @@
 #include "alpha.h"
 #include "focus.h"
 #include "dycoef.h"
-#include "pitch.h"
+#include "flight.h"
 #include <thread>
 #include <QtSql>
 #include <QDebug>
@@ -33,7 +33,7 @@ public:
     // Создание объектов
 //    std::unique_ptr<block> first = std::make_unique<block>();
 //    std::unique_ptr<block> second = std::make_unique<block>();
-    std::unique_ptr<pitch> P = std::make_unique<pitch>();
+    std::unique_ptr<flight> P = std::make_unique<flight>();
     //block first;
 //    block second;
     // Исходные данные РН
