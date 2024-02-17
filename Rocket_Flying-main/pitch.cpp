@@ -5,26 +5,28 @@ pitch::pitch()
 
 }
 
-void pitch::pitch_calculations()
+void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
-
     //
+    double peng [2];
+    peng[0] = kpeng[0] * 9.81 * (mpn+mb[0]+mb[1]);
+    peng[1] = kpeng[1] * 9.81 * (mpn+mb[1]);
     // Рассчитываемые параметры конструкции
     double m_fuel[2];
     double m_dry[2];
     double T_fuel[2];
     double m_furet = 33200/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
     M_Rocket=mpn;
-    first->m_t = M_Rocket;
-    second->m_t = M_Rocket;
+    fir->m_t = M_Rocket;
+    sec->m_t = M_Rocket;
     //
     // Время действия тормозных импульсов
 
     //
     // Поле локальных переменных
     Smid = M_PI*pow(D,2)/4;
-    first->V = 0.1;
-    second->V = 0.6;
+    fir->V = 0.1;
+    sec->V = 0.6;
     count =0;
     //
     // Создание объектов
@@ -32,7 +34,7 @@ void pitch::pitch_calculations()
     mass M;
     //
     // Определение габаритов ракеты
-    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], Peng[0], Peng[1]);
+    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     Lmax = M.get_lenght();
     //double L = Lmax;
     double L1= M.get_lst1();
@@ -56,81 +58,81 @@ void pitch::pitch_calculations()
     M_stage [0] = M_Rocket;
     M_stage [1] = M_Rocket - mb[0];
 
-    first->S_dry[0] = M.fun_S (M.K[6], M.K[12], m_dry[0]);
-    first->S_dry[1] = M.fun_S (M.K[1], M.K[6], m_dry[1]);
-    second->S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
-    second->S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
+    fir->S_dry[0] = M.fun_S (M.K[6], M.K[12], m_dry[0]);
+    fir->S_dry[1] = M.fun_S (M.K[1], M.K[6], m_dry[1]);
+    sec->S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
+    sec->S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
     S_o[0] = M.fun_S (M.K[8], M.K[9], m_O[0]);
     S_c[0] = M.fun_S (M.K[10], M.K[11], m_C[0]);
     S_o[1] = M.fun_S (M.K[3], M.K[4], m_O[1]);
     S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
-    first->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
-    first->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
-    second->S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
-    second->S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
+    fir->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
+    fir->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
+    sec->S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
+    sec->S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
 
-    first->Ssumm  = M.get_SGO() + first->S_dry[0] + first->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first->S_reO + first->S_reC;
-    Sx = first->Ssumm;
-    first->gl_c = first->Ssumm/M_Rocket;
-    gl_cmax = first->gl_c;
+    fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+    Sx = fir->Ssumm;
+    fir->gl_c = fir->Ssumm/M_Rocket;
+    gl_cmax = fir->gl_c;
     //std::cout<<Sx<<std::endl;
-    //std::cout<<first->gl_c<<std::endl;
+    //std::cout<<fir->gl_c<<std::endl;
 
-    first->I_dry[0] = M.fun_I (M.K[6], M.K[12], m_dry[0], D);
-    first->I_dry[1] = M.fun_I (M.K[1], M.K[6], m_dry[1], D);
+    fir->I_dry[0] = M.fun_I (M.K[6], M.K[12], m_dry[0], D);
+    fir->I_dry[1] = M.fun_I (M.K[1], M.K[6], m_dry[1], D);
 
-    second->I_dry[0] = M.fun_I (M.K[6]-6, M.K[12]-6, m_dry[0], D);
+    sec->I_dry[0] = M.fun_I (M.K[6]-6, M.K[12]-6, m_dry[0], D);
 
     I_o[0] = M.fun_I (M.K[8], M.K[9], m_O[0], D);
     I_c[0] = M.fun_I (M.K[10], M.K[11], m_C[0], D);
     I_o[1] = M.fun_I (M.K[3], M.K[4], m_O[1], D);
     I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
-    first->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
-    first->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
-    second->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
-    second->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
-    first->Isumm  = M.get_IGO() + first->I_dry[0] + first->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first->I_reO + first->I_reC - M_Rocket*pow(gl_cmax,2);
-    Iz = first->Isumm;
+    fir->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
+    fir->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
+    sec->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
+    sec->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
+    fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
+    Iz = fir->Isumm;
     Izmax = Iz;
     Ix = M_Rocket * pow(D/2, 2);
     Ixmax = Ix;
 
-    T_fuel[0] = m_fuel[0]/(Peng [0]/Imp[0]);
+    T_fuel[0] = m_fuel[0]/(peng [0]/Imp[0]);
     T_stage [0] = T_fuel [0] + T_sep [0];
-    T_fuel[1] = m_fuel[1]/(Peng [1]/Imp[1]);
+    T_fuel[1] = m_fuel[1]/(peng [1]/Imp[1]);
     T_stage [1] = T_fuel [1] + T_sep [1];
     //
     // ИД итеративного расчета
-    first->m_t = M_Rocket;
-    second->m_t = M_Rocket;
-    first->anY = M_PI/2;
-    second->anY = M_PI/2;
+    fir->m_t = M_Rocket;
+    sec->m_t = M_Rocket;
+    fir->anY = M_PI/2;
+    sec->anY = M_PI/2;
     //double p_ground = 101325;
-    second->tY = 1;
+    sec->tY = 1;
     //
     // Итеративный расчет
-    P->H1.clear();
-    P->H2.clear();
-    P->xn.clear();
+    H1.clear();
+    H2.clear();
+    xn.clear();
     count = 0;
-    first->tY = 0;
-    second->tX = 0;
+    fir->tY = 0;
+    sec->tX = 0;
     int i = 0;
     int value = 0;
     d_O[1] = 0;
     double K1, K2, K3, K4;
-    //while (second->tY>=0.5 && second->V>=0.5) second->tY>=0.5
-    while (second->tY>0 && second->V>0)
+    //while (sec->tY>=0.5 && sec->V>=0.5) sec->tY>=0.5
+    while (sec->tY>0 && sec->V>0)
     {
         airforce Qus_1 (Mah_1);
         airforce Qus_2 (Mah_2);
 
         focus F;
 
-        atmosphere Atm_1 (first->tY);
-        atmosphere Atm_2 (second->tY);
-        eastwind W1 (first->tY/1000);
-        eastwind W2 (second->tY/1000);
+        atmosphere Atm_1 (fir->tY);
+        atmosphere Atm_2 (sec->tY);
+        eastwind W1 (fir->tY/1000);
+        eastwind W2 (sec->tY/1000);
 
 
         // Участок работы ДУ-1
@@ -138,14 +140,14 @@ void pitch::pitch_calculations()
         {
             //if (m_t > M_Rocket-onefu )
             //{
-            first->Peng_t = Peng[0];
-            second->Peng_t = Peng[0];
-            second->Peng_control = second->Peng_t/2;
+            fir->Peng_t = peng[0];
+            sec->Peng_t = peng[0];
+            sec->Peng_control = sec->Peng_t/2;
             //+ (p_ground - P.get_pressure()) * Smid/2;
             Imp_t = Imp[0];
-            CF = first->Peng_t/Imp_t;
-            first-> m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
-            second->m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
+            CF = fir->Peng_t/Imp_t;
+            fir-> m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
+            sec->m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
             m_O[0] = Ratio*m_fuel[0]/(Ratio+1);
             m_C[0] = m_fuel[0]/(Ratio+1);
             m_fuel[0] -= CF*h;
@@ -153,47 +155,47 @@ void pitch::pitch_calculations()
             d_C[0] += CF*h/(440*Smid)/(Ratio+1);
             S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
             S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], m_C[0]);
-            // First в second->e не ошибка, а условность СК
-            first->Ssumm  = M.get_SGO() + first->S_dry[0] + first->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first->S_reO + first->S_reC;
-            second->Ssumm = M.get_SGO() + first->S_dry[0] + first->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + first->S_reO + first->S_reC;
-            first->gl_c = first->Ssumm/first->m_t;
-            second->gl_c = second->Ssumm/second->m_t;
+            // fir в sec->e не ошибка, а условность СК
+            fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+            sec->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+            fir->gl_c = fir->Ssumm/fir->m_t;
+            sec->gl_c = sec->Ssumm/sec->m_t;
 
             I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], D);
             I_c[0] = M.fun_I (M.K[10]+d_C[0], M.K[11], m_C[0], D);
-            first->Isumm  = M.get_IGO() + first->I_dry[0] + first->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first->I_reC +first->I_reO - first->m_t*pow (first->gl_c,2);
+            fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reC +fir->I_reO - fir->m_t*pow (fir->gl_c,2);
 
-            second->Isumm = M.get_IGO() + first->I_dry[0] + first->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + first->I_reC +first->I_reO - second->m_t*pow(second->gl_c,2);
-            Ix = first->m_t * pow(D/2, 2);
+            sec->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reC +fir->I_reO - sec->m_t*pow(sec->gl_c,2);
+            Ix = fir->m_t * pow(D/2, 2);
             //}
             //else T_fuel[0] = time;
             //if (abs(m_t - (M_Rocket-m_fuel[0])) < 100) T_fuel[0] = time;
-            first->L  = Lmax;
-            second->L = Lmax;
-            Ott_1 = first->anY;
-            H_1 = first->tY/1000;
+            fir->L  = Lmax;
+            sec->L = Lmax;
+            Ott_1 = fir->anY;
+            H_1 = fir->tY/1000;
             CILCON = 12.88;
             dep = count*h;
-            second->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
-            X_oneC = second->gl_c - second->focus;
-            X_twoC = second->L - second->gl_c;
+            sec->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
+            X_oneC = sec->gl_c - sec->focus;
+            X_twoC = sec->L - sec->gl_c;
         }
         // Участок разделения 1-2
         if (time >T_fuel[0] && time<=T_fuel[0] + T_sep[0])
         {
-            first->Peng_t = 0;
-            second->Peng_t = 0;
-            second->Peng_control = second->Peng_t/2;
+            fir->Peng_t = 0;
+            sec->Peng_t = 0;
+            sec->Peng_control = sec->Peng_t/2;
             Imp_t = 0;
             CF = 0;
-            first->m_t = m_fuel[1]+m_fuel[0]+m_dry[1]+mpn;
-            second->m_t = m_dry[0] + m_reC + m_reO;
-            first->Ssumm  = M.get_SGO() + first->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
-            second->Ssumm = second->S_dry[0] + second->S_reC + second->S_reO;
-            first->gl_c = first->Ssumm/first->m_t;
-            second->gl_c = second->Ssumm/second->m_t;
-            first->L = Lmax - L1;
-            second->L = L1;
+            fir->m_t = m_fuel[1]+m_fuel[0]+m_dry[1]+mpn;
+            sec->m_t = m_dry[0] + m_reC + m_reO;
+            fir->Ssumm  = M.get_SGO() + fir->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
+            sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
+            fir->gl_c = fir->Ssumm/fir->m_t;
+            sec->gl_c = sec->Ssumm/sec->m_t;
+            fir->L = Lmax - L1;
+            sec->L = L1;
             CILCON = 3.42;
             X_oneC = 0;
             X_twoC = 0;
@@ -202,13 +204,13 @@ void pitch::pitch_calculations()
         // Участок работы ДУ-2
         if (time>T_fuel[0] + T_sep[0] && time<=T_fuel[0] + T_sep[0]+T_fuel[1])
         {
-            first->Peng_t = Peng[1];
-            second->Peng_t = 0;
-            second->Peng_control = second->Peng_t/2;
+            fir->Peng_t = peng[1];
+            sec->Peng_t = 0;
+            sec->Peng_control = sec->Peng_t/2;
             Imp_t = Imp[1];
-            CF = first->Peng_t/Imp_t;
-            first->m_t = m_fuel[1]+m_fuel[0]+m_dry[1]+mpn;
-            second->m_t = m_dry[0] + m_reC + m_reO;
+            CF = fir->Peng_t/Imp_t;
+            fir->m_t = m_fuel[1]+m_fuel[0]+m_dry[1]+mpn;
+            sec->m_t = m_dry[0] + m_reC + m_reO;
 
             m_O[1] = Ratio*m_fuel[1]/(Ratio+1);
             m_C[1] = 1*m_fuel[1]/(Ratio+1);
@@ -218,26 +220,26 @@ void pitch::pitch_calculations()
             d_C[1] += CF*h /(440*Smid)/(Ratio+1);
             S_o[1] = M.fun_S (M.K[3]+d_O[1], M.K[4], m_O[1]);
             S_c[1] = M.fun_S (M.K[5]+d_C[1], M.K[6], m_C[1]);
-            first->Ssumm = M.get_SGO() + first->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
+            fir->Ssumm = M.get_SGO() + fir->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
 
             // std::cout << CF*h *Ratio/(1100*Smid)/(Ratio+1) << CF << std::endl;
 
-            second->Ssumm = second->S_dry[0] + second->S_reC + second->S_reO;
-            first->gl_c = first->Ssumm/first->m_t;
-            second->gl_c = second->Ssumm/second->m_t;
-            first->gl_c = first->gl_c/2;
-            second->gl_c = second->gl_c/2;
+            sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
+            fir->gl_c = fir->Ssumm/fir->m_t;
+            sec->gl_c = sec->Ssumm/sec->m_t;
+            fir->gl_c = fir->gl_c/2;
+            sec->gl_c = sec->gl_c/2;
             I_o[1] = M.fun_I (M.K[3]+d_O[1], M.K[4], m_O[1], D);
             I_c[1] = M.fun_I (M.K[5]+d_C[1], M.K[6], m_C[1], D);
-            first->Isumm = M.get_IGO() +first->I_dry[1]+ I_o[0] + I_c[0] + I_o[1] + I_c[1]- first->m_t*pow(first->gl_c,2);
-            second->Isumm = second->I_dry[0] + second->I_reC + second->I_reO - second->m_t*pow(second->gl_c,2);
-            first->Isumm = first->Isumm;
-            second->Isumm = second->Isumm;
-            Ix = first->m_t * pow(D/2, 2);
-            first->L = Lmax - L1;
-            second->L = L1;
+            fir->Isumm = M.get_IGO() +fir->I_dry[1]+ I_o[0] + I_c[0] + I_o[1] + I_c[1]- fir->m_t*pow(fir->gl_c,2);
+            sec->Isumm = sec->I_dry[0] + sec->I_reC + sec->I_reO - sec->m_t*pow(sec->gl_c,2);
+            fir->Isumm = fir->Isumm;
+            sec->Isumm = sec->Isumm;
+            Ix = fir->m_t * pow(D/2, 2);
+            fir->L = Lmax - L1;
+            sec->L = L1;
 
-            Ott_2 = first->anY;
+            Ott_2 = fir->anY;
             CILCON = 3.42;
             X_oneC = 0;
             X_twoC = 0;
@@ -245,19 +247,19 @@ void pitch::pitch_calculations()
         // Участок разделения 2-ПН
         if (time>T_fuel[0] + T_sep[0]+T_fuel[1] && time<=T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1])
         {
-            first->Peng_t = 0;
-            second->Peng_t = 0;
-            second->Peng_control = second->Peng_t/2;
+            fir->Peng_t = 0;
+            sec->Peng_t = 0;
+            sec->Peng_control = sec->Peng_t/2;
             Imp_t = 0;
             CF = 0;
-            first->m_t = m_dry[1]+mpn;
-            second->m_t = m_dry[0] + m_reC + m_reO;
-            first->Ssumm = M.get_SGO() + first->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1] ;
-            second->Ssumm = second->S_dry[0] + second->S_reC + second->S_reO;
-            first->gl_c = first->Ssumm/first->m_t;
-            second->gl_c = second->Ssumm/second->m_t;
-            first->L = Lmax - L1 - L2;
-            second->L = L1;
+            fir->m_t = m_dry[1]+mpn;
+            sec->m_t = m_dry[0] + m_reC + m_reO;
+            fir->Ssumm = M.get_SGO() + fir->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1] ;
+            sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
+            fir->gl_c = fir->Ssumm/fir->m_t;
+            sec->gl_c = sec->Ssumm/sec->m_t;
+            fir->L = Lmax - L1 - L2;
+            sec->L = L1;
 
             CILCON = 1.4;
             X_oneC = 0;
@@ -266,18 +268,18 @@ void pitch::pitch_calculations()
         // Участок полета ПН
         if (time>T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1])
         {
-            first->Peng_t = 0;
-            second->Peng_t = 0;
-            second->Peng_control = second->Peng_t/2;
+            fir->Peng_t = 0;
+            sec->Peng_t = 0;
+            sec->Peng_control = sec->Peng_t/2;
             Imp_t = 0;
             CF = 0;
-            first->m_t = mpn;
-            second->m_t = m_dry[0];
-            first->Ssumm = M.get_SGO() + S_o[0] + S_c[0] + S_o[1] + S_c[1];
-            second->Ssumm = second->S_dry[0] + second->S_reC + second->S_reO;
-            first->gl_c = first->Ssumm/first->m_t;
-            first->L = Lmax - L1 - L2;
-            second->L = L1;
+            fir->m_t = mpn;
+            sec->m_t = m_dry[0];
+            fir->Ssumm = M.get_SGO() + S_o[0] + S_c[0] + S_o[1] + S_c[1];
+            sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
+            fir->gl_c = fir->Ssumm/fir->m_t;
+            fir->L = Lmax - L1 - L2;
+            sec->L = L1;
             CILCON = 1.4;
             X_oneC = 0;
             X_twoC = 0;
@@ -288,42 +290,42 @@ void pitch::pitch_calculations()
         {
             if (m_furet>=0)
             {
-                if (time>k1 && time<k2) (second->Peng_t = kk1*Peng[0]);
-                if (time>k3 && time<k4) (second->Peng_t = kk2*Peng[0]);
-                second->Peng_control = second->Peng_t;
+                if (time>k1 && time<k2) (sec->Peng_t = kk1*peng[0]);
+                if (time>k3 && time<k4) (sec->Peng_t = kk2*peng[0]);
+                sec->Peng_control = sec->Peng_t;
                 Imp_t = Imp[0];
-                CF = second->Peng_t/Imp_t;
+                CF = sec->Peng_t/Imp_t;
                 m_reC -= CF*h * 1/(3.5+1);
                 m_reO -= CF*h * 3.5/(3.5+1);
                 m_furet = m_reC + m_reO;
-                second->m_t = m_dry[0] + m_reC + m_reO;
+                sec->m_t = m_dry[0] + m_reC + m_reO;
                 deo += CF*h *Ratio/(1100*Smid)/(Ratio+1);
                 dec += CF*h /(440*Smid)/(Ratio+1);
-                second->S_reO = M.fun_S (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO);
-                second->S_reC = M.fun_S (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC);
-                second->Ssumm = second->S_dry[0] + second->S_reC + second->S_reO;
-                second->gl_c = second->Ssumm/second->m_t;
-                second->I_reO = M.fun_I (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO, D);
-                second->I_reC = M.fun_I (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC, D);
-                second->Isumm = second->I_dry[0] + second->I_reC + second->I_reO - second->m_t*pow(second->gl_c,2);
-                second->Isumm = second->Isumm;
-                second->L = L1;
-                second->focus = 0.7*second->L;
-                X_oneC = second->gl_c - second->focus;
-                X_twoC = second->L - second->gl_c;
+                sec->S_reO = M.fun_S (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO);
+                sec->S_reC = M.fun_S (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC);
+                sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
+                sec->gl_c = sec->Ssumm/sec->m_t;
+                sec->I_reO = M.fun_I (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO, D);
+                sec->I_reC = M.fun_I (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC, D);
+                sec->Isumm = sec->I_dry[0] + sec->I_reC + sec->I_reO - sec->m_t*pow(sec->gl_c,2);
+                sec->Isumm = sec->Isumm;
+                sec->L = L1;
+                sec->focus = 0.7*sec->L;
+                X_oneC = sec->gl_c - sec->focus;
+                X_twoC = sec->L - sec->gl_c;
             };
 
 
         }
 
         // std::cout<<"t = "<<count*h<<std::endl;
-        // std::cout<<"H = "<<second->tY/1000<<std::endl;
-        // std::cout<<"V = "<<second->V<<std::endl;
+        // std::cout<<"H = "<<sec->tY/1000<<std::endl;
+        // std::cout<<"V = "<<sec->V<<std::endl;
         // std::cout<<"m = "<<m_reC+m_reO<<std::endl;
 
         // Программа угла атаки
-        alpha alph_1 (first->V,  coef_alpha [1], coef_alpha [2], time, T_stage [0], 0, k2, k3);
-        alpha alph_2 (second->V, coef_alpha [1],              0, time, 200, 180, k2, k3);
+        alpha alph_1 (fir->V,  kalph [1], kalph [2], time, T_stage [0], 0, k2, k3);
+        alpha alph_2 (sec->V, kalph [1],              0, time, 200, 180, k2, k3);
 
         // Учет параметров атмосферы
 
@@ -332,13 +334,13 @@ void pitch::pitch_calculations()
 
         //HSP = (P.get_density()/2)*pow(V,2);
         HSP_p_1 = HSP_1;
-        HSP_1 = (Atm_1.get_density()/2)*pow(first->V,2);
+        HSP_1 = (Atm_1.get_density()/2)*pow(fir->V,2);
         HSP_p_2 = HSP_2;
-        HSP_2 = (Atm_2.get_density()/2)*pow(second->V,2);
-        Mah_1 = first->V/Atm_1.get_SV();
-        Mah_2 = second->V/Atm_2.get_SV();
+        HSP_2 = (Atm_2.get_density()/2)*pow(sec->V,2);
+        Mah_1 = fir->V/Atm_1.get_SV();
+        Mah_2 = sec->V/Atm_2.get_SV();
 
-        first->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
+        fir->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
         //std::cout << Focus << std::endl;
         //Focus = M.Focus(Mah_1, D, M.get_lengo(), M.get_wgo());
         //qDebug()<<M.K[10]+d_C[0];
@@ -347,22 +349,22 @@ void pitch::pitch_calculations()
         if (time<T_stage[0]) {CY_1=Qus_1.getCY();  } else {CY_1=0;  }
         CX_2=Qus_2.getCX();
         CY_2=Qus_2.getCY();
-        bpr = ((Atm_1.get_density()/2*pow(first->V,2))*Smid*first->L*CY_1*first->alpha)/(first->Peng_t*(first->L-first->gl_c));
+        bpr = ((Atm_1.get_density()/2*pow(fir->V,2))*Smid*fir->L*CY_1*fir->alpha)/(fir->Peng_t*(fir->L-fir->gl_c));
 
-        equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), first->m_t, CX_1, CY_1, first->Peng_t, alph_1.A(), Wind1);
-        equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), second->m_t, CX_2, CY_2, second->Peng_t, alph_2.A(), Wind2);
+        equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), fir->m_t, CX_1, CY_1, fir->Peng_t, alph_1.A(), Wind1);
+        equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), sec->m_t, CX_2, CY_2, sec->Peng_t, alph_2.A(), Wind2);
 
-        //dV = B_1.fdV(first->V, first->anY);
-        dN = B_1.fdN(first->tY, first->V, first->anY);
+        //dV = B_1.fdV(fir->V, fir->anY);
+        dN = B_1.fdN(fir->tY, fir->V, fir->anY);
 
-        Ott = first->anY-Na;
-        pitch_angle = Ott-first->alpha/57.3;
+        Ott = fir->anY-Na;
+        pitch_angle = Ott-fir->alpha/57.3;
 
-        first->tX += h * (first->V* cos(first->anY)+X1)/2;
-        second->tX += h * (second->V* cos(second->anY)+X2)/2;
+        fir->tX += h * (fir->V* cos(fir->anY)+X1)/2;
+        sec->tX += h * (sec->V* cos(sec->anY)+X2)/2;
 
-        X1 = first->V* cos(first->anY);
-        X2 = second->V* cos(second->anY);
+        X1 = fir->V* cos(fir->anY);
+        X2 = sec->V* cos(sec->anY);
 
 
         Wind1 = W1.WSol();
@@ -372,7 +374,7 @@ void pitch::pitch_calculations()
         {
 
             MHSP_1 = HSP_1;
-            VHSP_1 = first->V;
+            VHSP_1 = fir->V;
             e+=1;
         }
 
@@ -380,38 +382,38 @@ void pitch::pitch_calculations()
         {
 
             MHSP_2 = HSP_2;
-            VHSP_2 = second->V;
+            VHSP_2 = sec->V;
             e+=1;
         }
         //  if  (HSP_2>90000)  {HSP_2=HSP_1;}
         time+=h;
         Na  += dN*h;
-        if (first->m_t>mpn)
+        if (fir->m_t>mpn)
         {
 
-            //double me = first->anY;
+            //double me = fir->anY;
 
-            first->tY += first->V* sin(first->anY) *h;
+            fir->tY += fir->V* sin(fir->anY) *h;
 
-            K1 = B_1.fdV(first->V, first->anY);
-            K2 = B_1.fdV(first->V+h/2*K1, first->anY+h/2);
-            K3 = B_1.fdV(first->V+h/2*K2, first->anY+h/2);
-            K4 = B_1.fdV(first->V+h*K3, first->anY+h);
-            first->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
+            K1 = B_1.fdV(fir->V, fir->anY);
+            K2 = B_1.fdV(fir->V+h/2*K1, fir->anY+h/2);
+            K3 = B_1.fdV(fir->V+h/2*K2, fir->anY+h/2);
+            K4 = B_1.fdV(fir->V+h*K3, fir->anY+h);
+            fir->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
 
-            K1 = B_1.fdY(first->tY, first->V, first->anY);
-            K2 = B_1.fdY(first->tY+h/2, first->V+h/2, first->anY+h/2*K1);
-            K3 = B_1.fdY(first->tY+h/2, first->V+h/2, first->anY+h/2*K2);
-            K4 = B_1.fdY(first->tY+h, first->V+h, first->anY+h*K3);
-            first->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
+            K1 = B_1.fdY(fir->tY, fir->V, fir->anY);
+            K2 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K1);
+            K3 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K2);
+            K4 = B_1.fdY(fir->tY+h, fir->V+h, fir->anY+h*K3);
+            fir->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
 
-            //first->V += Runge_Kutt(&B_1.fdV, first->V, first->anY, h);
-            //first->anY += (B_1.fdY(first->tY, first->V, first->anY)+Y1)/2*h;
+            //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
+            //fir->anY += (B_1.fdY(fir->tY, fir->V, fir->anY)+Y1)/2*h;
 
 
-            H11 = first->V* sin(first->anY);
-            V1 = B_1.fdV(first->V, first->anY);
-            Y1 = B_1.fdY(first->tY, first->V, first->anY);
+            H11 = fir->V* sin(fir->anY);
+            V1 = B_1.fdV(fir->V, fir->anY);
+            Y1 = B_1.fdY(fir->tY, fir->V, fir->anY);
 
 
             std::cout << zXY/1000  << std::endl;
@@ -420,8 +422,8 @@ void pitch::pitch_calculations()
             VZ += h*B_1.dVZ(velXY, Ott, Na);
             velXY = sqrt(VX*VX+VY*VY+VZ*VZ);
             trjXY = acos(VX/velXY);
-            xXY += h*VX * cos(first->anY) / cos(Ott);
-            yXY += h*VY * sin(first->anY) / sin(Ott);
+            xXY += h*VX * cos(fir->anY) / cos(Ott);
+            yXY += h*VY * sin(fir->anY) / sin(Ott);
             zXY += h*VZ;
             norXY = atan(xXY/(6371000+yXY));
             //
@@ -439,70 +441,72 @@ void pitch::pitch_calculations()
 
 
 
-            second->tY += (second->V* sin(second->anY)+H22)/2*h;
-            second->V  += (B_2.returndV(second->V, second->anY)+V2)/2*h; //return
-            second->anY  += (B_2.returndY(second->tY, second->V, second->anY)+Y2)/2*h;  //return
+            sec->tY += (sec->V* sin(sec->anY)+H22)/2*h;
+            sec->V  += (B_2.returndV(sec->V, sec->anY)+V2)/2*h; //return
+            sec->anY  += (B_2.returndY(sec->tY, sec->V, sec->anY)+Y2)/2*h;  //return
 
 
-            V2 = B_2.returndV(second->V, second->anY);
-            Y2 = B_2.returndY(second->tY, second->V, second->anY);
-            H22 = second->V* sin(second->anY);
+            V2 = B_2.returndV(sec->V, sec->anY);
+            Y2 = B_2.returndY(sec->tY, sec->V, sec->anY);
+            H22 = sec->V* sin(sec->anY);
 
         }
         else
         {
-            second->tY += (second->V* sin(second->anY)+H22)/2*h;
-            second->V  += (B_2.fdV(second->V, second->anY)+V2)/2*h;
-            second->anY  += (B_2.fdY(second->tY, second->V, second->anY)+Y2)/2*h;
+            sec->tY += (sec->V* sin(sec->anY)+H22)/2*h;
+            sec->V  += (B_2.fdV(sec->V, sec->anY)+V2)/2*h;
+            sec->anY  += (B_2.fdY(sec->tY, sec->V, sec->anY)+Y2)/2*h;
 
-            V2 = B_2.fdV(second->V, second->anY);
-            Y2 = B_2.fdY(second->tY, second->V, second->anY);
-            H22 = second->V* sin(second->anY);
+            V2 = B_2.fdV(sec->V, sec->anY);
+            Y2 = B_2.fdY(sec->tY, sec->V, sec->anY);
+            H22 = sec->V* sin(sec->anY);
         }
 
-        //qDebug()<<second->tY;
-        P->xn.push_back(time);
-        P->yu_1.push_back(HSP_1);
-        P->yu_2.push_back(HSP_2);
-        P->center_1.push_back(first->gl_c);
-        P->center_2.push_back(second->gl_c);
-        P->v_1.push_back(first->V);
-        P->v_2.push_back(second->V);
-        P->sinn.push_back(first->Ssumm);
-        P->jinn.push_back(first->Isumm);
-        P->jinn2.push_back(second->Isumm);
-        P->CM.push_back(first->Ssumm/first->m_t);
-        P->mass_1.push_back(first->m_t);
-        P->mass_2.push_back(second->m_t);
-        P->Long_1.push_back(first->tX/1000);
-        P->Long_2.push_back(second->tX/1000);
-        P->w.push_back(Wind2);
-        P->H1.push_back(first->tY/1000);
-        P->H2.push_back(second->tY/1000);
-        P->angle.push_back(pitch_angle*57.3);
-        P->b1.push_back(HSP_1*Smid*CX_1);
-        P->b2.push_back(HSP_2*Smid*CX_2);
-        P->lin.push_back(Ix);
-        P->ALI_1.push_back(alph_1.A());
-        P->ALI_2.push_back(alph_2.A());
-        //ALI.push_back(first->Peng_t/ (first->m_t*Atm_1.get_AOG()));
-        P->res.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
-        P->TET_1.push_back(first->anY*57.3);
-        P->TET_2.push_back(second->anY*57.3);
-        P->be.push_back(bpr*57.3);
-        P->pi.push_back(pitch_angle*57.3);
-        P->P1.push_back(first->Peng_t);
-        P->P2.push_back(second->Peng_t);
-        P->f1.push_back(first->focus);
-        P->Lon.push_back(first->Peng_t/(first->m_t*Atm_1.get_AOG()));
-        P->Lonre.push_back(second->Peng_t/(second->m_t*Atm_2.get_AOG()));
-        P->pc2.push_back(second->Peng_control);
-        P->cy2.push_back(CY_2);
+        //qDebug()<<sec->tY;
+        xn.push_back(time);
+        yu_1.push_back(HSP_1);
+        yu_2.push_back(HSP_2);
+        center_1.push_back(fir->gl_c);
+        center_2.push_back(sec->gl_c);
+        v_1.push_back(fir->V);
+        v_2.push_back(sec->V);
+        sinn.push_back(fir->Ssumm);
+        jinn.push_back(fir->Isumm);
+        jinn2.push_back(sec->Isumm);
+        CM.push_back(fir->Ssumm/fir->m_t);
+        mass_1.push_back(fir->m_t);
+        mass_2.push_back(sec->m_t);
+        Long_1.push_back(fir->tX/1000);
+        Long_2.push_back(sec->tX/1000);
+        w.push_back(Wind2);
+        H1.push_back(fir->tY/1000);
+        H2.push_back(sec->tY/1000);
+        angle.push_back(pitch_angle*57.3);
+        b1.push_back(HSP_1*Smid*CX_1);
+        b2.push_back(HSP_2*Smid*CX_2);
+        lin.push_back(Ix);
+        ALI_1.push_back(alph_1.A());
+        ALI_2.push_back(alph_2.A());
+        //ALI.push_back(fir->Peng_t/ (fir->m_t*Atm_1.get_AOG()));
+        res.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
+        TET_1.push_back(fir->anY*57.3);
+        TET_2.push_back(sec->anY*57.3);
+        be.push_back(bpr*57.3);
+        pi.push_back(pitch_angle*57.3);
+        P1.push_back(fir->Peng_t);
+        P2.push_back(sec->Peng_t);
+        f1.push_back(fir->focus);
+        Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
+        Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
+        pc2.push_back(sec->Peng_control);
+        cy2.push_back(CY_2);
         //std::cout << CY_2 << std::endl;
-        P->dyn1.push_back(X_oneC);
-        P->dyn2.push_back(X_twoC);
+        dyn1.push_back(X_oneC);
+        dyn2.push_back(X_twoC);
 
-        //std::cout<<first->gl_c<<std::endl;
+        //std::cout<<fir->gl_c<<std::endl;
         amax = alph_1.A();
         count+=1;
+        MaxTime = count*h;
+    }
 }

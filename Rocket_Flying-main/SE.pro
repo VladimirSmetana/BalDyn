@@ -14,6 +14,7 @@ SOURCES += \
     alpha.cpp \
     atmosphere.cpp \
     dycoef.cpp \
+    dynamic_mass.cpp \
     eastwind.cpp \
     equations.cpp \
     focus.cpp \
@@ -30,6 +31,7 @@ HEADERS += \
     block.h \
     dycoef.h \
     dynamic.h \
+    dynamic_mass.h \
     eastwind.h \
     equations.h \
     focus.h \
