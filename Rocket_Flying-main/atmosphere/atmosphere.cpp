@@ -1,4 +1,4 @@
-#include "atmosphere.h"
+#include "atmosphere/atmosphere.h"
 
     atmosphere::atmosphere (double H)
     {

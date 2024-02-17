@@ -1,4 +1,4 @@
-#include "eastwind.h"
+#include "atmosphere/eastwind.h"
 
     eastwind::eastwind (double H)
     {

@@ -10,11 +10,11 @@ QMAKE_CXXFLAGS += -Wa,-mbig-obj
 
 SOURCES += \
     DyEq.cpp \
-    airforce.cpp \
+    atmosphere/airforce.cpp \
     alpha.cpp \
-    atmosphere.cpp \
+    atmosphere/atmosphere.cpp \
+    atmosphere/eastwind.cpp \
     dycoef.cpp \
-    eastwind.cpp \
     equations.cpp \
     flight.cpp \
     focus.cpp \
@@ -25,13 +25,13 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
-    airforce.h \
     alpha.h \
-    atmosphere.h \
+    atmosphere/airforce.h \
+    atmosphere/atmosphere.h \
+    atmosphere/eastwind.h \
     block.h \
     dycoef.h \
     dynamic.h \
-    eastwind.h \
     equations.h \
     flight.h \
     focus.h \

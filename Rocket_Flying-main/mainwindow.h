@@ -7,9 +7,9 @@
 //#include "eastwind.h"
 //#include "mass.h"
 
-#include "block.h"
-#include "alpha.h"
-#include "focus.h"
+//#include "block.h"
+//#include "alpha.h"
+//#include "focus.h"
 #include "dycoef.h"
 #include "flight.h"
 #include <thread>
@@ -33,7 +33,7 @@ public:
     // Создание объектов
 //    std::unique_ptr<block> first = std::make_unique<block>();
 //    std::unique_ptr<block> second = std::make_unique<block>();
-    std::unique_ptr<flight> P = std::make_unique<flight>();
+
     //block first;
 //    block second;
     // Исходные данные РН
