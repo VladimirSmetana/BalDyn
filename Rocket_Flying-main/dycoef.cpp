@@ -3,7 +3,7 @@
 double DC::PI()
 {
     return 3.1415926535;
-};
+}
 
 void DC::print(double ct, double t)
 {

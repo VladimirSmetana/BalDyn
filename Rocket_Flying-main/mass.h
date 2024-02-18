@@ -78,9 +78,6 @@ class  mass
     double get_wgo();
     double get_lengo();
     double get_CIL();
-
-
-
 };
 
 

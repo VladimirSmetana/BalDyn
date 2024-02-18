@@ -5,21 +5,21 @@ pitch::pitch()
 
 }
 
-void pitch::pitch_calculations
-    (double time,
-     double T_stage, //T_stage[0]
-     double (&vel)[2],
-     double (&k)[4],
-     double (&kalph)[3],
-     double (&H)[2], //fir/sec->tY // Не забудь поставить изменение величины через &
-     double (&anY)[2], //fir/sec->anY
-     double (&Mah)[2], // Mah_1, Mah_2
-     double Smid,
-     double (&mass)[2],
-     double (&peng)[2],
-     double Ott, // Не забудь поставить изменение величины через &
-     double h,
-     double mpn)
+void pitch::pitch_calculations()
+//    (double time,
+//     double T_stage, //T_stage[0]
+//     double (&vel)[2],
+//     double (&k)[4],
+//     double (&kalph)[3],
+//     double (&H)[2], //fir/sec->tY // Не забудь поставить изменение величины через &
+//     double (&anY)[2], //fir/sec->anY
+//     double (&Mah)[2], // Mah_1, Mah_2
+//     double Smid,
+//     double (&mass)[2],
+//     double (&peng)[2],
+//     double Ott, // Не забудь поставить изменение величины через &
+//     double h,
+//     double mpn)
 {
     // Программа угла атаки
     // ________________________________________________________________________
@@ -31,8 +31,8 @@ void pitch::pitch_calculations
     airforce Qus_2 (Mah[1]);
 
 
-    alpha alph_1 (vel[0],  kalph [1], kalph [2], time,    T_stage, 0,   k[1], k[2]);
-    alpha alph_2 (vel[1],  kalph [1], 0,         time,    200,     180, k[1], k[2]);
+    alpha_class alph_1 (vel[0],  kalph [1], kalph [2], time,    T_stage, 0,   k[1], k[2]);
+    alpha_class alph_2 (vel[1],  kalph [1], 0,         time,    200,     180, k[1], k[2]);
 
     // Учет параметров атмосферы
 
@@ -57,6 +57,10 @@ void pitch::pitch_calculations
 
     equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), mass[0], CX_1, CY_1, peng[0], alph_1.A(), Wind1);
     equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), mass[1], CX_2, CY_2, peng[1], alph_2.A(), Wind2);
+    alpha[0] = alph_1.A();
+    alpha[1] = alph_2.A();
+    AOG[0] = Atm_1.get_AOG();
+    AOG[1] = Atm_2.get_AOG();
 
     //dV = B_1.fdV(vel[0], Y[0]);
     dN = B_1.fdN(H[0], vel[0], anY[0]);
@@ -112,12 +116,12 @@ void pitch::pitch_calculations
 //        Y[0] += (K1 + k[1]*2 + k[2]*2 + K4)/6*h;
 
         //vel[0] += Runge_Kutt(&B_1.fdV, vel[0], Y[0], h);
-        Y[0] += (B_1.fdY(fir->tY, vel[0], Y[0])+Y1)/2*h;
+        H[0] += (B_1.fdY(H[0], vel[0], anY[0])+Y1)/2*h;
 
 
-        H11 = vel[0]* sin(Y[0]);
-        V1 = B_1.fdV(vel[0], Y[0]);
-        Y1 = B_1.fdY(fir->tY, vel[0], Y[0]);
+        H11 = vel[0]* sin(anY[0]);
+        V1 = B_1.fdV(vel[0], anY[0]);
+        Y1 = B_1.fdY(H[0], vel[0], anY[0]);
 
 
         std::cout << zXY/1000  << std::endl;
@@ -126,8 +130,8 @@ void pitch::pitch_calculations
         VZ += h*B_1.dVZ(velXY, Ott, Na);
         velXY = sqrt(VX*VX+VY*VY+VZ*VZ);
         trjXY = acos(VX/velXY);
-        xXY += h*VX * cos(Y[0]) / cos(Ott);
-        yXY += h*VY * sin(Y[0]) / sin(Ott);
+        xXY += h*VX * cos(anY[0]) / cos(Ott);
+        yXY += h*VY * sin(anY[0]) / sin(Ott);
         zXY += h*VZ;
         norXY = atan(xXY/(6371000+yXY));
         //
@@ -139,31 +143,28 @@ void pitch::pitch_calculations
 
     }
 
-    if (time >T_fuel[0])
+    if (time >T_fuel)
     //if ((time>k1 && time<k[1]) || (time>k[2] && time<k4))
     {
+        H[1] += (vel[1]* sin(anY[1])+H22)/2*h;
+        vel[1]  += (B_2.returndV(vel[1], H[1])+V2)/2*h; //return
+        anY[1]  += (B_2.returndY(H[1], vel[1], anY[1])+Y2)/2*h;  //return
 
 
-
-        sec->tY += (vel[1]* sin(Y[1])+H22)/2*h;
-        vel[1]  += (B_2.returndV(vel[1], Y[1])+V2)/2*h; //return
-        Y[1]  += (B_2.returndY(sec->tY, vel[1], Y[1])+Y2)/2*h;  //return
-
-
-        V2 = B_2.returndV(vel[1], Y[1]);
-        Y2 = B_2.returndY(sec->tY, vel[1], Y[1]);
-        H22 = vel[1]* sin(Y[1]);
+        V2 = B_2.returndV(vel[1], anY[1]);
+        Y2 = B_2.returndY(H[1], vel[1], anY[1]);
+        H22 = vel[1]* sin(anY[1]);
 
     }
     else
     {
-        sec->tY += (vel[1]* sin(Y[1])+H22)/2*h;
-        vel[1]  += (B_2.fdV(vel[1], Y[1])+V2)/2*h;
-        Y[1]  += (B_2.fdY(sec->tY, vel[1], Y[1])+Y2)/2*h;
+        H[1] += (vel[1]* sin(anY[1])+H22)/2*h;
+        vel[1]  += (B_2.fdV(vel[1], anY[1])+V2)/2*h;
+        anY[1]  += (B_2.fdY(H[1], vel[1], anY[1])+Y2)/2*h;
 
-        V2 = B_2.fdV(vel[1], Y[1]);
-        Y2 = B_2.fdY(sec->tY, vel[1], Y[1]);
-        H22 = vel[1]* sin(Y[1]);
+        V2 = B_2.fdV(vel[1], anY[1]);
+        Y2 = B_2.fdY(H[1], vel[1], anY[1]);
+        H22 = vel[1]* sin(anY[1]);
     }
 
 

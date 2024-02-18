@@ -31,7 +31,7 @@ public:
     ~MainWindow();
 public:
     // Создание объектов
-//    std::unique_ptr<block> first = std::make_unique<block>();
+    std::unique_ptr<flight> P = std::make_unique<flight>();
 //    std::unique_ptr<block> second = std::make_unique<block>();
 
     //block first;

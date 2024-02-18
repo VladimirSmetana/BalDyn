@@ -1,6 +1,6 @@
 #include "alpha.h"
 
-alpha::alpha (double Vel, double k1, double k2, double time, double septime, int def, int tv1, int tv2)
+alpha_class::alpha_class (double Vel, double k1, double k2, double time, double septime, int def, int tv1, int tv2)
 {
     this->Vel = Vel;
     this->k1 = k1;
@@ -12,7 +12,7 @@ alpha::alpha (double Vel, double k1, double k2, double time, double septime, int
     this->tv2 = tv2;
 }
 
-double alpha::A()
+double alpha_class::A()
 {
     if (Vel>50 && Vel<270 && time <= septime)
     {

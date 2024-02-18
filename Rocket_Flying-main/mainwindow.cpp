@@ -79,11 +79,12 @@ void MainWindow::on_action_triggered()
     P->flight_calculations(coef_alpha, kpeng);
 
     //db.close();
-    QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
+    QString mk2s = QString::number(P->pit.vel[0]);        ui->lineEdit  ->setText(mk2s);
+
     QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
     QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
     QString mk5s = QString::number(P->sec->tX/1000); ui->lineEdit_7->setText(mk5s);
-    QString mk6s = QString::number(P->MHSP_1);    ui->lineEdit_6->setText(mk6s);
+    QString mk6s = QString::number(P->pit.MHSP_1);    ui->lineEdit_6->setText(mk6s);
     QString mk8s = QString::number(57.3*P->Ott_1);       ui->lineEdit_8->setText(mk8s);
     QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
     QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);

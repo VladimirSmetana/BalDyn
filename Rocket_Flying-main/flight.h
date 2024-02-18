@@ -111,6 +111,9 @@ public:
     double X_twoC;
     double MaxTime;
 
+    double AOG[2];
+    double alpha[2];
+
     void flight_calculations(double (&kalph)[3], double (&peng)[2]);
 
 };

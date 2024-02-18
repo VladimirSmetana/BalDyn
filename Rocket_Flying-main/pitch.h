@@ -35,22 +35,29 @@ public:
     double pitch_angle;
     double Len[2];
 
+    //    (double time,
+    double T_stage; //T_stage[0]
+    double vel [2];
+    double k[4];
+    double kalph[3];
+    double H[2]; //fir/sec->tY // Не забудь поставить изменение величины через &
+    double anY[2]; //fir/sec->anY
+    double Mah[2]; // Mah_1, Mah_2
+    double Smid;
+    double mass[2];
+    double peng[2];
+    double Ott; // Не забудь поставить изменение величины через &
+    double h;
+    double mpn;
+    double T_fuel;
+    double alpha[2];
+    double AOG[2];
 
-    void pitch_calculations
-        (double time,
-         double T_stage, //T_stage[0]
-         double (&vel)[2],
-         double (&k)[4],
-         double (&kalph)[3],
-         double (&H)[2], //fir/sec->tY
-         double (&anY)[2], //fir/sec->anY
-         double (&Mah)[2], // Mah_1, Mah_2
-         double Smid,
-         double (&mass)[2],
-         double (&peng)[2],
-         double Ott, // Не забудь поставить изменение величины через &
-         double h,
-         double mpn);
+
+
+    void pitch_calculations();
+
+
 };
 
 #endif // PITCH_H
