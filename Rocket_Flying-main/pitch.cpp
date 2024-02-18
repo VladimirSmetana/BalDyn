@@ -395,20 +395,22 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
             fir->tY += fir->V* sin(fir->anY) *h;
 
-            K1 = B_1.fdV(fir->V, fir->anY);
-            K2 = B_1.fdV(fir->V+h/2*K1, fir->anY+h/2);
-            K3 = B_1.fdV(fir->V+h/2*K2, fir->anY+h/2);
-            K4 = B_1.fdV(fir->V+h*K3, fir->anY+h);
-            fir->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
+//            K1 = B_1.fdV(fir->V, fir->anY);
+//            K2 = B_1.fdV(fir->V+h/2*K1, fir->anY+h/2);
+//            K3 = B_1.fdV(fir->V+h/2*K2, fir->anY+h/2);
+//            K4 = B_1.fdV(fir->V+h*K3, fir->anY+h);
+//            fir->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
 
-            K1 = B_1.fdY(fir->tY, fir->V, fir->anY);
-            K2 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K1);
-            K3 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K2);
-            K4 = B_1.fdY(fir->tY+h, fir->V+h, fir->anY+h*K3);
-            fir->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
+//            K1 = B_1.fdY(fir->tY, fir->V, fir->anY);
+//            K2 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K1);
+//            K3 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K2);
+//            K4 = B_1.fdY(fir->tY+h, fir->V+h, fir->anY+h*K3);
+//            fir->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
 
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
-            //fir->anY += (B_1.fdY(fir->tY, fir->V, fir->anY)+Y1)/2*h;
+            fir->V   += (B_1.fdV(fir->V, fir->anY) + V1)/2*h;
+            fir->anY += (B_1.fdY(fir->tY, fir->V, fir->anY)+Y1)/2*h;
+
 
 
             H11 = fir->V* sin(fir->anY);
