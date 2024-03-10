@@ -2,10 +2,10 @@
 #define MAINWINDOW_H
 #include <QMainWindow>
 #include <qcustomplot.h>
-//#include "equations.h"
-//#include "atmosphere.h"
-//#include "eastwind.h"
-//#include "mass.h"
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
+
 
 #include "block.h"
 #include "alpha.h"
@@ -52,7 +52,8 @@ public:
     void drawing(QVector<double> Y1, double y0,  double yk,
                  QVector<double> X1, double x0 , double xk);
 
-
+    void dirty_drawing(QVector<double> Y1, double y0,  double yk,
+                                   QVector<double> X1, double x0 , double xk);
 
     double Runge_Kutt(double func(double, double),
                     double XX, double YY,

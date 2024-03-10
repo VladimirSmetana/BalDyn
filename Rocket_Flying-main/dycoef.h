@@ -14,6 +14,7 @@ class DC
 public:
 
     double PI();
+    double const lamb [5] {4.73, 7.853, 10.996, 14.137, 17.279};
     QVector<double> times;
     QVector<double> Cbs;
     QVector<double> Cyws;
@@ -34,6 +35,9 @@ public:
     QVector<double> get_w; QVector<double> get_W();
     QVector<double> get_s; QVector<double> get_S();
 
+    QVector<double> form[5];
+    QVector<double> lenght;
+
     void print(double ct, double t);
     void data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H2,
                       QVector<double> w, QVector<double> mass_2, QVector<double> P2,
@@ -42,6 +46,8 @@ public:
                       QVector<double> jinn2);
 
     void data_calculating(double P, double I, double D);
+    void const_par(double len, double mass);
+    void ver_par(double mass);
 };
 
 

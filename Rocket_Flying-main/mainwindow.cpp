@@ -29,6 +29,17 @@ QVector<double> X1, double x0 , double xk)
     ui->widget->yAxis->setRange(y0, yk);
     ui->widget->replot();
 }
+
+void MainWindow::dirty_drawing(QVector<double> Y1, double y0,  double yk,
+                         QVector<double> X1, double x0 , double xk)
+{
+    ui->widget->addGraph();
+    ui->widget->graph(0)->setData(X1, Y1);
+    ui->widget->graph(0)->setPen(QPen(Qt::red));
+    ui->widget->xAxis->setRange(x0, xk);
+    ui->widget->yAxis->setRange(y0, yk);
+    ui->widget->replot();
+}
 // -
 void MainWindow::drawing(QVector<double> Y1,
                          QVector<double> Y2, double y0,  double yk,
@@ -100,6 +111,8 @@ void MainWindow::on_action_triggered()
     ui->label_4->show();
     ui->label_5->show();
     ui->action_2->setEnabled(true);
+
+
 }
 
 // График перегрузки
@@ -231,18 +244,26 @@ void MainWindow::on_Xmoment_Button_clicked()
 // Управление ПИД
 void MainWindow::on_action_5_triggered()
 {
-    DC d;
-    d.data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
+    QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
+    std::unique_ptr<DC> d = std::make_unique<DC>();
+    //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
+    double P_control = P->P1/2;
+    double X_1;
+    double X_2;
+    d->const_par(64.4, 513000);
 
-    QString k14=ui->lineEdit_14->text(); double P = k14.toDouble();
-    QString k15=ui->lineEdit_15->text(); double I = k15.toDouble();
-    QString k16=ui->lineEdit_16->text(); double D = k16.toDouble();
-    d.get_T().clear();
-    d.get_V().clear();
-    d.data_calculating(P, I, D);
+    for (auto it = P->mass_1.begin(); it!=P->mass_1.end();it++)
+    {
+        d->ver_par(*it);
+    }
 
-    ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Отклонение по тангажу, м");
+    drawing(d->form[0], -1, 1, d->lenght, 0, 64.4);
+    for (int i=1;i<5;i++)
+    {
+        ui->widget->addGraph();
+        ui->widget->graph(i)->setData(d->lenght, d->form[i]);
+        ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->replot();
+    }
 
-    drawing(d.get_V(), -20, 20, d.get_T(), 405, 440);
 }

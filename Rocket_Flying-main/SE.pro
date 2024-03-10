@@ -30,7 +30,6 @@ HEADERS += \
     atmosphere.h \
     block.h \
     dycoef.h \
-    dynamic.h \
     dynamic_mass.h \
     eastwind.h \
     equations.h \

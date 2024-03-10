@@ -1,4 +1,5 @@
 #include "dycoef.h"
+#include <QDebug>
 
 double DC::PI()
 {
@@ -106,6 +107,47 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
 
     }
+
+    void DC::const_par(double len, double mass)
+    {
+
+        double a [5];
+        double K[3], Y[5];
+        double f[5];
+
+
+
+        for (int i=0;i<5;i++)
+        {
+            a[i] = lamb [i]/(len);
+            K[0] = cosh(lamb [i]) - cos(lamb [i]);
+            K[1] = sinh(lamb [i]) - sin(lamb [i]);
+            K[2] = - K[1];
+            Y[i] = K[0]/K[2];
+
+            for (double x = 0;x<=len;x+=0.1)
+            {
+                lenght.push_back(x);
+                f[i] =  ((sin(a[i]*x)+sinh(a[i]*x))*Y[i]+(cos(a[i]*x)+cosh(a[i]*x)))/2;
+                form[i].push_back(f[i]);
+
+            }
+        }
+    }
+
+    void DC::ver_par(double mass)
+    {
+        double Ms[5];
+        double Mx = mass*0.1/64.4;
+        for (int i=0;i<5;i++)
+        {
+            for (auto it = form[i].begin(); it!=form[i].end();it++)
+            {
+                Ms[i] += Mx*pow(*it,2)*0.1;
+            }
+        }
+    }
+
     void DC::data_calculating(double P, double I, double D)
     {
         double PI = 3.1415926535;
