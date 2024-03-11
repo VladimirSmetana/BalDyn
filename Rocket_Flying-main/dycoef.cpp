@@ -116,7 +116,6 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
         double f[5];
 
 
-
         for (int i=0;i<5;i++)
         {
             a[i] = lamb [i]/(len);
@@ -130,22 +129,32 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
                 lenght.push_back(x);
                 f[i] =  ((sin(a[i]*x)+sinh(a[i]*x))*Y[i]+(cos(a[i]*x)+cosh(a[i]*x)))/2;
                 form[i].push_back(f[i]);
-
             }
         }
     }
 
-    void DC::ver_par(double mass)
+    void DC::ver_par(double mass, double p, double p_con,
+                     double q, double cy, double x1, double x2, double vel, double iner)
     {
-        double Ms[5];
+        double S = M_PI*pow(4.1,2)/4;
         double Mx = mass*0.1/64.4;
         for (int i=0;i<5;i++)
         {
-            for (auto it = form[i].begin(); it!=form[i].end();it++)
+            Ms[i] = 0;
+            for (int k=0;k<=form[i].size();k++)
             {
-                Ms[i] += Mx*pow(*it,2)*0.1;
+                Ms[i] += Mx*pow(form[i][k],2)*0.1;
             }
+            ms_vec[i].push_back(Ms[i]);
         }
+        Cbs.push_back(p_con/mass);
+        Cyws.push_back(-(p+cy/57.3*q*S)/mass);
+        Cwws.push_back((-cy/57.3*q*S*x1)/iner);
+        Cyys.push_back((cy/57.3*q*S)/(mass*vel));
+        Cwys.push_back((cy/57.3*q*S*x1)/iner/vel);
+        Cwbs.push_back(p_con*x2/iner);
+
+        Csbs.push_back(p_con/iner);
     }
 
     void DC::data_calculating(double P, double I, double D)

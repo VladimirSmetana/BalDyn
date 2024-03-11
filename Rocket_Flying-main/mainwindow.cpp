@@ -175,7 +175,7 @@ void MainWindow::on_T_angle_Button_clicked()
 void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Максимальный скоростной напор, Па");
+    ui->widget->yAxis->setLabel("Скоростной напор, Па");
     drawing(P->yu_1, P->yu_2, 0, *std::max_element(P->yu_2.begin(),P->yu_2.end()), P->xn, P->xn, 0, P->MaxTime);
 }
 
@@ -247,14 +247,15 @@ void MainWindow::on_action_5_triggered()
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
     std::unique_ptr<DC> d = std::make_unique<DC>();
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
-    double P_control = P->P1/2;
     double X_1;
     double X_2;
     d->const_par(64.4, 513000);
 
-    for (auto it = P->mass_1.begin(); it!=P->mass_1.end();it++)
+    for (int i=0;i<P->mass_2.size(); i++)
     {
-        d->ver_par(*it);
+        d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
+                   P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i]);
+
     }
 
     drawing(d->form[0], -1, 1, d->lenght, 0, 64.4);

@@ -35,8 +35,12 @@ public:
     QVector<double> get_w; QVector<double> get_W();
     QVector<double> get_s; QVector<double> get_S();
 
+    QVector<double> ms_vec[5];
+
     QVector<double> form[5];
     QVector<double> lenght;
+
+    double Ms[5];
 
     void print(double ct, double t);
     void data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H2,
@@ -47,7 +51,8 @@ public:
 
     void data_calculating(double P, double I, double D);
     void const_par(double len, double mass);
-    void ver_par(double mass);
+    void ver_par(double mass, double p, double p_con,
+                        double q, double cy, double x1, double x2, double vel, double iner);
 };
 
 
