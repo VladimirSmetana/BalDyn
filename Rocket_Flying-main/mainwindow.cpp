@@ -244,20 +244,42 @@ void MainWindow::on_Xmoment_Button_clicked()
 // Управление ПИД
 void MainWindow::on_action_5_triggered()
 {
-    QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
-    std::unique_ptr<DC> d = std::make_unique<DC>();
+
+
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
     double X_1;
     double X_2;
-    d->const_par(64.4, 513000);
+    d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
 
     for (int i=0;i<P->mass_2.size(); i++)
     {
         d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
-                   P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i]);
+                   P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
 
     }
 
+
+
+}
+
+void MainWindow::on_height_Button_2_clicked()
+{
+
+    QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
+    drawing(d->W[0], 0, 90, P->xn, 0, P->MaxTime);
+    for (int i=1;i<5;i++)
+    {
+        ui->widget->addGraph();
+        ui->widget->graph(i)->setData(P->xn, d->W[i]);
+        ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->replot();
+    }
+}
+
+
+void MainWindow::on_height_Button_3_clicked()
+{
+    QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
     drawing(d->form[0], -1, 1, d->lenght, 0, 64.4);
     for (int i=1;i<5;i++)
     {
@@ -265,6 +287,31 @@ void MainWindow::on_action_5_triggered()
         ui->widget->graph(i)->setData(d->lenght, d->form[i]);
         ui->widget->graph(i)->setPen(QPen(color[i]));
         ui->widget->replot();
+
     }
 
 }
+
+
+void MainWindow::on_height_Button_4_clicked()
+{
+
+    QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
+    drawing(d->dform[0], -1, 1, d->lenght, 0, 64.4);
+    for (int i=1;i<5;i++)
+    {
+        ui->widget->addGraph();
+        ui->widget->graph(i)->setData(d->lenght, d->dform[i]);
+        ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->replot();
+    }
+}
+
+
+void MainWindow::on_pushButton_clicked()
+{
+    ui->widget->xAxis->setLabel("Высота, км");
+    ui->widget->yAxis->setLabel("Ветер, м/с");
+    drawing(P->w, 0, *std::max_element(P->w.begin(),P->w.end()), P->H2, 0, 95);
+}
+

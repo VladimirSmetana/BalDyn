@@ -37,8 +37,11 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     Lmax = M.get_lenght();
     //double L = Lmax;
-    double L1= M.get_lst1();
-    double L2= M.get_lst2();
+    double L1= 42.9;//M.get_lst1();
+    double L2= 10.5;//M.get_lst2();
+
+
+
     //
     // Определение основных мцих
     for (int i=0;i<=1;i++)
@@ -505,6 +508,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         //std::cout << CY_2 << std::endl;
         dyn1.push_back(X_oneC);
         dyn2.push_back(X_twoC);
+        lenght_R.push_back(sec->L);
+        //qDebug() << sec->L;
 
         //std::cout<<fir->gl_c<<std::endl;
         amax = alph_1.A();

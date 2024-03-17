@@ -34,6 +34,7 @@ public:
 //    std::unique_ptr<block> first = std::make_unique<block>();
 //    std::unique_ptr<block> second = std::make_unique<block>();
     std::unique_ptr<pitch> P = std::make_unique<pitch>();
+    std::unique_ptr<DC> d = std::make_unique<DC>();
     //block first;
 //    block second;
     // Исходные данные РН
@@ -99,6 +100,14 @@ private slots:
     void on_YZmoment_Button_clicked();
 
     void on_Xmoment_Button_clicked();
+
+    void on_height_Button_2_clicked();
+
+    void on_height_Button_3_clicked();
+
+    void on_height_Button_4_clicked();
+
+    void on_pushButton_clicked();
 
 private:
     Ui::MainWindow *ui;

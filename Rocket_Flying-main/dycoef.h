@@ -11,8 +11,11 @@
 
 class DC
 {
-public:
 
+private:
+    double len;
+public:
+    DC();
     double PI();
     double const lamb [5] {4.73, 7.853, 10.996, 14.137, 17.279};
     QVector<double> times;
@@ -38,6 +41,7 @@ public:
     QVector<double> ms_vec[5];
 
     QVector<double> form[5];
+    QVector<double> dform[5];
     QVector<double> lenght;
 
     double Ms[5];
@@ -50,9 +54,9 @@ public:
                       QVector<double> jinn2);
 
     void data_calculating(double P, double I, double D);
-    void const_par(double len, double mass);
+    void const_par(double mass, double len);
     void ver_par(double mass, double p, double p_con,
-                        double q, double cy, double x1, double x2, double vel, double iner);
+                        double q, double cy, double x1, double x2, double vel, double iner, double len);
 };
 
 

@@ -46,6 +46,8 @@ public:
     QVector<double> w, pc2;
     QVector<double> cy2;
     QVector<double> dyn1, dyn2;
+    QVector<double> lenght_R;
+
 
     std::unique_ptr<block> fir = std::make_unique<block>();
     std::unique_ptr<block> sec = std::make_unique<block>();
