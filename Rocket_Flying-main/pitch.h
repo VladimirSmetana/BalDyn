@@ -1,7 +1,6 @@
 #ifndef PITCH_H
 #define PITCH_H
 
-#include "block.h"
 #include <cmath>
 #include <iostream>
 #include <QVector>
@@ -49,8 +48,6 @@ public:
     QVector<double> lenght_R;
 
 
-    std::unique_ptr<block> fir = std::make_unique<block>();
-    std::unique_ptr<block> sec = std::make_unique<block>();
 
 
     double Na=0.1, Mah_1, Mah_2,  time = 0;
@@ -62,13 +59,7 @@ public:
     double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
     double zXY = 0, VZ  = 0.3;
 
-    double mpn=15000;
-    double mb[2] {391000, 107000};
-    double s[2] {7, 10};
-    double D = 4.1;
-    double Imp[2] {3300, 3700};
-    double T_sep[2] {3, 3};
-    double Ratio = 3.5;
+    double D = 0.102;
     double h = 0.1;
 
     double M_Rocket;
@@ -82,12 +73,6 @@ public:
     double Wind2;
     double CILCON;
 
-    double k1 = 360;
-    double k2 = 383;
-    double k3 = 405;
-    double k4 = 440;
-    double kk1 = 0.2;
-    double kk2 = 0.22;
 
     double Smid;
 
@@ -97,10 +82,10 @@ public:
     double CX_1, CY_1;
     double CX_2, CY_2;
     double dN;
-    double m_O[2], m_C[2];
-    double d_O[2], d_C[2];
-    double S_o[2], S_c[2];
-    double I_o[2], I_c[2];
+    double m_O;
+    double d_O;
+    double S_o;
+    double I_o;
     double Imp_t, CF;
     double pitch_angle;
     double bpr;
@@ -116,7 +101,7 @@ public:
     double X_oneC;
     double X_twoC;
     double MaxTime;
-    double T_fuel[2];
+    double T_fuel;
 
     void pitch_calculations(double (&kalph)[3], double (&peng)[2]);
 
