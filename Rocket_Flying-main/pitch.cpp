@@ -14,7 +14,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     // Рассчитываемые параметры конструкции
     double m_fuel[2];
     double m_dry[2];
-    double T_fuel[2];
+
     double m_furet = 33200/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
     M_Rocket=mpn;
     fir->m_t = M_Rocket;

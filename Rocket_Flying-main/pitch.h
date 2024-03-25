@@ -116,6 +116,7 @@ public:
     double X_oneC;
     double X_twoC;
     double MaxTime;
+    double T_fuel[2];
 
     void pitch_calculations(double (&kalph)[3], double (&peng)[2]);
 

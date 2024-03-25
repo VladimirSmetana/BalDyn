@@ -123,6 +123,9 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
         for (int i=0;i<5;i++)
         {
+            form[i].clear();
+            dform[i].clear();
+            lenght.clear();
             a[i] = lamb [i]/(len);
             K[0] = cosh(lamb [i]) - cos(lamb [i]);
             K[1] = sinh(lamb [i]) - sin(lamb [i]);

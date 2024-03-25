@@ -247,14 +247,26 @@ void MainWindow::on_action_5_triggered()
 
 
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
-    double X_1;
-    double X_2;
+    int coun = 0;
     d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
 
-    for (int i=0;i<P->mass_2.size(); i++)
+
+    for (int i=0;i<P->xn.size(); i++)
     {
-        d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
-                   P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+        if (P->xn[i] < P->T_fuel[0])
+        {
+            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
+                       P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+        }
+        else
+        {
+            if (coun==0 && P->lenght_R[i]<P->lenght_R[i-1])
+            {
+                d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->lenght_R[i]); coun++;
+            }
+            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
+            P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+        }
 
     }
 
