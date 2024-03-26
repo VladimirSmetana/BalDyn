@@ -18,7 +18,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     double m_fuel;
     double m_dry;
 
-    M_Rocket=0;
+    M_Rocket=5.32;
     m_t = M_Rocket;
 
     //
@@ -36,8 +36,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     mass M;
     //
     // Определение габаритов ракеты
-    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
-    Lmax = M.get_lenght();
+    //M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     //double L = Lmax;
     double L= 1.2;//M.get_lst1();
 
@@ -45,86 +44,69 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
     //
     // Определение основных мцих
-    for (int i=0;i<=1;i++)
-    {
-        m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
-        m_O[i] = m_fuel[i]*Ratio/(Ratio+1);
-        m_C[i] = m_fuel[i]*1/(Ratio+1);
-        m_dry[i] = mb[i]-m_fuel[i];
-    }
-    m_dry[0]-=m_furet;
-    M_Rocket+=m_fuel[0]+m_dry[0]+m_fuel[1]+m_dry[1] + m_furet;
 
-    double zap = 0;
-    m_dry [1]+=zap;
+        m_fuel = 0.7;
+        m_dry = M_Rocket-m_fuel[i];
 
-    double onefu = m_fuel[0];
-    M_stage [0] = M_Rocket;
-    M_stage [1] = M_Rocket - mb[0];
 
-    S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
-    S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
-    S_o[0] = M.fun_S (M.K[8], M.K[9], m_O[0]);
-    S_c[0] = M.fun_S (M.K[10], M.K[11], m_C[0]);
-    S_o[1] = M.fun_S (M.K[3], M.K[4], m_O[1]);
-    S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
-    fir->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
-    fir->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
-    sec->S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
-    sec->S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
+//    S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
+//    S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
+//    S_o[0] = M.fun_S (M.K[8], M.K[9], m_O[0]);
+//    S_c[0] = M.fun_S (M.K[10], M.K[11], m_C[0]);
+//    S_o[1] = M.fun_S (M.K[3], M.K[4], m_O[1]);
+//    S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
+//    fir->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
+//    fir->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
+//    sec->S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
+//    sec->S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
 
-    fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
-    Sx = fir->Ssumm;
-    fir->gl_c = fir->Ssumm/M_Rocket;
-    gl_cmax = fir->gl_c;
+//    fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+//    Sx = fir->Ssumm;
+//    fir->gl_c = fir->Ssumm/M_Rocket;
+//    gl_cmax = fir->gl_c;
     //std::cout<<Sx<<std::endl;
     //std::cout<<fir->gl_c<<std::endl;
 
-    fir->I_dry[0] = M.fun_I (M.K[6], M.K[12], m_dry[0], D);
-    fir->I_dry[1] = M.fun_I (M.K[1], M.K[6], m_dry[1], D);
+//    fir->I_dry[0] = M.fun_I (M.K[6], M.K[12], m_dry[0], D);
+//    fir->I_dry[1] = M.fun_I (M.K[1], M.K[6], m_dry[1], D);
 
-    sec->I_dry[0] = M.fun_I (M.K[6]-6, M.K[12]-6, m_dry[0], D);
+//    sec->I_dry[0] = M.fun_I (M.K[6]-6, M.K[12]-6, m_dry[0], D);
 
-    I_o[0] = M.fun_I (M.K[8], M.K[9], m_O[0], D);
-    I_c[0] = M.fun_I (M.K[10], M.K[11], m_C[0], D);
-    I_o[1] = M.fun_I (M.K[3], M.K[4], m_O[1], D);
-    I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
-    fir->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
-    fir->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
-    sec->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
-    sec->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
-    fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
-    Iz = fir->Isumm;
-    Izmax = Iz;
-    Ix = M_Rocket * pow(D/2, 2);
-    Ixmax = Ix;
+//    I_o[0] = M.fun_I (M.K[8], M.K[9], m_O[0], D);
+//    I_c[0] = M.fun_I (M.K[10], M.K[11], m_C[0], D);
+//    I_o[1] = M.fun_I (M.K[3], M.K[4], m_O[1], D);
+//    I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
+//    fir->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
+//    fir->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
+//    sec->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
+//    sec->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
+//    fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
+//    Iz = fir->Isumm;
+//    Izmax = Iz;
+//    Ix = M_Rocket * pow(D/2, 2);
+//    Ixmax = Ix;
 
-    T_fuel[0] = m_fuel[0]/(peng [0]/Imp[0]);
-    T_stage [0] = T_fuel [0] + T_sep [0];
-    T_fuel[1] = m_fuel[1]/(peng [1]/Imp[1]);
-    T_stage [1] = T_fuel [1] + T_sep [1];
+    T_fuel = 2.17;
     //
     // ИД итеративного расчета
-    fir->m_t = M_Rocket;
-    sec->m_t = M_Rocket;
-    fir->anY = M_PI/2;
-    sec->anY = M_PI/2;
+    anY = M_PI/2-10/57.3;
+
     //double p_ground = 101325;
-    sec->tY = 1;
+    tY = 1;
     //
     // Итеративный расчет
     H1.clear();
     H2.clear();
     xn.clear();
     count = 0;
-    fir->tY = 0;
-    sec->tX = 0;
+    tY = 0;
+    tX = 0;
     int i = 0;
     int value = 0;
-    d_O[1] = 0;
+    d_O = 0;
     double K1, K2, K3, K4;
     //while (sec->tY>=0.5 && sec->V>=0.5) sec->tY>=0.5
-    while (sec->tY>0 && sec->V>0)
+    while (tY>0 && V>0)
     {
         airforce Qus_1 (Mah_1);
         airforce Qus_2 (Mah_2);
