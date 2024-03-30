@@ -90,15 +90,15 @@ void MainWindow::on_action_triggered()
     P->pitch_calculations(coef_alpha, kpeng);
 
     //db.close();
-    QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
-    QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
-    QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
-    QString mk5s = QString::number(P->sec->tX/1000); ui->lineEdit_7->setText(mk5s);
-    QString mk6s = QString::number(P->MHSP_1);    ui->lineEdit_6->setText(mk6s);
-    QString mk8s = QString::number(57.3*P->Ott_1);       ui->lineEdit_8->setText(mk8s);
-    QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
-    QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);
-    QString mk13s = QString::number(57.3*P->sec->anY);       ui->lineEdit_13->setText(mk13s);
+//    QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
+//    QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
+//    QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
+//    QString mk5s = QString::number(P->sec->tX/1000); ui->lineEdit_7->setText(mk5s);
+//    QString mk6s = QString::number(P->MHSP_1);    ui->lineEdit_6->setText(mk6s);
+//    QString mk8s = QString::number(57.3*P->Ott_1);       ui->lineEdit_8->setText(mk8s);
+//    QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
+//    QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);
+//    QString mk13s = QString::number(57.3*P->sec->anY);       ui->lineEdit_13->setText(mk13s);
 
     //ui->label_2->setText("Скорость, м/с");
     //ui->label_3->setText("Высота, км");
@@ -152,7 +152,7 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    drawing(P->v_1, P->v_2, 0, P->fir->V+10, P->xn, P->xn, 0, P->MaxTime+10);
+    //drawing(P->v_1, P->v_2, 0, P->fir->V+10, P->xn, P->xn, 0, P->MaxTime+10);
 }
 
 // График угла атаки
@@ -247,28 +247,28 @@ void MainWindow::on_action_5_triggered()
 
 
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
-    int coun = 0;
-    d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
+//    int coun = 0;
+//    d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
 
 
-    for (int i=0;i<P->xn.size(); i++)
-    {
-        if (P->xn[i] < P->T_fuel[0])
-        {
-            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
-                       P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
-        }
-        else
-        {
-            if (coun==0 && P->lenght_R[i]<P->lenght_R[i-1])
-            {
-                d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->lenght_R[i]); coun++;
-            }
-            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
-            P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
-        }
+//    for (int i=0;i<P->xn.size(); i++)
+//    {
+//        if (P->xn[i] < P->T_fuel[0])
+//        {
+//            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
+//                       P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+//        }
+//        else
+//        {
+//            if (coun==0 && P->lenght_R[i]<P->lenght_R[i-1])
+//            {
+//                d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->lenght_R[i]); coun++;
+//            }
+//            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
+//            P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+//        }
 
-    }
+//    }
 
 
 
