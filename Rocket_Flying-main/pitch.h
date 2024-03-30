@@ -60,7 +60,7 @@ public:
     double zXY = 0, VZ  = 0.3;
 
     double D = 0.102;
-    double h = 0.1;
+    double h = 0.01;
 
     double M_Rocket;
 

@@ -99,8 +99,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     H2.clear();
     xn.clear();
     count = 0;
-    tY = 0;
-    tX = 0;
+    tY = 1;
+    tX = 1;
     int i = 0;
     int value = 0;
     d_O = 0;
@@ -270,7 +270,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
             V   += (B_1.fdV(V, anY) + V1)/2*h;
             anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
-
+            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng;
 
 
             H11 = V* sin(anY);
