@@ -1,4 +1,5 @@
-#include <QDebug>
+
+//#include <QDebug>
 #ifndef AIRFORCE_H
 #define AIRFORCE_H
 #include <cmath>

@@ -1,5 +1,5 @@
 #include "dycoef.h"
-#include <QDebug>
+//#include <QDebug>
 
 DC::DC()
 {

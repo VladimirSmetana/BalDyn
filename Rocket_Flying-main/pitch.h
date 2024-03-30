@@ -67,6 +67,7 @@ public:
     int count;
     double Lmax;
     double Iz, Izmax, Sx, Ix, Ixmax;
+
     //double gl_c;
     double gl_cmax;
     double Wind1;

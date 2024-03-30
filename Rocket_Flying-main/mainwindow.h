@@ -4,7 +4,7 @@
 #include <qcustomplot.h>
 #include <QFile>
 #include <QTextStream>
-#include <QDebug>
+//#include <QDebug>
 
 
 //#include "block.h"
@@ -14,7 +14,7 @@
 #include "pitch.h"
 #include <thread>
 #include <QtSql>
-#include <QDebug>
+//#include <QDebug>
 #include <cmath>
 #include <iostream>
 

@@ -2,7 +2,7 @@
 #define DYCOEF_H
 #include <QSqlDatabase>
 #include <QSqlQuery>
-#include <QDebug>
+//#include <QDebug>
 #include <QSqlRecord>
 #include <cmath>
 #include <QtSql>

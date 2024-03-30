@@ -1,4 +1,4 @@
-#include <QDebug>
+//#include <QDebug>
 #ifndef ATMOSPHERE_H
 #define ATMOSPHERE_H
 #include <cmath>

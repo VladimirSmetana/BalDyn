@@ -1,5 +1,5 @@
 #include "pitch.h"
-
+#include <QDebug>
 pitch::pitch()
 {
 
@@ -270,7 +270,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
             V   += (B_1.fdV(V, anY) + V1)/2*h;
             anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
-            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng;
+            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t;
 
 
             H11 = V* sin(anY);
@@ -278,7 +278,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             Y1 = B_1.fdY(tY, V, anY);
 
 
-            std::cout << zXY/1000  << std::endl;
+            //std::cout << zXY/1000  << std::endl;
             VX += h*B_1.dVX(velXY, Ott, Na);
             VY += h*B_1.dVY(velXY, Ott, Na);
             VZ += h*B_1.dVZ(velXY, Ott, Na);
@@ -324,8 +324,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //            H22 = sec->V* sin(sec->anY);
 //        }
 
-        //qDebug()<<sec->tY;
-//        xn.push_back(time);
+
+        xn.push_back(time);
 //        yu_1.push_back(HSP_1);
 //        yu_2.push_back(HSP_2);
 ////        center_1.push_back(fir->gl_c);
