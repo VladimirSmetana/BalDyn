@@ -172,12 +172,12 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
             CY[i].push_back(p_con/iner*((x2-len)*dform[i].back()+form[i].back()));
 
         }
-        Cbs.push_back(p_con/mass);
+        //Cbs.push_back(p_con/mass);
         Cyws.push_back(-(p+cy/57.3*q*S)/mass);
         Cwws.push_back((-cy/57.3*q*S*x1)/iner);
         Cyys.push_back((cy/57.3*q*S)/(mass*vel));
         Cwys.push_back((cy/57.3*q*S*x1)/iner/vel);
-        Cwbs.push_back(p_con*x2/iner);
+        //Cwbs.push_back(p_con*x2/iner);
 
         Csbs.push_back(p_con/iner);
     }

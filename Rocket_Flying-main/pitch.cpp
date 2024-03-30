@@ -28,7 +28,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     // Поле локальных переменных
     Smid = M_PI*pow(D,2)/4;
 
-    V = 0.6;
+    V = 0.1;
     count =0;
     //
     // Создание объектов
@@ -45,10 +45,10 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     //
     // Определение основных мцих
 
-        m_fuel = 0.7;
+        m_fuel = 1.2;
         m_dry = M_Rocket-m_fuel;
 
-        double m_fuel_start = 0.7;
+        double m_fuel_start = 1.2;
 
 //    S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
 //    S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
@@ -125,12 +125,25 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         {
             //if (m_t > M_Rocket-onefu )
             //{
+            if (time <= 0.08) peng = 921.22;
+            if ((time > 0.08) && (time <= 0.34)) peng = 700;
+            if ((time > 0.34) && (time <= 0.44)) peng = 665.08;
+            if ((time > 0.44) && (time <= 0.65)) peng = 674.60;
+            if ((time > 0.65) && (time <= 1.00)) peng = 681.21;
+            if ((time > 1.00) && (time <= 1.21)) peng = 668.16;
+            if ((time > 1.21) && (time <= 1.45)) peng = 640.74;
+            if ((time > 1.45) && (time <= 1.70)) peng = 600.00;
+            if ((time > 1.70) && (time <= 2.00)) peng = 538.04;
+            if ((time > 2.00) && (time <= 2.10)) peng = 353.31;
+            if (time > 2.10) peng = 353.31;
+
+
             Peng_control = peng;
             //+ (p_ground - P.get_pressure()) * Smid/2;
 
             m_t = m_fuel+m_dry;
 
-            m_fuel -= m_fuel_start/T_fuel*h;
+            m_fuel -= peng/1150*h;
 //            d_O[0] += Ratio*CF*h/(1100*Smid)/(Ratio+1);
 //            d_C[0] += CF*h/(440*Smid)/(Ratio+1);
 //            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
@@ -273,7 +286,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             V   += (B_1.fdV(V, anY) + V1)/2*h;
             anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
             qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-                     << ";Y : " << anY*57.3 << ";Mah : " << Mah_1;
+                     << ";Y : " << anY*57.3 << ";Q : " << HSP_1;
 
 
             H11 = V* sin(anY);
@@ -329,7 +342,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
 
         xn.push_back(time);
-//        yu_1.push_back(HSP_1);
+        yu_1.push_back(HSP_1);
 //        yu_2.push_back(HSP_2);
 ////        center_1.push_back(fir->gl_c);
 ////        center_2.push_back(sec->gl_c);

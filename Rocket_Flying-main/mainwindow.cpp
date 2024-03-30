@@ -175,7 +175,7 @@ void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скоростной напор, Па");
-    drawing(P->yu_1, P->yu_2, 0, *std::max_element(P->yu_2.begin(),P->yu_2.end()), P->xn, P->xn, 0, P->MaxTime);
+    drawing(P->yu_1, 0, 35000, P->xn, 0, 40);
 }
 
 // График центра масс
@@ -191,7 +191,7 @@ void MainWindow::on_thrust_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Тяга ДУ, кН");
-    drawing(P->P1, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, 0, 40);
+    drawing(P->P1, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, 0, 2.5);
 }
 
 // График массы
@@ -199,7 +199,7 @@ void MainWindow::on_mass_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Масса, кг");
-    drawing(P->mass_1, 0, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, 0, 40);
+    drawing(P->mass_1, 4, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, 0, 2.5);
 }
 
 // Файл->Выход
