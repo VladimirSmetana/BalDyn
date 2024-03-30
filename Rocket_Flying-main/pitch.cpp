@@ -48,6 +48,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         m_fuel = 0.7;
         m_dry = M_Rocket-m_fuel;
 
+        double m_fuel_start = 0.7;
 
 //    S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
 //    S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
@@ -126,9 +127,10 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //{
             Peng_control = peng;
             //+ (p_ground - P.get_pressure()) * Smid/2;
+
             m_t = m_fuel+m_dry;
 
-            m_fuel -= m_fuel/T_fuel*h;
+            m_fuel -= m_fuel_start/T_fuel*h;
 //            d_O[0] += Ratio*CF*h/(1100*Smid)/(Ratio+1);
 //            d_C[0] += CF*h/(440*Smid)/(Ratio+1);
 //            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
@@ -270,7 +272,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
             V   += (B_1.fdV(V, anY) + V1)/2*h;
             anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
-            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t;
+            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
+                     << ";Y : " << anY*57.3 << ";Imp : " << m_fuel/T_fuel;
 
 
             H11 = V* sin(anY);
@@ -330,18 +333,18 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //        yu_2.push_back(HSP_2);
 ////        center_1.push_back(fir->gl_c);
 ////        center_2.push_back(sec->gl_c);
-//        v_1.push_back(fir->V);
+        v_1.push_back(V);
 //        v_2.push_back(sec->V);
 //        sinn.push_back(fir->Ssumm);
 //        jinn.push_back(fir->Isumm);
 //        jinn2.push_back(sec->Isumm);
 //        CM.push_back(fir->Ssumm/fir->m_t);
-//        mass_1.push_back(fir->m_t);
+        mass_1.push_back(m_t);
 //        mass_2.push_back(sec->m_t);
-//        Long_1.push_back(fir->tX/1000);
+        Long_1.push_back(tX);
 //        Long_2.push_back(sec->tX/1000);
 //        w.push_back(Wind2);
-//        H1.push_back(fir->tY/1000);
+        H1.push_back(tY);
 //        H2.push_back(sec->tY/1000);
 //        angle.push_back(pitch_angle*57.3);
 //        b1.push_back(HSP_1*Smid*CX_1);
@@ -351,11 +354,11 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 ////        ALI_2.push_back(alph_2.A());
 //        //ALI.push_back(fir->Peng_t/ (fir->m_t*Atm_1.get_AOG()));
 ////        res.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
-//        TET_1.push_back(fir->anY*57.3);
+        TET_1.push_back(anY*57.3);
 //        TET_2.push_back(sec->anY*57.3);
 //        be.push_back(bpr*57.3);
 //        pi.push_back(pitch_angle*57.3);
-//        P1.push_back(fir->Peng_t);
+        P1.push_back(peng);
 //        P2.push_back(sec->Peng_t);
 //        f1.push_back(fir->focus);
 //        Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
@@ -371,6 +374,6 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //        //std::cout<<fir->gl_c<<std::endl;
 ////        amax = alph_1.A();
 //        count+=1;
-//        MaxTime = count*h;
+        MaxTime = count*h;
     }
 }

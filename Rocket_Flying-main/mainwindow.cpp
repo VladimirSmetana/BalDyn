@@ -122,21 +122,20 @@ void MainWindow::on_NX_Button_clicked()
     ui->widget->yAxis->setLabel("Продольная перегрузка");
     drawing(P->Lon, P->Lonre, 0, 10, P->xn, P->xn, 0, P->MaxTime);
 }
-
-// График траектории
+// График высоты
 void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(P->H1, P->H2, 0, 230, P->xn, P->xn, 0, P->MaxTime+50);
+    drawing(P->H1, 0, 2000, P->xn, 0, 40);
 }
 
-// График высоты
+// График траектории
 void MainWindow::on_trj_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Дальность, км");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(P->H1, P->H2, 0, 230, P->Long_1, P->Long_2, 0, 1600);
+    drawing(P->H1, 0, 2000, P->Long_1, 0, 1600);
 }
 
 // График дальности
@@ -144,7 +143,7 @@ void MainWindow::on_distance_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Дальность, км");
-    drawing(P->Long_1, P->Long_2, 0, 1600, P->xn, P->xn, 0, P->MaxTime);
+    drawing(P->Long_1, 0, 1600, P->xn, 0, 40);
 }
 
 // График скорости
@@ -152,7 +151,7 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    //drawing(P->v_1, P->v_2, 0, P->fir->V+10, P->xn, P->xn, 0, P->MaxTime+10);
+    drawing(P->v_1, 0, 300, P->xn, 0, 40);
 }
 
 // График угла атаки
@@ -168,7 +167,7 @@ void MainWindow::on_T_angle_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    drawing(P->TET_1, P->TET_2, -90, 90, P->xn, P->xn, 0, P->MaxTime+10);
+    drawing(P->TET_1, -90, 90, P->xn, 0, 40);
 }
 
 // График скоростного напора
@@ -192,7 +191,7 @@ void MainWindow::on_thrust_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Тяга ДУ, кН");
-    drawing(P->P1, P->P2, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, P->xn, 0, P->MaxTime);
+    drawing(P->P1, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, 0, 40);
 }
 
 // График массы
@@ -200,7 +199,7 @@ void MainWindow::on_mass_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Масса, кг");
-    drawing(P->mass_1, P->mass_2, 0, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, P->xn, 0, P->MaxTime);
+    drawing(P->mass_1, 0, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, 0, 40);
 }
 
 // Файл->Выход
