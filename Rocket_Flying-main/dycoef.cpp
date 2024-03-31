@@ -145,41 +145,57 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
     }
 
     void DC::ver_par(double mass, double p, double p_con,
-                     double q, double cy, double x1, double x2, double vel, double iner, double len)
+                     double q, double cy, double x1, double x2, double vel, double iner, double len, double Y)
     {
-        double D = 4.1;
-        double R = D/2;
-        double bb = 0.004;
-        double E = 70000;
-        double I = M_PI*pow(D,4)/64 - M_PI*pow(D-2*bb,4)/64;
-        double I4 = mass*pow(len,4);
-        double EI0 = E*I * 1000000;
+        qDebug() << mass << " " << p << " " << p_con << " " << q << " " << cy << " " << x1 << " " << x2 << " " << vel << " " << iner << " " <<
+            len << " " << Y;
+//        double D = 4.1;
+//        double R = D/2;
+//        double bb = 0.004;
+//        double E = 70000;
+//        double I = M_PI*pow(D,4)/64 - M_PI*pow(D-2*bb,4)/64;
+//        double I4 = mass*pow(len,4);
+//        double EI0 = E*I * 1000000;
 
+        double alpha;
+        double h = 0.01;
+        double S = M_PI*pow(0.102,2)/4;
+//        double Mx = mass*0.1/64.4;
+//        for (int i=0;i<5;i++)
+//        {
+//            Ms[i] = 0;
+//            for (int k=0;k<=form[i].size();k++)
+//            {
+//                Ms[i] += Mx*pow(form[i][k],2)*0.1;
+//            }
+//            ms_vec[i].push_back(Ms[i]);
 
-        double S = M_PI*pow(D,2)/4;
-        double Mx = mass*0.1/64.4;
-        for (int i=0;i<5;i++)
-        {
-            Ms[i] = 0;
-            for (int k=0;k<=form[i].size();k++)
-            {
-                Ms[i] += Mx*pow(form[i][k],2)*0.1;
-            }
-            ms_vec[i].push_back(Ms[i]);
+//            W[i].push_back(sqrt(EI0/I4*pow(lamb[i],4)));
+//            CW[i].push_back(-form[i].back()*p_con/mass);
+//            CY[i].push_back(p_con/iner*((x2-len)*dform[i].back()+form[i].back()));
 
-            W[i].push_back(sqrt(EI0/I4*pow(lamb[i],4)));
-            CW[i].push_back(-form[i].back()*p_con/mass);
-            CY[i].push_back(p_con/iner*((x2-len)*dform[i].back()+form[i].back()));
-
-        }
+//        }
         //Cbs.push_back(p_con/mass);
-        Cyws.push_back(-(p+cy/57.3*q*S)/mass);
-        Cwws.push_back((-cy/57.3*q*S*x1)/iner);
-        Cyys.push_back((cy/57.3*q*S)/(mass*vel));
-        Cwys.push_back((cy/57.3*q*S*x1)/iner/vel);
+        Cyw = -(p+cy/57.3*q*S)/mass;
+        Cww = (-cy/57.3*q*S*x1)/iner;
+        Cyy = (cy/57.3*q*S)/(mass*vel);
+        Cwy = (cy/57.3*q*S*x1)/iner/vel;
+
+        Cyws.push_back(Cyw);
+        Cwws.push_back(Cww);
+        Cyys.push_back(Cyy);
+        Cwys.push_back(Cwy);
+
+        double sk = 2*sin(Y/57.3);
+        ww = - Cwy*y - Cww*w + Cwy*sk;
+        yy = - Cyw*w - Cyy*y + Cyw*sk;
+        w+=h*ww;
+        y+=h*yy;
+        alpha = w - (y - sk)/vel;
+        //qDebug() << w*57.3 << " " << y << " " << alpha*57.3 << " " << Cwy;
         //Cwbs.push_back(p_con*x2/iner);
 
-        Csbs.push_back(p_con/iner);
+//        Csbs.push_back(p_con/iner);
     }
 
     void DC::data_calculating(double P, double I, double D)

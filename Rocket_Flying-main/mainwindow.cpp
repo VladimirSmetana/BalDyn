@@ -90,21 +90,21 @@ void MainWindow::on_action_triggered()
     P->pitch_calculations(coef_alpha, kpeng);
 
     //db.close();
-//    QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
-//    QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
+    //QString mk2s = QString::number(P->Vmax);        ui->lineEdit  ->setText(mk2s);
+    QString mk1s = QString::number(P->Hmax);        ui->lineEdit_2->setText(mk1s);
 //    QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
-//    QString mk5s = QString::number(P->sec->tX/1000); ui->lineEdit_7->setText(mk5s);
+    QString mk5s = QString::number(P->tX); ui->lineEdit_7->setText(mk5s);
 //    QString mk6s = QString::number(P->MHSP_1);    ui->lineEdit_6->setText(mk6s);
 //    QString mk8s = QString::number(57.3*P->Ott_1);       ui->lineEdit_8->setText(mk8s);
 //    QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
 //    QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);
 //    QString mk13s = QString::number(57.3*P->sec->anY);       ui->lineEdit_13->setText(mk13s);
 
-    //ui->label_2->setText("Скорость, м/с");
-    //ui->label_3->setText("Высота, км");
-    //ui->label  ->setText("Время полета, с");
-    //ui->label_8->setText("Макс скор напор, кг/мс2");
-    //ui->label_9->setText("Дальность, км");
+    ui->label_2->setText("Скорость, м/с");
+    ui->label_3->setText("Высота, км");
+    ui->label  ->setText("Время полета, с");
+    ui->label_8->setText("Макс скор напор, кг/мс2");
+    ui->label_9->setText("Дальность, км");
 
     ui->lineEdit_4->show();
     ui->lineEdit_5->show();
@@ -120,22 +120,22 @@ void MainWindow::on_NX_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Продольная перегрузка");
-    drawing(P->Lon, P->Lonre, 0, 10, P->xn, P->xn, 0, P->MaxTime);
+    drawing(P->Lon, 0, 20, P->xn, 0, 2.5);
 }
 // График высоты
 void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Высота, км");
-    drawing(P->H1, 0, 2000, P->xn, 0, 40);
+    ui->widget->yAxis->setLabel("Высота, м");
+    drawing(P->H1, 0, 1000, P->xn, 0, 25);
 }
 
 // График траектории
 void MainWindow::on_trj_Button_clicked()
 {
-    ui->widget->xAxis->setLabel("Дальность, км");
-    ui->widget->yAxis->setLabel("Высота, км");
-    drawing(P->H1, 0, 2000, P->Long_1, 0, 1600);
+    ui->widget->xAxis->setLabel("Дальность, м");
+    ui->widget->yAxis->setLabel("Высота, м");
+    drawing(P->H1, 0, 1000, P->Long_1, 0, 2500);
 }
 
 // График дальности
@@ -143,7 +143,7 @@ void MainWindow::on_distance_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Дальность, км");
-    drawing(P->Long_1, 0, 1600, P->xn, 0, 40);
+    drawing(P->Long_1, 0, 2500, P->xn, 0, 25);
 }
 
 // График скорости
@@ -151,7 +151,7 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    drawing(P->v_1, 0, 300, P->xn, 0, 40);
+    drawing(P->v_1, 0, 300, P->xn, 0, 25);
 }
 
 // График угла атаки
@@ -167,7 +167,7 @@ void MainWindow::on_T_angle_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    drawing(P->TET_1, -90, 90, P->xn, 0, 40);
+    drawing(P->TET_1, -90, 90, P->xn, 0, 25);
 }
 
 // График скоростного напора
@@ -175,7 +175,7 @@ void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скоростной напор, Па");
-    drawing(P->yu_1, 0, 35000, P->xn, 0, 40);
+    drawing(P->yu_1, 0, 40000, P->xn, 0, 25);
 }
 
 // График центра масс
@@ -183,7 +183,7 @@ void MainWindow::on_center_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Центр масс РН, м");
-    drawing(P->center_1, 0, *std::max_element(P->center_1.begin(),P->center_1.end()), P->xn, 0, P->MaxTime);
+    drawing(P->center_1, 0.6, *std::max_element(P->center_1.begin(),P->center_1.end()), P->xn, 0, 25);
 }
 
 // График тяги
@@ -221,7 +221,7 @@ void MainWindow::on_static_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Стат момент X, кг м");
-    drawing(P->sinn, 0, P->Sx, P->xn, 0, P->MaxTime);
+    drawing(P->sinn, 2, 4, P->xn, 0, 25);
 }
 
 // График момента инерции Y или Z
@@ -229,7 +229,7 @@ void MainWindow::on_YZmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции Y/Z,   кг м2");
-    drawing(P->jinn, 0, P->Iz, P->xn, 0, P->MaxTime);
+    drawing(P->jinn, 0.8, 1, P->xn, 0, 2.5);
 }
 
 // График момента инерции Х
@@ -237,7 +237,7 @@ void MainWindow::on_Xmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции X, кг м2");
-    drawing(P->lin, 0, P->Ixmax, P->xn, 0, P->MaxTime);
+    drawing(P->lin, 0.125, P->Ixmax, P->xn, 0, 2.5);
 }
 
 // Управление ПИД
@@ -250,12 +250,12 @@ void MainWindow::on_action_5_triggered()
 //    d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
 
 
-//    for (int i=0;i<P->xn.size(); i++)
-//    {
-//        if (P->xn[i] < P->T_fuel[0])
+    for (int i=0;i<P->xn.size(); i++)
+    {
+//       if (P->xn[i] < P->T_fuel[0])
 //        {
-//            d->ver_par(P->mass_2[i], P->P2[i], P->pc2[i], P->yu_2[i], P->cy2[i],
-//                       P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
+            d->ver_par(P->mass_1[i], P->P1[i], P->pc2[i], P->yu_1[i], P->cy2[i],
+           P->dyn1[i], P->dyn2[i], P->v_1[i], P->jinn[i], 1.2, P->TET_1[i]);
 //        }
 //        else
 //        {
@@ -267,7 +267,7 @@ void MainWindow::on_action_5_triggered()
 //            P->dyn1[i], P->dyn2[i], P->v_2[i], P->jinn2[i], P->lenght_R[i]);
 //        }
 
-//    }
+    }
 
 
 
@@ -323,6 +323,6 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->widget->xAxis->setLabel("Высота, км");
     ui->widget->yAxis->setLabel("Ветер, м/с");
-    drawing(P->w, 0, *std::max_element(P->w.begin(),P->w.end()), P->H2, 0, 95);
+    drawing(P->w, 0, *std::max_element(P->w.begin(),P->w.end()), P->H1, 0, 1000);
 }
 

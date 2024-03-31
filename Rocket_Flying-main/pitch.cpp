@@ -13,7 +13,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     double S_dry[2];
 
     double peng;
-    peng = 636;
+    peng = 0;
     // Рассчитываемые параметры конструкции
     double m_fuel;
     double m_dry;
@@ -63,8 +63,11 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
 //    fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
 //    Sx = fir->Ssumm;
-//    fir->gl_c = fir->Ssumm/M_Rocket;
-//    gl_cmax = fir->gl_c;
+      gl_c = 0.719;
+      foc = 0.956;
+      gl_cmax = 0.719;
+
+
     //std::cout<<Sx<<std::endl;
     //std::cout<<fir->gl_c<<std::endl;
 
@@ -82,10 +85,17 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //    sec->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
 //    sec->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
 //    fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
-//    Iz = fir->Isumm;
-//    Izmax = Iz;
-//    Ix = M_Rocket * pow(D/2, 2);
-//    Ixmax = Ix;
+    Iz = 0.99;
+    Izmax = Iz;
+    Ix = 0.13;
+    Ixmax = Ix;
+    double Ib = M.fun_I (L - 0.485, L, m_fuel, D);
+    double Iem = Izmax - Ib + M_Rocket * pow(gl_c, 2);
+    double Sstart = gl_c * M_Rocket;
+    Ssumm = Sstart;
+    double Sem = Sstart - M.fun_S (L - 0.485, L, m_fuel);
+
+    qDebug() << Sem;
 
     T_fuel = 2.17;
     //
@@ -105,6 +115,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     int i = 0;
     int value = 0;
     d_O = 0;
+    bool co = true;
+    bool vo = true;
     double K1, K2, K3, K4;
     //while (sec->tY>=0.5 && sec->V>=0.5) sec->tY>=0.5
     while (tY>0 && V>0)
@@ -119,47 +131,59 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         eastwind W1 (tY/1000);
 //        eastwind W2 (tY/1000);
 
-
+        X_oneC = gl_c - foc;
+        X_twoC = L - gl_c;
         // Участок работы ДУ-1
         if (time<=T_fuel)
         {
             //if (m_t > M_Rocket-onefu )
             //{
-            if (time <= 0.08) peng = 921.22;
-            if ((time > 0.08) && (time <= 0.34)) peng = 700;
-            if ((time > 0.34) && (time <= 0.44)) peng = 665.08;
-            if ((time > 0.44) && (time <= 0.65)) peng = 674.60;
-            if ((time > 0.65) && (time <= 1.00)) peng = 681.21;
-            if ((time > 1.00) && (time <= 1.21)) peng = 668.16;
-            if ((time > 1.21) && (time <= 1.45)) peng = 640.74;
-            if ((time > 1.45) && (time <= 1.70)) peng = 600.00;
-            if ((time > 1.70) && (time <= 2.00)) peng = 538.04;
-            if ((time > 2.00) && (time <= 2.10)) peng = 353.31;
-            if (time > 2.10) peng = 353.31;
+//            if (time <= 0.08) peng = 921.22;
+//            if ((time > 0.08) && (time <= 0.34)) peng = 700;
+//            if ((time > 0.34) && (time <= 0.44)) peng = 665.08;
+//            if ((time > 0.44) && (time <= 0.65)) peng = 674.60;
+//            if ((time > 0.65) && (time <= 1.00)) peng = 681.21;
+//            if ((time > 1.00) && (time <= 1.21)) peng = 668.16;
+//            if ((time > 1.21) && (time <= 1.45)) peng = 640.74;
+//            if ((time > 1.45) && (time <= 1.70)) peng = 600.00;
+//            if ((time > 1.70) && (time <= 2.00)) peng = 538.04;
+//            if ((time > 2.00) && (time <= 2.10)) peng = 353.31;
+//            if (time > 2.10) peng = 353.31;
 
+            static double P_matrix [12] {921.22, 921.22, 700, 665.08, 674.6, 681.21, 668.16, 640.74, 600, 538.04, 353.31, 0};
+            static double T_matrix [12] {0.01, 0.08, 0.34, 0.44, 0.65, 1.00, 1.21, 1.45, 1.70, 2.00, 2.10, 2.18};
+
+            for (int i = 0; i < 12; i++)
+            {
+                if (time >= T_matrix[i] && time <= T_matrix[i+1])  {peng = P_matrix[i] + (P_matrix[i+1]-P_matrix[i])/(T_matrix[i+1]-T_matrix[i])*(time-T_matrix[i]);}
+            }
+            //qDebug() << peng << " " << time;
 
             Peng_control = peng;
             //+ (p_ground - P.get_pressure()) * Smid/2;
 
             m_t = m_fuel+m_dry;
+            static double Imp = 1180;
 
-            m_fuel -= peng/1150*h;
-//            d_O[0] += Ratio*CF*h/(1100*Smid)/(Ratio+1);
+            m_fuel -= peng/Imp*h;
+            d_O += peng/Imp*h/(1600*Smid);
 //            d_C[0] += CF*h/(440*Smid)/(Ratio+1);
 //            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
 //            S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], m_C[0]);
 //            // fir в sec->e не ошибка, а условность СК
 //            fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
 //            sec->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
-//            fir->gl_c = fir->Ssumm/fir->m_t;
-//            sec->gl_c = sec->Ssumm/sec->m_t;
 
-//            I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], D);
+               gl_c = Ssumm/m_t;
+            //            sec->gl_c = sec->Ssumm/sec->m_t;
+//   I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], D);
 //            I_c[0] = M.fun_I (M.K[10]+d_C[0], M.K[11], m_C[0], D);
 //            fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reC +fir->I_reO - fir->m_t*pow (fir->gl_c,2);
 
 //            sec->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reC +fir->I_reO - sec->m_t*pow(sec->gl_c,2);
-//            Ix = fir->m_t * pow(D/2, 2);
+            Iz = Iem + M.fun_I (L - 0.485+d_O, L, m_fuel, D) - m_t*pow(gl_c,2);
+            Ssumm = Sem + M.fun_S (L - 0.485+d_O, L, m_fuel);
+            Ix -= peng/Imp*h * pow(D/2, 2);
             //}
             //else T_fuel[0] = time;
             //if (abs(m_t - (M_Rocket-m_fuel[0])) < 100) T_fuel[0] = time;
@@ -169,7 +193,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //            H_1 = fir->tY/1000;
 //            CILCON = 12.88;
 //            dep = count*h;
-//            sec->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
+//              focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
 //            X_oneC = sec->gl_c - sec->focus;
 //            X_twoC = sec->L - sec->gl_c;
         }
@@ -268,7 +292,10 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
             //double me = fir->anY;
 
+            double H1 = tY;
             tY += V* sin(anY) *h;
+
+            if (tY <= H1 && co) {Hmax = tY; co = false;}
 
 //            K1 = B_1.fdV(fir->V, fir->anY);
 //            K2 = B_1.fdV(fir->V+h/2*K1, fir->anY+h/2);
@@ -283,10 +310,13 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //            fir->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
 
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
+
+            //double V2 = V;
             V   += (B_1.fdV(V, anY) + V1)/2*h;
+            //if (V < V2 && vo) {Vmax = V; vo = false;}
             anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
-            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-                     << ";Y : " << anY*57.3 << ";Q : " << HSP_1;
+         //   qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
+         //            << ";Y : " << anY*57.3 << ";Q : " << Iz;
 
 
             H11 = V* sin(anY);
@@ -344,25 +374,25 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         xn.push_back(time);
         yu_1.push_back(HSP_1);
 //        yu_2.push_back(HSP_2);
-////        center_1.push_back(fir->gl_c);
+        center_1.push_back(gl_c);
 ////        center_2.push_back(sec->gl_c);
         v_1.push_back(V);
 //        v_2.push_back(sec->V);
-//        sinn.push_back(fir->Ssumm);
-//        jinn.push_back(fir->Isumm);
+        sinn.push_back(Ssumm);
+        jinn.push_back(Iz);
 //        jinn2.push_back(sec->Isumm);
 //        CM.push_back(fir->Ssumm/fir->m_t);
         mass_1.push_back(m_t);
 //        mass_2.push_back(sec->m_t);
         Long_1.push_back(tX);
 //        Long_2.push_back(sec->tX/1000);
-//        w.push_back(Wind2);
+        w.push_back(3);
         H1.push_back(tY);
 //        H2.push_back(sec->tY/1000);
 //        angle.push_back(pitch_angle*57.3);
 //        b1.push_back(HSP_1*Smid*CX_1);
 //        b2.push_back(HSP_2*Smid*CX_2);
-//        lin.push_back(Ix);
+        lin.push_back(Ix);
 ////        ALI_1.push_back(alph_1.A());
 ////        ALI_2.push_back(alph_2.A());
 //        //ALI.push_back(fir->Peng_t/ (fir->m_t*Atm_1.get_AOG()));
@@ -374,13 +404,13 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         P1.push_back(peng);
 //        P2.push_back(sec->Peng_t);
 //        f1.push_back(fir->focus);
-//        Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
+        Lon.push_back(peng/(m_t*Atm_1.get_AOG()));
 ////        Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
-//        pc2.push_back(sec->Peng_control);
-//        cy2.push_back(CY_2);
+        pc2.push_back(Peng_control);
+        cy2.push_back(CY_1);
 //        //std::cout << CY_2 << std::endl;
-//        dyn1.push_back(X_oneC);
-//        dyn2.push_back(X_twoC);
+        dyn1.push_back(X_oneC);
+        dyn2.push_back(X_twoC);
 //        lenght_R.push_back(sec->L);
 //        //qDebug() << sec->L;
 
@@ -388,5 +418,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 ////        amax = alph_1.A();
 //        count+=1;
         MaxTime = count*h;
+
     }
+
 }

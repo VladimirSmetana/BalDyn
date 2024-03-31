@@ -56,7 +56,13 @@ public:
     void data_calculating(double P, double I, double D);
     void const_par(double mass, double len);
     void ver_par(double mass, double p, double p_con,
-                        double q, double cy, double x1, double x2, double vel, double iner, double len);
+                        double q, double cy, double x1, double x2, double vel, double iner, double len, double Y);
+
+    double ww, yy, w, y;
+    double Cyw;
+    double Cww;
+    double Cyy;
+    double Cwy;
 };
 
 

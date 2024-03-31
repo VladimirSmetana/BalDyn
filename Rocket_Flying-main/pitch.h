@@ -103,10 +103,14 @@ public:
     double X_twoC;
     double MaxTime;
     double T_fuel = 2.17;
+    double gl_c, foc;
 
     double anY;
     double tY, tX;
     double Peng_control;
+    double Ssumm;
+    double Hmax;
+    double Vmax;
 
     void pitch_calculations(double (&kalph)[3], double (&peng)[2]);
 
