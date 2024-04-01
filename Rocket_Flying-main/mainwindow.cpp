@@ -199,7 +199,7 @@ void MainWindow::on_mass_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Масса, кг");
-    drawing(P->mass_1, 4, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, 0, 2.5);
+    drawing(P->mass_1, 3.5, *std::max_element(P->mass_1.begin(),P->mass_1.end()), P->xn, 0, 2.5);
 }
 
 // Файл->Выход

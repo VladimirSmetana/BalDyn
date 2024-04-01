@@ -58,11 +58,13 @@ public:
     void ver_par(double mass, double p, double p_con,
                         double q, double cy, double x1, double x2, double vel, double iner, double len, double Y);
 
-    double ww, yy, w, y;
+    double www = 0, yyy = 0, ww = 0, yy = 0, w = 0, y = 0;
     double Cyw;
     double Cww;
     double Cyy;
     double Cwy;
+
+    double alpha = 0;
 };
 
 

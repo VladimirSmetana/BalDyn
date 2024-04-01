@@ -147,8 +147,8 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
     void DC::ver_par(double mass, double p, double p_con,
                      double q, double cy, double x1, double x2, double vel, double iner, double len, double Y)
     {
-        qDebug() << mass << " " << p << " " << p_con << " " << q << " " << cy << " " << x1 << " " << x2 << " " << vel << " " << iner << " " <<
-            len << " " << Y;
+        //qDebug() << mass << " " << p << " " << p_con << " " << q << " " << cy << " " << x1 << " " << x2 << " " << vel << " " << iner << " " <<
+        //    len << " " << Y;
 //        double D = 4.1;
 //        double R = D/2;
 //        double bb = 0.004;
@@ -157,7 +157,7 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 //        double I4 = mass*pow(len,4);
 //        double EI0 = E*I * 1000000;
 
-        double alpha;
+
         double h = 0.01;
         double S = M_PI*pow(0.102,2)/4;
 //        double Mx = mass*0.1/64.4;
@@ -176,23 +176,28 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
 //        }
         //Cbs.push_back(p_con/mass);
-        Cyw = -(p+cy/57.3*q*S)/mass;
-        Cww = (-cy/57.3*q*S*x1)/iner;
-        Cyy = (cy/57.3*q*S)/(mass*vel);
-        Cwy = (cy/57.3*q*S*x1)/iner/vel;
+        Cyw = -(p+cy*q*S)/mass;
+        Cww = (-cy*q*S*x1)/iner;
+        Cyy = (cy*q*S)/(mass*vel);
+        Cwy = (cy*q*S*x1)/iner/vel;
 
         Cyws.push_back(Cyw);
         Cwws.push_back(Cww);
         Cyys.push_back(Cyy);
         Cwys.push_back(Cwy);
 
-        double sk = 2*sin(Y/57.3);
-        ww = - Cwy*y - Cww*w + Cwy*sk;
-        yy = - Cyw*w - Cyy*y + Cyw*sk;
-        w+=h*ww;
-        y+=h*yy;
-        alpha = w - (y - sk)/vel;
-        //qDebug() << w*57.3 << " " << y << " " << alpha*57.3 << " " << Cwy;
+        qDebug() << w << " " << y << " " << alpha*57.3 << " " << Cwy;
+
+        double w_abs = -2;
+        double sk = w_abs*sin(Y/57.3);
+        www = - Cwy*yy - Cww*ww + Cwy*sk;
+        yyy = - Cyw*ww - Cyy*yy + Cyw*sk;
+        ww=h*www;
+        yy=h*yyy;
+        w=h*ww;
+        y=h*yy;
+        alpha = atan(w_abs/vel);
+
         //Cwbs.push_back(p_con*x2/iner);
 
 //        Csbs.push_back(p_con/iner);

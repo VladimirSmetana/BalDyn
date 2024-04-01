@@ -159,11 +159,12 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             }
             //qDebug() << peng << " " << time;
 
+            //peng*=1.05; //
             Peng_control = peng;
             //+ (p_ground - P.get_pressure()) * Smid/2;
 
             m_t = m_fuel+m_dry;
-            static double Imp = 1180;
+            static double Imp = 1150; //1150
 
             m_fuel -= peng/Imp*h;
             d_O += peng/Imp*h/(1600*Smid);
