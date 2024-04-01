@@ -186,18 +186,20 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
         Cyys.push_back(Cyy);
         Cwys.push_back(Cwy);
 
-        qDebug() << w << " " << y << " " << alpha*57.3 << " " << Cwy;
+        qDebug() << w*57.3 << " " << y << " " << alpha*57.3 << " " << Cwy;
 
         double w_abs = -5;
         double sk = w_abs*sin(Y/57.3);
 
 
-        www = - Cwy*yy - Cww*w + Cwy*sk;
-        yyy = - Cyw*w - Cyy*yy + Cyw*sk;
-        ww+=h*www;
-        yy+=h*yyy;
-        w=h*ww;
-        y=h*yy;
+        w = (Cyy*sk)/Cyw;
+        y = (Cwy*sk)/Cyy;
+//        www = - Cwy*yy - Cww*w + Cwy*sk;
+//        yyy = - Cyw*w - Cyy*yy + Cyw*sk;
+//        ww+=h*www;
+//        yy+=h*yyy;
+//        w=h*ww;
+//        y=h*yy;
         alpha = atan(w_abs/vel);
 
         //Cwbs.push_back(p_con*x2/iner);

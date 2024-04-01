@@ -95,7 +95,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     Ssumm = Sstart;
     double Sem = Sstart - M.fun_S (L - 0.485, L, m_fuel);
 
-    qDebug() << Sem;
+    //qDebug() << Sem;
 
     T_fuel = 2.17;
     //

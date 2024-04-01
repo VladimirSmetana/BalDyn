@@ -76,17 +76,14 @@ double  Runge_Kutt(double func(double, double),
 void MainWindow::on_action_triggered()
 {
     // Параметры тяги и угла атаки
-    QString p1=ui->lineEdit_10->text();
-    QString p2=ui->lineEdit_11->text();
-    QString al1=ui->lineEdit_5->text();
-    QString al2=ui->lineEdit_4->text();
 
 
 
-    double kpeng [2] {p1.toDouble(), p2.toDouble()};
+
+    double kpeng [2] {1, 1};
 
 
-    double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
+    double coef_alpha [3] {0, 1, 1};
     P->pitch_calculations(coef_alpha, kpeng);
 
     //db.close();
@@ -106,11 +103,7 @@ void MainWindow::on_action_triggered()
     ui->label_8->setText("Макс скор напор, кг/мс2");
     ui->label_9->setText("Дальность, км");
 
-    ui->lineEdit_4->show();
-    ui->lineEdit_5->show();
-    ui->label_4->show();
-    ui->label_5->show();
-    ui->action_2->setEnabled(true);
+
 
 
 }
