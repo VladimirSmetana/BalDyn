@@ -127,7 +127,7 @@ void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Высота, м");
-    drawing(P->H1, 0, 1000, P->xn, 0, 25);
+    drawing(P->H1, 0, 1700, P->xn, 0, 40);
 }
 
 // График траектории
@@ -135,7 +135,7 @@ void MainWindow::on_trj_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Дальность, м");
     ui->widget->yAxis->setLabel("Высота, м");
-    drawing(P->H1, 0, 1000, P->Long_1, 0, 2500);
+    drawing(P->H1, 0, 1700, P->Long_1, 0, 900);
 }
 
 // График дальности
@@ -143,7 +143,7 @@ void MainWindow::on_distance_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Дальность, км");
-    drawing(P->Long_1, 0, 2500, P->xn, 0, 25);
+    drawing(P->Long_1, 0, 900, P->xn, 0, 40);
 }
 
 // График скорости
@@ -151,7 +151,7 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    drawing(P->v_1, 0, 300, P->xn, 0, 25);
+    drawing(P->v_1, 0, 300, P->xn, 0, 40);
 }
 
 // График угла атаки
@@ -167,7 +167,7 @@ void MainWindow::on_T_angle_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    drawing(P->TET_1, -90, 90, P->xn, 0, 25);
+    drawing(P->TET_1, -90, 90, P->xn, 0, 40);
 }
 
 // График скоростного напора
@@ -175,7 +175,7 @@ void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скоростной напор, Па");
-    drawing(P->yu_1, 0, 40000, P->xn, 0, 25);
+    drawing(P->yu_1, 0, 40000, P->xn, 0, 40);
 }
 
 // График центра масс
@@ -183,14 +183,14 @@ void MainWindow::on_center_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Центр масс РН, м");
-    drawing(P->center_1, 0.6, *std::max_element(P->center_1.begin(),P->center_1.end()), P->xn, 0, 25);
+    drawing(P->center_1, 0.6, *std::max_element(P->center_1.begin(),P->center_1.end()), P->xn, 0, 40);
 }
 
 // График тяги
 void MainWindow::on_thrust_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
-    ui->widget->yAxis->setLabel("Тяга ДУ, кН");
+    ui->widget->yAxis->setLabel("Тяга ДУ, Н");
     drawing(P->P1, 0, *std::max_element(P->P1.begin(),P->P1.end()), P->xn, 0, 2.5);
 }
 
@@ -255,7 +255,7 @@ void MainWindow::on_action_5_triggered()
 //       if (P->xn[i] < P->T_fuel[0])
 //        {
             d->ver_par(P->mass_1[i], P->P1[i], P->pc2[i], P->yu_1[i], P->cy2[i],
-           P->dyn1[i], P->dyn2[i], P->v_1[i], P->jinn[i], 1.2, P->TET_1[i]);
+           P->dyn1[i], P->dyn2[i], P->v_1[i], P->lin[i], 1.2, P->TET_1[i]);
 //        }
 //        else
 //        {
