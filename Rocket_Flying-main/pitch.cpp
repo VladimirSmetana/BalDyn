@@ -7,6 +7,7 @@ pitch::pitch()
 
 void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
+    double V0X, V0Y;
     //
     double m_t;
     double V;
@@ -263,7 +264,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         Ott = anY-Na;
         pitch_angle = Ott;
 
-        tX += h * (V* cos(anY)+X1)/2;
+        tX += h * (B_1.fdV(V, anY)*h* cos(anY));
 
 
         X1 = V* cos(anY);
@@ -297,7 +298,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //double me = fir->anY;
 
             double H1 = tY;
-            tY += V* sin(anY) *h;
+            tY += B_1.fdV(V, anY)*h* sin(anY) *h;
 
             if (tY <= H1 && co) {Hmax = tY; co = false;}
 
@@ -316,13 +317,19 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
 
             //double V2 = V;
-            V   += (B_1.fdV(V, anY) + V1)/2*h;
+
             //if (V < V2 && vo) {Vmax = V; vo = false;}
+
+
             if (tY>4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;}
+            V   += B_1.fdV(V, anY)*h;
+//            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
+//                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
 
-            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
+            VX += h*B_1.dVX(V, anY, Na);
+            VY += h*B_1.dVY(V, anY, Na);
 
+            qDebug() << VX << " "<< V* cos(anY) << " " << VY << " " <<V* sin(anY) << " " << zXY;
 
             H11 = V* sin(anY);
             V1 = B_1.fdV(V, anY);
@@ -330,13 +337,12 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
 
             //std::cout << zXY/1000  << std::endl;
-            VX += h*B_1.dVX(velXY, Ott, Na);
-            VY += h*B_1.dVY(velXY, Ott, Na);
+
             VZ += h*B_1.dVZ(velXY, Ott, Na);
-            velXY = sqrt(VX*VX+VY*VY+VZ*VZ);
+            velXY = sqrt(VX*VX+VY*VY);
             trjXY = acos(VX/velXY);
-            xXY += h*VX * cos(anY) / cos(Ott);
-            yXY += h*VY * sin(anY) / sin(Ott);
+            xXY += h*VX;
+            yXY += h*VY;
             zXY += h*VZ;
             norXY = atan(xXY/(6371000+yXY));
             //
