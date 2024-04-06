@@ -3,12 +3,14 @@ debug/airforce.o
 debug/alpha.o
 debug/atmosphere.o
 debug/dycoef.o
+debug/dynamic_mass.o
 debug/eastwind.o
 debug/equations.o
 debug/focus.o
 debug/main.o
 debug/mainwindow.o
 debug/mass.o
+debug/pitch.o
 debug/qcustomplot.o
 debug/qrc_Exp.o
 debug/moc_mainwindow.o

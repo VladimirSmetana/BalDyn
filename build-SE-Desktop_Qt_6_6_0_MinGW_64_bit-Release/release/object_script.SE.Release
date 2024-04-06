@@ -3,12 +3,14 @@ release/airforce.o
 release/alpha.o
 release/atmosphere.o
 release/dycoef.o
+release/dynamic_mass.o
 release/eastwind.o
 release/equations.o
 release/focus.o
 release/main.o
 release/mainwindow.o
 release/mass.o
+release/pitch.o
 release/qcustomplot.o
 release/qrc_Exp.o
 release/moc_mainwindow.o

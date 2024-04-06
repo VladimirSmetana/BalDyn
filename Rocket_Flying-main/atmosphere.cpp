@@ -2,9 +2,18 @@
 
     atmosphere::atmosphere (double H)
     {
-        for (int i = 1; i < 15; i++)
+
+        H+=800;
+
+
+        for (int i = 0; i < 15; i++)
         {
-            if (H >= HT[i - 1] && H < HT[i]) { T = (TT[i-1])+(H-HT[i-1])*(TT[i]-TT[i-1])/ (HT[i] - HT[i - 1]); };
+            if (H >= H_new[i - 1] && H < H_new[i])
+            {
+                po = (p_new[i-1])+(H-H_new[i-1])*(p_new[i]-p_new[i-1])/ (H_new[i] - H_new[i - 1]);
+                a = (a_new[i-1])+(H-H_new[i-1])*(a_new[i]-a_new[i-1])/ (H_new[i] - H_new[i - 1]);
+            };
+
         }
 
         for (int i = 1; i < 8; i++)
@@ -32,7 +41,7 @@
             if (abs(Bett) >= 0.0000001) { pp = log(101325); Hs = H-0.1; P = exp(pp - (gc * log((Tm + Bett *  (H - 0))  / Tm)) / (Bett * r)); }
             Pap = 101325 * exp(-gc*H*Mc/(RB*T));
             /// Плотность
-            po = (P * Mol) / (RB * T);
+            //po = (P * Mol) / (RB * T);
             /// Концентрация частиц воздуха
             n = 7.243611 * pow(10, 22) * P / T;
 
@@ -41,7 +50,7 @@
             tCel = T - 273.15;
             yyd = po * g;
             Hmas = (RB / Mol) * (T / g);
-            a = 20.046796 * sqrt(T);
+            //a = 20.046796 * sqrt(T);
             vsred = 145.50685 * T / Mol;
             lsred = 2.332376 * pow(10, -5) * T / P;
             omega = 6.238629 * pow(10, 6) * P / sqrt(T * Mol);

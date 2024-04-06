@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.3, 2024-04-06T10:29:19. -->
+<!-- Written by QtCreator 11.0.3, 2024-04-06T19:20:20. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -245,12 +245,12 @@
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="bool" key="PE.EnvironmentAspect.PrintOnRun">false</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/smeta/OneDrive/Рабочий стол/BalDyn/Rocket_Flying-main/SE.pro</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/smeta/OneDrive/Рабочий стол/BalDyn/Rocket_Flying-main/SE.pro</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">SE2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">Qt4ProjectManager.Qt4RunConfiguration:C:/Users/smeta/OneDrive/Рабочий стол/BD/BalDyn/Rocket_Flying-main/SE.pro</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/smeta/OneDrive/Рабочий стол/BD/BalDyn/Rocket_Flying-main/SE.pro</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/smeta/OneDrive/Рабочий стол/BD/BalDyn/build-SE-Desktop_Qt_6_6_0_MinGW_64_bit-Release</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>

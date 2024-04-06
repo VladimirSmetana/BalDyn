@@ -1,5 +1,6 @@
 #include "pitch.h"
 #include <QDebug>
+
 pitch::pitch()
 {
 
@@ -7,7 +8,6 @@ pitch::pitch()
 
 void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
-    double V0X, V0Y;
     //
     double m_t;
     double V;
@@ -96,9 +96,9 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     Ssumm = Sstart;
     double Sem = Sstart - M.fun_S (L - 0.485, L, m_fuel);
 
-    //qDebug() << Sem;
+    //qDebug() << Smid;
 
-    T_fuel = 2.17;
+    T_fuel = 2.18;
     //
     // ИД итеративного расчета
     anY = M_PI/2-10/57.3;
@@ -135,14 +135,14 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         X_oneC = gl_c - foc;
         X_twoC = L - gl_c;
         // Участок работы ДУ-1
-        static double P_matrix [12] {921.22, 921.22, 700, 665.08, 674.6, 681.21, 668.16, 640.74, 600, 538.04, 353.31, 0};
+        static double P_matrix [12] {100 , 1200, 700, 665.08, 674.6, 681.21, 668.16, 640.74, 600, 538.04, 353.31, 0};
         static double T_matrix [12] {0.01, 0.08, 0.34, 0.44, 0.65, 1.00, 1.21, 1.45, 1.70, 2.00, 2.10, 2.18};
 
         for (int i = 0; i < 12; i++)
         {
             if (time >= T_matrix[i] && time <= T_matrix[i+1])  {peng = P_matrix[i] + (P_matrix[i+1]-P_matrix[i])/(T_matrix[i+1]-T_matrix[i])*(time-T_matrix[i]);}
         }
-        equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), m_t, CX_1, CY_1, peng, 0, Wind1);
+        equations B_1 (Atm_1.get_density(), 0.009894, Atm_1.get_AOG(), m_t, CX_1, CY_1, peng, 0, Wind1);
 
         if (time<=T_fuel)
         {
@@ -163,12 +163,12 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
             //qDebug() << peng << " " << time;
 
-            //peng*=1.05; //
+            //peng*=1.2; //
             Peng_control = peng;
             //+ (p_ground - P.get_pressure()) * Smid/2;
 
             m_t = m_fuel+m_dry;
-            static double Imp = 1170; //1150
+            static double Imp = 1190; //1150
 
             m_fuel -= peng/Imp*h;
             d_O += peng/Imp*h/(1600*Smid);
@@ -264,7 +264,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         Ott = anY-Na;
         pitch_angle = Ott;
 
-        tX += h * (B_1.fdV(V, anY)*h* cos(anY));
+        tX += h * (V* cos(anY)+X1)/2;
 
 
         X1 = V* cos(anY);
@@ -298,7 +298,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //double me = fir->anY;
 
             double H1 = tY;
-            tY += B_1.fdV(V, anY)*h* sin(anY) *h;
+            tY += V* sin(anY) *h;
 
             if (tY <= H1 && co) {Hmax = tY; co = false;}
 
@@ -317,19 +317,13 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
 
             //double V2 = V;
-
+            V   += (B_1.fdV(V, anY) + V1)/2*h;
             //if (V < V2 && vo) {Vmax = V; vo = false;}
+            if (tY>=4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;}
 
+            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
+                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
 
-            if (tY>4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;}
-            V   += B_1.fdV(V, anY)*h;
-//            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-//                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
-
-            VX += h*B_1.dVX(V, anY, Na);
-            VY += h*B_1.dVY(V, anY, Na);
-
-            qDebug() << VX << " "<< V* cos(anY) << " " << VY << " " <<V* sin(anY) << " " << zXY;
 
             H11 = V* sin(anY);
             V1 = B_1.fdV(V, anY);
@@ -337,12 +331,13 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
 
             //std::cout << zXY/1000  << std::endl;
-
+            VX += h*B_1.dVX(velXY, Ott, Na);
+            VY += h*B_1.dVY(velXY, Ott, Na);
             VZ += h*B_1.dVZ(velXY, Ott, Na);
-            velXY = sqrt(VX*VX+VY*VY);
+            velXY = sqrt(VX*VX+VY*VY+VZ*VZ);
             trjXY = acos(VX/velXY);
-            xXY += h*VX;
-            yXY += h*VY;
+            xXY += h*VX * cos(anY) / cos(Ott);
+            yXY += h*VY * sin(anY) / sin(Ott);
             zXY += h*VZ;
             norXY = atan(xXY/(6371000+yXY));
             //

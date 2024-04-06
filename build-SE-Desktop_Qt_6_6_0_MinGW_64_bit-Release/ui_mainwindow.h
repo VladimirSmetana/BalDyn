@@ -32,7 +32,7 @@ public:
     QAction *action;
     QAction *action_2;
     QAction *action_3;
-    QAction *action_4;
+    QAction *action_exit;
     QAction *action_6;
     QAction *action_5;
     QAction *action_7;
@@ -40,15 +40,6 @@ public:
     QAction *action_9;
     QWidget *centralwidget;
     QCustomPlot *widget;
-    QGroupBox *groupBox;
-    QLineEdit *lineEdit_5;
-    QLineEdit *lineEdit_4;
-    QLabel *label_4;
-    QLabel *label_5;
-    QLineEdit *lineEdit_10;
-    QLineEdit *lineEdit_11;
-    QLabel *label_12;
-    QLabel *label_13;
     QGroupBox *groupBox_2;
     QLineEdit *lineEdit;
     QLabel *label_2;
@@ -71,24 +62,27 @@ public:
     QGroupBox *groupBox_3;
     QWidget *verticalLayoutWidget;
     QVBoxLayout *verticalLayout;
-    QPushButton *heightButton;
-    QPushButton *trjButton;
-    QPushButton *distanceButton;
-    QPushButton *velButton;
-    QPushButton *alphaButton;
-    QPushButton *angleButton;
-    QPushButton *vhButton;
-    QPushButton *centerButton;
-    QPushButton *pushButton_11;
-    QPushButton *massButton;
-    QPushButton *pushButton_14;
-    QPushButton *fokusButton;
-    QPushButton *staticButton;
-    QPushButton *YZmomentButton;
-    QPushButton *XmomentButton;
-    QLineEdit *lineEdit_14;
-    QLineEdit *lineEdit_15;
-    QLineEdit *lineEdit_16;
+    QPushButton *height_Button;
+    QPushButton *trj_Button;
+    QPushButton *distance_Button;
+    QPushButton *velocity_Button;
+    QPushButton *alpha_Button;
+    QPushButton *T_angle_Button;
+    QPushButton *Q_Button;
+    QPushButton *center_Button;
+    QPushButton *thrust_Button;
+    QPushButton *mass_Button;
+    QPushButton *NX_Button;
+    QPushButton *fokus_Button;
+    QPushButton *static_Button;
+    QPushButton *YZmoment_Button;
+    QPushButton *Xmoment_Button;
+    QGroupBox *groupBox_4;
+    QWidget *verticalLayoutWidget_2;
+    QVBoxLayout *verticalLayout_2;
+    QPushButton *height_Button_3;
+    QPushButton *height_Button_4;
+    QPushButton *pushButton;
     QStatusBar *statusbar;
     QMenuBar *menubar;
     QMenu *menu;
@@ -98,8 +92,8 @@ public:
     {
         if (MainWindow->objectName().isEmpty())
             MainWindow->setObjectName("MainWindow");
-        MainWindow->resize(1271, 650);
-        MainWindow->setStyleSheet(QString::fromUtf8("background-color:   rgb(206, 202, 145);\n"
+        MainWindow->resize(1274, 680);
+        MainWindow->setStyleSheet(QString::fromUtf8("background-color:  rgb(235, 237, 255);\n"
 "color: black;"));
         action = new QAction(MainWindow);
         action->setObjectName("action");
@@ -108,8 +102,8 @@ public:
         action_2->setEnabled(false);
         action_3 = new QAction(MainWindow);
         action_3->setObjectName("action_3");
-        action_4 = new QAction(MainWindow);
-        action_4->setObjectName("action_4");
+        action_exit = new QAction(MainWindow);
+        action_exit->setObjectName("action_exit");
         action_6 = new QAction(MainWindow);
         action_6->setObjectName("action_6");
         action_6->setEnabled(false);
@@ -125,53 +119,16 @@ public:
         centralwidget->setObjectName("centralwidget");
         widget = new QCustomPlot(centralwidget);
         widget->setObjectName("widget");
-        widget->setGeometry(QRect(590, 80, 411, 281));
+        widget->setGeometry(QRect(590, 30, 621, 601));
         QFont font;
         font.setUnderline(false);
         widget->setFont(font);
         widget->setToolTipDuration(0);
         widget->setStyleSheet(QString::fromUtf8(""));
-        groupBox = new QGroupBox(centralwidget);
-        groupBox->setObjectName("groupBox");
-        groupBox->setGeometry(QRect(20, 30, 271, 171));
-        groupBox->setStyleSheet(QString::fromUtf8("background-color:  rgb(177, 171, 84);\n"
-"color: rgb(118, 0, 2);"));
-        lineEdit_5 = new QLineEdit(groupBox);
-        lineEdit_5->setObjectName("lineEdit_5");
-        lineEdit_5->setGeometry(QRect(170, 40, 81, 30));
-        lineEdit_5->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        lineEdit_4 = new QLineEdit(groupBox);
-        lineEdit_4->setObjectName("lineEdit_4");
-        lineEdit_4->setGeometry(QRect(170, 70, 81, 30));
-        lineEdit_4->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        label_4 = new QLabel(groupBox);
-        label_4->setObjectName("label_4");
-        label_4->setGeometry(QRect(10, 40, 61, 20));
-        label_5 = new QLabel(groupBox);
-        label_5->setObjectName("label_5");
-        label_5->setGeometry(QRect(10, 70, 49, 16));
-        lineEdit_10 = new QLineEdit(groupBox);
-        lineEdit_10->setObjectName("lineEdit_10");
-        lineEdit_10->setGeometry(QRect(170, 100, 81, 30));
-        lineEdit_10->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        lineEdit_11 = new QLineEdit(groupBox);
-        lineEdit_11->setObjectName("lineEdit_11");
-        lineEdit_11->setGeometry(QRect(170, 130, 81, 30));
-        lineEdit_11->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        label_12 = new QLabel(groupBox);
-        label_12->setObjectName("label_12");
-        label_12->setGeometry(QRect(10, 100, 141, 16));
-        label_13 = new QLabel(groupBox);
-        label_13->setObjectName("label_13");
-        label_13->setGeometry(QRect(10, 130, 151, 16));
         groupBox_2 = new QGroupBox(centralwidget);
         groupBox_2->setObjectName("groupBox_2");
-        groupBox_2->setGeometry(QRect(20, 210, 271, 401));
-        groupBox_2->setStyleSheet(QString::fromUtf8("background-color:  rgb(177, 171, 84);\n"
+        groupBox_2->setGeometry(QRect(20, 30, 271, 401));
+        groupBox_2->setStyleSheet(QString::fromUtf8("background-color: rgb(133, 172, 255);\n"
 "color: rgb(118, 0, 2);"));
         lineEdit = new QLineEdit(groupBox_2);
         lineEdit->setObjectName("lineEdit");
@@ -248,7 +205,7 @@ public:
         groupBox_3 = new QGroupBox(centralwidget);
         groupBox_3->setObjectName("groupBox_3");
         groupBox_3->setGeometry(QRect(300, 30, 271, 601));
-        groupBox_3->setStyleSheet(QString::fromUtf8("background-color:  rgb(177, 171, 84);\n"
+        groupBox_3->setStyleSheet(QString::fromUtf8("background-color: rgb(133, 172, 255);\n"
 "color: black;"));
         groupBox_3->setFlat(false);
         verticalLayoutWidget = new QWidget(groupBox_3);
@@ -257,147 +214,175 @@ public:
         verticalLayout = new QVBoxLayout(verticalLayoutWidget);
         verticalLayout->setObjectName("verticalLayout");
         verticalLayout->setContentsMargins(0, 0, 0, 0);
-        heightButton = new QPushButton(verticalLayoutWidget);
-        heightButton->setObjectName("heightButton");
-        heightButton->setContextMenuPolicy(Qt::CustomContextMenu);
-        heightButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        height_Button = new QPushButton(verticalLayoutWidget);
+        height_Button->setObjectName("height_Button");
+        height_Button->setContextMenuPolicy(Qt::CustomContextMenu);
+        height_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
-        heightButton->setCheckable(false);
-        heightButton->setAutoRepeat(false);
-        heightButton->setAutoExclusive(false);
-        heightButton->setAutoDefault(false);
+        height_Button->setCheckable(false);
+        height_Button->setAutoRepeat(false);
+        height_Button->setAutoExclusive(false);
+        height_Button->setAutoDefault(false);
 
-        verticalLayout->addWidget(heightButton);
+        verticalLayout->addWidget(height_Button);
 
-        trjButton = new QPushButton(verticalLayoutWidget);
-        trjButton->setObjectName("trjButton");
-        trjButton->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
+        trj_Button = new QPushButton(verticalLayoutWidget);
+        trj_Button->setObjectName("trj_Button");
+        trj_Button->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
 "color: white;\n"
 "\n"
 ""));
 
-        verticalLayout->addWidget(trjButton);
+        verticalLayout->addWidget(trj_Button);
 
-        distanceButton = new QPushButton(verticalLayoutWidget);
-        distanceButton->setObjectName("distanceButton");
-        distanceButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        distance_Button = new QPushButton(verticalLayoutWidget);
+        distance_Button->setObjectName("distance_Button");
+        distance_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(distanceButton);
+        verticalLayout->addWidget(distance_Button);
 
-        velButton = new QPushButton(verticalLayoutWidget);
-        velButton->setObjectName("velButton");
-        velButton->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
+        velocity_Button = new QPushButton(verticalLayoutWidget);
+        velocity_Button->setObjectName("velocity_Button");
+        velocity_Button->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
 "color: white;\n"
 "\n"
 ""));
 
-        verticalLayout->addWidget(velButton);
+        verticalLayout->addWidget(velocity_Button);
 
-        alphaButton = new QPushButton(verticalLayoutWidget);
-        alphaButton->setObjectName("alphaButton");
-        alphaButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        alpha_Button = new QPushButton(verticalLayoutWidget);
+        alpha_Button->setObjectName("alpha_Button");
+        alpha_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(alphaButton);
+        verticalLayout->addWidget(alpha_Button);
 
-        angleButton = new QPushButton(verticalLayoutWidget);
-        angleButton->setObjectName("angleButton");
-        angleButton->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
+        T_angle_Button = new QPushButton(verticalLayoutWidget);
+        T_angle_Button->setObjectName("T_angle_Button");
+        T_angle_Button->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
 "color: white;\n"
 "\n"
 ""));
 
-        verticalLayout->addWidget(angleButton);
+        verticalLayout->addWidget(T_angle_Button);
 
-        vhButton = new QPushButton(verticalLayoutWidget);
-        vhButton->setObjectName("vhButton");
-        vhButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        Q_Button = new QPushButton(verticalLayoutWidget);
+        Q_Button->setObjectName("Q_Button");
+        Q_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(vhButton);
+        verticalLayout->addWidget(Q_Button);
 
-        centerButton = new QPushButton(verticalLayoutWidget);
-        centerButton->setObjectName("centerButton");
-        centerButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        center_Button = new QPushButton(verticalLayoutWidget);
+        center_Button->setObjectName("center_Button");
+        center_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(centerButton);
+        verticalLayout->addWidget(center_Button);
 
-        pushButton_11 = new QPushButton(verticalLayoutWidget);
-        pushButton_11->setObjectName("pushButton_11");
-        pushButton_11->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        thrust_Button = new QPushButton(verticalLayoutWidget);
+        thrust_Button->setObjectName("thrust_Button");
+        thrust_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(pushButton_11);
+        verticalLayout->addWidget(thrust_Button);
 
-        massButton = new QPushButton(verticalLayoutWidget);
-        massButton->setObjectName("massButton");
-        massButton->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
+        mass_Button = new QPushButton(verticalLayoutWidget);
+        mass_Button->setObjectName("mass_Button");
+        mass_Button->setStyleSheet(QString::fromUtf8("background-color:  rgb(102, 13, 19);\n"
 "color: white;\n"
 "\n"
 "\n"
 ""));
 
-        verticalLayout->addWidget(massButton);
+        verticalLayout->addWidget(mass_Button);
 
-        pushButton_14 = new QPushButton(verticalLayoutWidget);
-        pushButton_14->setObjectName("pushButton_14");
-        pushButton_14->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        NX_Button = new QPushButton(verticalLayoutWidget);
+        NX_Button->setObjectName("NX_Button");
+        NX_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(pushButton_14);
+        verticalLayout->addWidget(NX_Button);
 
-        fokusButton = new QPushButton(verticalLayoutWidget);
-        fokusButton->setObjectName("fokusButton");
-        fokusButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        fokus_Button = new QPushButton(verticalLayoutWidget);
+        fokus_Button->setObjectName("fokus_Button");
+        fokus_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(fokusButton);
+        verticalLayout->addWidget(fokus_Button);
 
-        staticButton = new QPushButton(verticalLayoutWidget);
-        staticButton->setObjectName("staticButton");
-        staticButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        static_Button = new QPushButton(verticalLayoutWidget);
+        static_Button->setObjectName("static_Button");
+        static_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(staticButton);
+        verticalLayout->addWidget(static_Button);
 
-        YZmomentButton = new QPushButton(verticalLayoutWidget);
-        YZmomentButton->setObjectName("YZmomentButton");
-        YZmomentButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        YZmoment_Button = new QPushButton(verticalLayoutWidget);
+        YZmoment_Button->setObjectName("YZmoment_Button");
+        YZmoment_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(YZmomentButton);
+        verticalLayout->addWidget(YZmoment_Button);
 
-        XmomentButton = new QPushButton(verticalLayoutWidget);
-        XmomentButton->setObjectName("XmomentButton");
-        XmomentButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+        Xmoment_Button = new QPushButton(verticalLayoutWidget);
+        Xmoment_Button->setObjectName("Xmoment_Button");
+        Xmoment_Button->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
 "color: white"));
 
-        verticalLayout->addWidget(XmomentButton);
+        verticalLayout->addWidget(Xmoment_Button);
 
-        lineEdit_14 = new QLineEdit(centralwidget);
-        lineEdit_14->setObjectName("lineEdit_14");
-        lineEdit_14->setGeometry(QRect(590, 30, 81, 30));
-        lineEdit_14->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        lineEdit_15 = new QLineEdit(centralwidget);
-        lineEdit_15->setObjectName("lineEdit_15");
-        lineEdit_15->setGeometry(QRect(680, 30, 81, 30));
-        lineEdit_15->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
-        lineEdit_16 = new QLineEdit(centralwidget);
-        lineEdit_16->setObjectName("lineEdit_16");
-        lineEdit_16->setGeometry(QRect(770, 30, 81, 30));
-        lineEdit_16->setStyleSheet(QString::fromUtf8("background-color: white ;\n"
-"color: rgb(0, 0, 88);"));
+        groupBox_4 = new QGroupBox(centralwidget);
+        groupBox_4->setObjectName("groupBox_4");
+        groupBox_4->setGeometry(QRect(20, 440, 271, 191));
+        groupBox_4->setStyleSheet(QString::fromUtf8("background-color: rgb(133, 172, 255);\n"
+"color: black;"));
+        groupBox_4->setFlat(false);
+        verticalLayoutWidget_2 = new QWidget(groupBox_4);
+        verticalLayoutWidget_2->setObjectName("verticalLayoutWidget_2");
+        verticalLayoutWidget_2->setGeometry(QRect(10, 30, 241, 151));
+        verticalLayout_2 = new QVBoxLayout(verticalLayoutWidget_2);
+        verticalLayout_2->setObjectName("verticalLayout_2");
+        verticalLayout_2->setContentsMargins(0, 0, 0, 0);
+        height_Button_3 = new QPushButton(verticalLayoutWidget_2);
+        height_Button_3->setObjectName("height_Button_3");
+        height_Button_3->setContextMenuPolicy(Qt::CustomContextMenu);
+        height_Button_3->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+"color: white"));
+        height_Button_3->setCheckable(false);
+        height_Button_3->setAutoRepeat(false);
+        height_Button_3->setAutoExclusive(false);
+        height_Button_3->setAutoDefault(false);
+
+        verticalLayout_2->addWidget(height_Button_3);
+
+        height_Button_4 = new QPushButton(verticalLayoutWidget_2);
+        height_Button_4->setObjectName("height_Button_4");
+        height_Button_4->setContextMenuPolicy(Qt::CustomContextMenu);
+        height_Button_4->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+"color: white"));
+        height_Button_4->setCheckable(false);
+        height_Button_4->setAutoRepeat(false);
+        height_Button_4->setAutoExclusive(false);
+        height_Button_4->setAutoDefault(false);
+
+        verticalLayout_2->addWidget(height_Button_4);
+
+        pushButton = new QPushButton(verticalLayoutWidget_2);
+        pushButton->setObjectName("pushButton");
+        pushButton->setStyleSheet(QString::fromUtf8("background-color: rgb(0, 0, 88);\n"
+"color: white"));
+
+        verticalLayout_2->addWidget(pushButton);
+
         MainWindow->setCentralWidget(centralwidget);
         statusbar = new QStatusBar(MainWindow);
         statusbar->setObjectName("statusbar");
         MainWindow->setStatusBar(statusbar);
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName("menubar");
-        menubar->setGeometry(QRect(0, 0, 1271, 22));
+        menubar->setGeometry(QRect(0, 0, 1274, 22));
         menu = new QMenu(menubar);
         menu->setObjectName("menu");
         menu_2 = new QMenu(menubar);
@@ -411,7 +396,7 @@ public:
         menu->addSeparator();
         menu->addSeparator();
         menu->addAction(action_5);
-        menu_2->addAction(action_4);
+        menu_2->addAction(action_exit);
 
         retranslateUi(MainWindow);
 
@@ -424,21 +409,12 @@ public:
         action->setText(QCoreApplication::translate("MainWindow", "\320\221\320\260\320\273\320\273\320\270\321\201\321\202\320\270\320\272\320\260", nullptr));
         action_2->setText(QCoreApplication::translate("MainWindow", "\320\234\320\246\320\230\320\245", nullptr));
         action_3->setText(QCoreApplication::translate("MainWindow", "\320\224\320\270\320\275\320\260\320\274\320\270\320\272\320\260", nullptr));
-        action_4->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\205\320\276\320\264", nullptr));
+        action_exit->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\205\320\276\320\264", nullptr));
         action_6->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\273\321\213", nullptr));
         action_5->setText(QCoreApplication::translate("MainWindow", "\320\224\320\270\320\275\320\260\320\274\320\270\320\272\320\260", nullptr));
         action_7->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214", nullptr));
         action_8->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273", nullptr));
         action_9->setText(QCoreApplication::translate("MainWindow", "\320\237\320\265\321\200\320\265\320\274\320\265\321\211\320\265\320\275\320\270\320\265", nullptr));
-        groupBox->setTitle(QCoreApplication::translate("MainWindow", "\320\222\320\245\320\236\320\224\320\235\320\253\320\225 \320\237\320\220\320\240\320\220\320\234\320\225\320\242\320\240\320\253", nullptr));
-        lineEdit_5->setText(QCoreApplication::translate("MainWindow", "-4.3", nullptr));
-        lineEdit_4->setText(QCoreApplication::translate("MainWindow", "0.0344", nullptr));
-        label_4->setText(QCoreApplication::translate("MainWindow", "\320\240\320\260\320\267\320\262\320\276\321\200\320\276\321\202", nullptr));
-        label_5->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\320\262\320\276\320\264", nullptr));
-        lineEdit_10->setText(QCoreApplication::translate("MainWindow", "1.7", nullptr));
-        lineEdit_11->setText(QCoreApplication::translate("MainWindow", "1.1", nullptr));
-        label_12->setText(QCoreApplication::translate("MainWindow", "\320\242\321\217\320\263\320\276\320\262\320\276\320\276\321\200\321\203\320\266\320\265\320\275\320\275\320\276\321\201\321\202\321\214 1\320\241\320\242", nullptr));
-        label_13->setText(QCoreApplication::translate("MainWindow", "\320\242\321\217\320\263\320\276\320\262\320\276\320\276\321\200\321\203\320\266\320\265\320\275\320\275\320\276\321\201\321\202\321\214 2 \320\241\320\242", nullptr));
         groupBox_2->setTitle(QCoreApplication::translate("MainWindow", "\320\224\320\220\320\235\320\235\320\253\320\225 \320\240\320\220\320\241\320\247\320\225\320\242\320\220", nullptr));
         label_2->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214, \320\274/c", nullptr));
         label_3->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\201\320\276\321\202\320\260, \320\274", nullptr));
@@ -450,24 +426,25 @@ public:
         label_14->setText(QCoreApplication::translate("MainWindow", "\320\232\320\276\320\275. \321\203\320\263\320\276\320\273 \320\260\321\202\320\260\320\272\320\270, \320\263\321\200\320\260\320\264", nullptr));
         label_15->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \321\202\321\200\320\260\320\265\320\272\321\202\320\276\321\200\320\270\320\270 (3), \320\263\321\200\320\260\320\264", nullptr));
         groupBox_3->setTitle(QCoreApplication::translate("MainWindow", "\320\222\320\253\320\245\320\236\320\224\320\235\320\253\320\225 \320\237\320\220\320\240\320\220\320\234\320\225\320\242\320\240\320\253", nullptr));
-        heightButton->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\201\320\276\321\202\320\260", nullptr));
-        trjButton->setText(QCoreApplication::translate("MainWindow", "\320\242\321\200\320\260\320\265\320\272\321\202\320\276\321\200\320\270\321\217", nullptr));
-        distanceButton->setText(QCoreApplication::translate("MainWindow", "\320\224\320\260\320\273\321\214\320\275\320\276\321\201\321\202\321\214", nullptr));
-        velButton->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214", nullptr));
-        alphaButton->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \320\260\321\202\320\260\320\272\320\270", nullptr));
-        angleButton->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \321\202\321\200\320\260\320\265\320\272\321\202\320\276\321\200\320\270\320\270", nullptr));
-        vhButton->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\320\275\320\276\320\271 \320\275\320\260\320\277\320\276\321\200", nullptr));
-        centerButton->setText(QCoreApplication::translate("MainWindow", "\320\246\320\265\320\275\321\202\321\200 \320\274\320\260\321\201\321\201", nullptr));
-        pushButton_11->setText(QCoreApplication::translate("MainWindow", "\320\242\321\217\320\263\320\260", nullptr));
-        massButton->setText(QCoreApplication::translate("MainWindow", "\320\234\320\260\321\201\321\201\320\260", nullptr));
-        pushButton_14->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\276\320\264\320\276\320\273\321\214\320\275\320\260\321\217 \320\277\320\265\321\200\320\265\320\263\321\200\321\203\320\267\320\272\320\260", nullptr));
-        fokusButton->setText(QCoreApplication::translate("MainWindow", "\320\244\320\276\320\272\321\203\321\201", nullptr));
-        staticButton->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
-        YZmomentButton->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\277\320\265\321\200\320\265\321\207\320\275\321\213\320\271 \321\206\320\265\320\275\321\202\321\200\320\276\320\261\320\265\320\266\320\275\321\213\320\271 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
-        XmomentButton->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\276\320\264\320\276\320\273\321\214\320\275\321\213\320\271 \321\206\320\265\320\275\321\202\321\200\320\276\320\261\320\265\320\266\320\275\321\213\320\271 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
-        lineEdit_14->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        lineEdit_15->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
-        lineEdit_16->setText(QCoreApplication::translate("MainWindow", "0", nullptr));
+        height_Button->setText(QCoreApplication::translate("MainWindow", "\320\222\321\213\321\201\320\276\321\202\320\260", nullptr));
+        trj_Button->setText(QCoreApplication::translate("MainWindow", "\320\242\321\200\320\260\320\265\320\272\321\202\320\276\321\200\320\270\321\217", nullptr));
+        distance_Button->setText(QCoreApplication::translate("MainWindow", "\320\224\320\260\320\273\321\214\320\275\320\276\321\201\321\202\321\214", nullptr));
+        velocity_Button->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\321\214", nullptr));
+        alpha_Button->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \320\260\321\202\320\260\320\272\320\270", nullptr));
+        T_angle_Button->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \321\202\321\200\320\260\320\265\320\272\321\202\320\276\321\200\320\270\320\270", nullptr));
+        Q_Button->setText(QCoreApplication::translate("MainWindow", "\320\241\320\272\320\276\321\200\320\276\321\201\321\202\320\275\320\276\320\271 \320\275\320\260\320\277\320\276\321\200", nullptr));
+        center_Button->setText(QCoreApplication::translate("MainWindow", "\320\246\320\265\320\275\321\202\321\200 \320\274\320\260\321\201\321\201", nullptr));
+        thrust_Button->setText(QCoreApplication::translate("MainWindow", "\320\242\321\217\320\263\320\260", nullptr));
+        mass_Button->setText(QCoreApplication::translate("MainWindow", "\320\234\320\260\321\201\321\201\320\260", nullptr));
+        NX_Button->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\276\320\264\320\276\320\273\321\214\320\275\320\260\321\217 \320\277\320\265\321\200\320\265\320\263\321\200\321\203\320\267\320\272\320\260", nullptr));
+        fokus_Button->setText(QCoreApplication::translate("MainWindow", "\320\244\320\276\320\272\321\203\321\201", nullptr));
+        static_Button->setText(QCoreApplication::translate("MainWindow", "\320\241\321\202\320\260\321\202 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
+        YZmoment_Button->setText(QCoreApplication::translate("MainWindow", "\320\237\320\276\320\277\320\265\321\200\320\265\321\207\320\275\321\213\320\271 \321\206\320\265\320\275\321\202\321\200\320\276\320\261\320\265\320\266\320\275\321\213\320\271 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
+        Xmoment_Button->setText(QCoreApplication::translate("MainWindow", "\320\237\321\200\320\276\320\264\320\276\320\273\321\214\320\275\321\213\320\271 \321\206\320\265\320\275\321\202\321\200\320\276\320\261\320\265\320\266\320\275\321\213\320\271 \320\274\320\276\320\274\320\265\320\275\321\202", nullptr));
+        groupBox_4->setTitle(QCoreApplication::translate("MainWindow", "\320\224\320\230\320\235\320\220\320\234\320\230\320\247\320\225\320\241\320\232\320\230\320\225 \320\237\320\220\320\240\320\220\320\234\320\225\320\242\320\240\320\253", nullptr));
+        height_Button_3->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \321\202\320\260\320\275\320\263\320\260\320\266\320\260", nullptr));
+        height_Button_4->setText(QCoreApplication::translate("MainWindow", "\320\235\320\276\321\200\320\274\320\260\320\273\321\214\320\275\321\213\320\271 \321\201\320\275\320\276\321\201", nullptr));
+        pushButton->setText(QCoreApplication::translate("MainWindow", "\320\243\320\263\320\276\320\273 \320\260\321\202\320\260\320\272\320\270", nullptr));
         menu->setTitle(QCoreApplication::translate("MainWindow", "\320\240\320\260\321\201\321\207\320\265\321\202", nullptr));
         menu_2->setTitle(QCoreApplication::translate("MainWindow", "\320\244\320\260\320\271\320\273", nullptr));
     } // retranslateUi

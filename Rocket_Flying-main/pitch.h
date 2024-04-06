@@ -102,7 +102,7 @@ public:
     double X_oneC;
     double X_twoC;
     double MaxTime;
-    double T_fuel = 2.17;
+    double T_fuel = 2.18;
     double gl_c, foc;
 
     double anY;
