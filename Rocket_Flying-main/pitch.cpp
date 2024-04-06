@@ -321,7 +321,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             if (tY>4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;}
 
             qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-                     << ";Y : " << anY*57.3 << ";Q : " << Iz;
+                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
 
 
             H11 = V* sin(anY);

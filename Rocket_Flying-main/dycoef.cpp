@@ -176,10 +176,10 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
 //        }
         //Cbs.push_back(p_con/mass);
-        Cyw = -(p+cy/57.3*q*S)/mass;
-        Cww = (-cy/57.3*q*S*x1)/iner;
-        Cyy = (cy/57.3*q*S)/(mass*vel);
-        Cwy = (cy/57.3*q*S*x1)/iner/vel;
+        Cyw = -(p+cy*57.3*q*S)/mass;
+        Cww = (-cy*57.3*q*S*x1)/iner;
+        Cyy = (cy*57.3*q*S)/(mass*vel);
+        Cwy = (cy*57.3*q*S*x1)/iner/vel;
 
         Cyws.push_back(Cyw);
         Cwws.push_back(Cww);
@@ -193,14 +193,17 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
 
 
         w = (Cyy*sk)/Cyw;
-        y = (Cwy*sk)/Cyy;
-//        www = - Cwy*yy - Cww*w + Cwy*sk;
-//        yyy = - Cyw*w - Cyy*yy + Cyw*sk;
+        y = w;
+
+        lenght.push_back(alpha*57.3);
+        //y = (Cwy*sk)/Cyy;
+//        w = (- Cwy*yy + Cwy*sk)/Cww;
+//        yy = (- Cyw*w  + Cyw*sk)/Cyy;
 //        ww+=h*www;
 //        yy+=h*yyy;
 //        w=h*ww;
 //        y=h*yy;
-        alpha = atan(w_abs/vel);
+        alpha = w - atan((sk)/vel);
 
         //Cwbs.push_back(p_con*x2/iner);
 

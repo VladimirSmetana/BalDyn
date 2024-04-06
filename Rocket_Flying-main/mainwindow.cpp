@@ -283,12 +283,14 @@ void MainWindow::on_height_Button_2_clicked()
 
 void MainWindow::on_height_Button_3_clicked()
 {
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Угол атаки, град");
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
-    drawing(d->form[0], -1, 1, d->lenght, 0, 64.4);
+    drawing(d->lenght, -20, 20, P->xn, 0.0, 40);
     for (int i=1;i<5;i++)
     {
         ui->widget->addGraph();
-        ui->widget->graph(i)->setData(d->lenght, d->form[i]);
+        ui->widget->graph(i)->setData(P->xn, d->lenght);
         ui->widget->graph(i)->setPen(QPen(color[i]));
         ui->widget->replot();
 

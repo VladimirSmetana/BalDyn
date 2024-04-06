@@ -22,9 +22,9 @@ color: black;</string>
     <property name="geometry">
      <rect>
       <x>590</x>
-      <y>80</y>
-      <width>381</width>
-      <height>281</height>
+      <y>30</y>
+      <width>621</width>
+      <height>601</height>
      </rect>
     </property>
     <property name="font">
@@ -520,64 +520,13 @@ color: white</string>
      </layout>
     </widget>
    </widget>
-   <widget class="QLineEdit" name="lineEdit_14">
-    <property name="geometry">
-     <rect>
-      <x>590</x>
-      <y>30</y>
-      <width>81</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white ;
-color: rgb(0, 0, 88);</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_15">
-    <property name="geometry">
-     <rect>
-      <x>680</x>
-      <y>30</y>
-      <width>81</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white ;
-color: rgb(0, 0, 88);</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_16">
-    <property name="geometry">
-     <rect>
-      <x>770</x>
-      <y>30</y>
-      <width>81</width>
-      <height>30</height>
-     </rect>
-    </property>
-    <property name="styleSheet">
-     <string notr="true">background-color: white ;
-color: rgb(0, 0, 88);</string>
-    </property>
-    <property name="text">
-     <string>0</string>
-    </property>
-   </widget>
    <widget class="QGroupBox" name="groupBox_4">
     <property name="geometry">
      <rect>
-      <x>990</x>
-      <y>20</y>
+      <x>20</x>
+      <y>440</y>
       <width>271</width>
-      <height>211</height>
+      <height>191</height>
      </rect>
     </property>
     <property name="styleSheet">
