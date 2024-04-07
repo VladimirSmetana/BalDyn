@@ -1,23 +1,27 @@
 #ifndef EQUATIONS_H
 #define EQUATIONS_H
 #include <cmath>
-
+#include <QVector>
+#include <QDebug>
 class equations
 {
     private:
-    double po;
+
     double S;
     double g, m, I;
     double CX, CY;
-    double PENG, alpha;
+
     double F_P, F_Z, F_Y, F_X, F_G, F_W;
     double wind;
     double const  R = 6371000;
 
-    public: 
-    equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind);
+    public:
+    equations (double S, double g, double m, double CX, double CY, double alpha, double wind, double time);
+    double po;
+    double PENG, alpha;
     // Баллистические уравнения
     double fdV(double vv, double ii);
+    double fdV_rk(double vv, double time);
     double fdY(double hh, double vv, double ii);
     double returndV(double vv, double ii);
     double returndY(double hh, double vv, double ii);
@@ -28,6 +32,16 @@ class equations
     double dVY(double vv, double ii, double N);
     double dVZ(double vv, double ii, double N);
 
+    double peng_rk(double time);
+
+
+    double mass_rk(double time);
+
+    double Y_rk;
+    double time;
+
+    QVector<double> mtm;
+    QVector<double> ttm;
 };
 
 #endif // EQUATIONS_H

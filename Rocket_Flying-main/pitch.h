@@ -17,6 +17,7 @@ class pitch
 public:
     pitch();
 
+
     // Глобальные векторы
     QVector<double>lin;
     QVector<double>sinn;

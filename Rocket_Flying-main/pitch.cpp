@@ -1,4 +1,5 @@
 #include "pitch.h"
+#include "spline.h"
 #include <QDebug>
 
 pitch::pitch()
@@ -14,7 +15,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     double S_dry[2];
 
     double peng;
-    peng = 0;
+    peng = 1;
     // Рассчитываемые параметры конструкции
     double m_fuel;
     double m_dry;
@@ -135,14 +136,9 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         X_oneC = gl_c - foc;
         X_twoC = L - gl_c;
         // Участок работы ДУ-1
-        static double P_matrix [12] {100 , 1200, 700, 665.08, 674.6, 681.21, 668.16, 640.74, 600, 538.04, 353.31, 0};
-        static double T_matrix [12] {0.01, 0.08, 0.34, 0.44, 0.65, 1.00, 1.21, 1.45, 1.70, 2.00, 2.10, 2.18};
-
-        for (int i = 0; i < 12; i++)
-        {
-            if (time >= T_matrix[i] && time <= T_matrix[i+1])  {peng = P_matrix[i] + (P_matrix[i+1]-P_matrix[i])/(T_matrix[i+1]-T_matrix[i])*(time-T_matrix[i]);}
-        }
-        equations B_1 (Atm_1.get_density(), 0.009894, Atm_1.get_AOG(), m_t, CX_1, CY_1, peng, 0, Wind1);
+        double pn;
+        equations B_1 (0.009894, Atm_1.get_AOG(), m_t, CX_1, CY_1, 0, Wind1, time);
+        B_1.po = Atm_1.get_density();
 
         if (time<=T_fuel)
         {
@@ -160,7 +156,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //            if ((time > 2.00) && (time <= 2.10)) peng = 353.31;
 //            if (time > 2.10) peng = 353.31;
 
-
+             B_1.PENG = B_1.peng_rk(time);
+             peng = B_1.PENG;
             //qDebug() << peng << " " << time;
 
             //peng*=1.2; //
@@ -168,7 +165,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //+ (p_ground - P.get_pressure()) * Smid/2;
 
             m_t = m_fuel+m_dry;
-            static double Imp = 1190; //1150
+            static double Imp = 1150; //1150
 
             m_fuel -= peng/Imp*h;
             d_O += peng/Imp*h/(1600*Smid);
@@ -317,16 +314,23 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
 
             //double V2 = V;
-            V   += (B_1.fdV(V, anY) + V1)/2*h;
-            //if (V < V2 && vo) {Vmax = V; vo = false;}
-            if (tY>=4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;}
+            //V   += B_1.fdV_rk(V, time)*h;
+            K1 = B_1.fdV_rk(V, time);
+            K2 = B_1.fdV_rk(V+h/2*K1, time+h/2);
+            K3 = B_1.fdV_rk(V+h/2*K2, time+h/2);
+            K4 = B_1.fdV_rk(V+h*K3, time+h);
+            V   += (K1 + K2*2 + K3*2 + K4)/6*h;
 
-            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << peng << ";mass : " << m_t
-                     << ";Y : " << anY*57.3 << ";Q : " << Mah_1;
+
+            //if (V < V2 && vo) {Vmax = V; vo = false;}
+            if (tY>=4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h; B_1.Y_rk = anY;}
+
+//            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << B_1.mass_rk(time+h/2) << ";mass : " << m_t
+//                     << ";Y : " << anY*57.3 << ";Q : " << pn;
 
 
             H11 = V* sin(anY);
-            V1 = B_1.fdV(V, anY);
+            V1 = B_1.fdV_rk(V, time);
             Y1 = B_1.fdY(tY, V, anY);
 
 
@@ -407,10 +411,10 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 //        TET_2.push_back(sec->anY*57.3);
 //        be.push_back(bpr*57.3);
 //        pi.push_back(pitch_angle*57.3);
-        P1.push_back(peng);
+        P1.push_back(pn);
 //        P2.push_back(sec->Peng_t);
 //        f1.push_back(fir->focus);
-        Lon.push_back(peng/(m_t*Atm_1.get_AOG()));
+        Lon.push_back(B_1.fdV(V, anY)/(Atm_1.get_AOG()));
 ////        Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
         pc2.push_back(Peng_control);
         cy2.push_back(CY_1);

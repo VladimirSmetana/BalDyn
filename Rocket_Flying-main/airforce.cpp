@@ -51,7 +51,7 @@
 
     double airforce::getCX()
     {
-        return 0.6;
+        return CX;
     }
 
     double airforce::getCY()

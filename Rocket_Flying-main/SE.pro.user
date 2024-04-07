@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 11.0.3, 2024-04-06T19:20:20. -->
+<!-- Written by QtCreator 11.0.3, 2024-04-07T14:34:17. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -251,6 +251,7 @@
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseLibrarySearchPath">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/smeta/OneDrive/Рабочий стол/BD/BalDyn/build-SE-Desktop_Qt_6_6_0_MinGW_64_bit-Release</value>
    </valuemap>
    <value type="qlonglong" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
