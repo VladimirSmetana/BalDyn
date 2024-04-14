@@ -68,6 +68,13 @@
         return (F_P+ F_Y)/ (m*vv)  - ((g  * cos(ii))) * (1-pow(vv,2)/(g*(R+hh))) /vv;
     }
 
+    double equations::fdY_rk(double yy, double time)
+    {
+        F_P = (peng_rk(time) * sin((M_PI * alpha) / 180));
+        F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(V_rk, 2)) / 2);
+        return (F_P+ F_Y)/ (mass_rk(time)*V_rk)  - ((g  * cos(yy))) * (1-pow(V_rk,2)/(g*(R+H_rk))) /V_rk;
+    }
+
     double equations::returndV(double vv, double ii)
     {
         F_P = (PENG * cos((M_PI * alpha) / 180));
@@ -147,5 +154,14 @@
 //            return 4.12;
 //        }
 
+    }
+
+    double equations::RK(double V, double t, double h, double (*fc)(double, double))
+    {
+        double K1 = fc(V, t);
+        double K2 = fc(V+h/2*K1, t+h/2);
+        double K3 = fc(V+h/2*K2, t+h/2);
+        double K4 = fc(V+h*K3, t+h);
+        V   += (K1 + K2*2 + K3*2 + K4)/6*h;
     }
 

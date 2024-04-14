@@ -23,6 +23,7 @@ class equations
     double fdV(double vv, double ii);
     double fdV_rk(double vv, double time);
     double fdY(double hh, double vv, double ii);
+    double fdY_rk(double yy, double time);
     double returndV(double vv, double ii);
     double returndY(double hh, double vv, double ii);
     double fdN(double hh, double vv, double ii);
@@ -38,10 +39,14 @@ class equations
     double mass_rk(double time);
 
     double Y_rk;
+    double H_rk;
+    double V_rk;
     double time;
 
     QVector<double> mtm;
     QVector<double> ttm;
+
+    double RK(double V, double t, double h, double (*fc)(double, double));
 };
 
 #endif // EQUATIONS_H

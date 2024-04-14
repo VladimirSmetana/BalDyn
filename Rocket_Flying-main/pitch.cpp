@@ -120,6 +120,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     bool co = true;
     bool vo = true;
     double K1, K2, K3, K4;
+
     //while (sec->tY>=0.5 && sec->V>=0.5) sec->tY>=0.5
     while (tY>0 && V>0)
     {
@@ -296,6 +297,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
             double H1 = tY;
             tY += V* sin(anY) *h;
+            B_1.H_rk = tY;
 
             if (tY <= H1 && co) {Hmax = tY; co = false;}
 
@@ -320,10 +322,21 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             K3 = B_1.fdV_rk(V+h/2*K2, time+h/2);
             K4 = B_1.fdV_rk(V+h*K3, time+h);
             V   += (K1 + K2*2 + K3*2 + K4)/6*h;
+            B_1.V_rk = V;
 
+            //V += B_1.RK(V, time, h, B_1.fdV_rk);
 
             //if (V < V2 && vo) {Vmax = V; vo = false;}
-            if (tY>=4*cos(10/57.3)) {anY += (B_1.fdY(tY, V, anY)+Y1)/2*h; B_1.Y_rk = anY;}
+            if (tY>=4*cos(10/57.3)) {
+
+                K1 = B_1.fdY_rk(anY, time);
+                K2 = B_1.fdY_rk(anY+h/2*K1, time+h/2);
+                K3 = B_1.fdY_rk(anY+h/2*K2, time+h/2);
+                K4 = B_1.fdY_rk(anY+h*K3, time+h);
+                anY   += (K1 + K2*2 + K3*2 + K4)/6*h;
+                //anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
+
+                B_1.Y_rk = anY;}
 
 //            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << B_1.mass_rk(time+h/2) << ";mass : " << m_t
 //                     << ";Y : " << anY*57.3 << ";Q : " << pn;
@@ -432,3 +445,5 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     }
 
 }
+
+
