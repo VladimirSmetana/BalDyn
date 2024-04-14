@@ -143,19 +143,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
         if (time<=T_fuel)
         {
-            //if (m_t > M_Rocket-onefu )
-            //{
-//            if (time <= 0.08) peng = 921.22;
-//            if ((time > 0.08) && (time <= 0.34)) peng = 700;
-//            if ((time > 0.34) && (time <= 0.44)) peng = 665.08;
-//            if ((time > 0.44) && (time <= 0.65)) peng = 674.60;
-//            if ((time > 0.65) && (time <= 1.00)) peng = 681.21;
-//            if ((time > 1.00) && (time <= 1.21)) peng = 668.16;
-//            if ((time > 1.21) && (time <= 1.45)) peng = 640.74;
-//            if ((time > 1.45) && (time <= 1.70)) peng = 600.00;
-//            if ((time > 1.70) && (time <= 2.00)) peng = 538.04;
-//            if ((time > 2.00) && (time <= 2.10)) peng = 353.31;
-//            if (time > 2.10) peng = 353.31;
+
 
              B_1.PENG = B_1.peng_rk(time);
              peng = B_1.PENG;
@@ -301,22 +289,6 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
             if (tY <= H1 && co) {Hmax = tY; co = false;}
 
-//            K1 = B_1.fdV(fir->V, fir->anY);
-//            K2 = B_1.fdV(fir->V+h/2*K1, fir->anY+h/2);
-//            K3 = B_1.fdV(fir->V+h/2*K2, fir->anY+h/2);
-//            K4 = B_1.fdV(fir->V+h*K3, fir->anY+h);
-//            fir->V   += (K1 + K2*2 + K3*2 + K4)/6*h;
-
-//            K1 = B_1.fdY(fir->tY, fir->V, fir->anY);
-//            K2 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K1);
-//            K3 = B_1.fdY(fir->tY+h/2, fir->V+h/2, fir->anY+h/2*K2);
-//            K4 = B_1.fdY(fir->tY+h, fir->V+h, fir->anY+h*K3);
-//            fir->anY += (K1 + K2*2 + K3*2 + K4)/6*h;
-
-            //fir->V += Runge_Kutt(&B_1.fdV, fir->V, fir->anY, h);
-
-            //double V2 = V;
-            //V   += B_1.fdV_rk(V, time)*h;
             K1 = B_1.fdV_rk(V, time);
             K2 = B_1.fdV_rk(V+h/2*K1, time+h/2);
             K3 = B_1.fdV_rk(V+h/2*K2, time+h/2);
@@ -324,9 +296,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             V   += (K1 + K2*2 + K3*2 + K4)/6*h;
             B_1.V_rk = V;
 
-            //V += B_1.RK(V, time, h, B_1.fdV_rk);
 
-            //if (V < V2 && vo) {Vmax = V; vo = false;}
             if (tY>=4*cos(10/57.3)) {
 
                 K1 = B_1.fdY_rk(anY, time);
@@ -334,12 +304,9 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
                 K3 = B_1.fdY_rk(anY+h/2*K2, time+h/2);
                 K4 = B_1.fdY_rk(anY+h*K3, time+h);
                 anY   += (K1 + K2*2 + K3*2 + K4)/6*h;
-                //anY += (B_1.fdY(tY, V, anY)+Y1)/2*h;
 
                 B_1.Y_rk = anY;}
 
-//            qDebug() << "t : " <<time << ";V : " << V << ";H : " << tY << ";L : " << tX << ";peng : " << B_1.mass_rk(time+h/2) << ";mass : " << m_t
-//                     << ";Y : " << anY*57.3 << ";Q : " << pn;
 
 
             H11 = V* sin(anY);
@@ -365,34 +332,6 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 */
 
         }
-
-//        if (time >T_fuel[0])
-//        //if ((time>k1 && time<k2) || (time>k3 && time<k4))
-//        {
-
-
-
-//            sec->tY += (sec->V* sin(sec->anY)+H22)/2*h;
-//            sec->V  += (B_2.returndV(sec->V, sec->anY)+V2)/2*h; //return
-//            sec->anY  += (B_2.returndY(sec->tY, sec->V, sec->anY)+Y2)/2*h;  //return
-
-
-//            V2 = B_2.returndV(sec->V, sec->anY);
-//            Y2 = B_2.returndY(sec->tY, sec->V, sec->anY);
-//            H22 = sec->V* sin(sec->anY);
-
-//        }
-//        else
-//        {
-//            sec->tY += (sec->V* sin(sec->anY)+H22)/2*h;
-//            sec->V  += (B_2.fdV(sec->V, sec->anY)+V2)/2*h;
-//            sec->anY  += (B_2.fdY(sec->tY, sec->V, sec->anY)+Y2)/2*h;
-
-//            V2 = B_2.fdV(sec->V, sec->anY);
-//            Y2 = B_2.fdY(sec->tY, sec->V, sec->anY);
-//            H22 = sec->V* sin(sec->anY);
-//        }
-
 
         xn.push_back(time);
         yu_1.push_back(HSP_1);
