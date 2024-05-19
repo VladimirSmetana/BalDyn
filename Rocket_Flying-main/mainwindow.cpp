@@ -87,9 +87,11 @@ void MainWindow::on_action_triggered()
 
 
     double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
+    P->start_calculations(coef_alpha, kpeng);
     P->pitch_calculations(coef_alpha, kpeng);
 
-    //db.close();
+
+
     QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
     QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
     QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
@@ -99,12 +101,6 @@ void MainWindow::on_action_triggered()
     QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
     QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);
     QString mk13s = QString::number(57.3*P->sec->anY);       ui->lineEdit_13->setText(mk13s);
-
-    //ui->label_2->setText("Скорость, м/с");
-    //ui->label_3->setText("Высота, км");
-    //ui->label  ->setText("Время полета, с");
-    //ui->label_8->setText("Макс скор напор, кг/мс2");
-    //ui->label_9->setText("Дальность, км");
 
     ui->lineEdit_4->show();
     ui->lineEdit_5->show();
