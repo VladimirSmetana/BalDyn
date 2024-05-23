@@ -1,9 +1,22 @@
 #include "dycoef.h"
 #include <QDebug>
+#include <QDataStream>
 
 DC::DC()
 {
+    file1.setFileName("dow.txt");
+    file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    file1.resize(0);
 
+    file2.setFileName("cin.txt");
+    file2.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    file2.resize(0);
+}
+
+DC::~DC()
+{
+     file1.close();
+     file2.close();
 }
 
 double DC::PI()
@@ -142,11 +155,26 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
                 dform[i].push_back(df[i]);
             }
         }
+
+//        if(file.open(QIODevice::WriteOnly))
+//        {
+
+//        }
+//        else
+//        {
+//            qDebug() << "Error";
+//        }
+
+
     }
 
     void DC::ver_par(double mass, double p, double p_con,
                      double q, double cy, double x1, double x2, double vel, double iner, double len)
     {
+
+         QTextStream out1(&file1);
+         QTextStream out2(&file2);
+
         double D = 4.1;
         double R = D/2;
         double bb = 0.004;
@@ -168,18 +196,25 @@ void DC::data_writing(QVector<double> xn, QVector<double> v_2, QVector<double> H
             ms_vec[i].push_back(Ms[i]);
 
             W[i].push_back(sqrt(EI0/I4*pow(lamb[i],4)));
+
+
             CW[i].push_back(-form[i].back()*p_con/mass);
             CY[i].push_back(p_con/iner*((x2-len)*dform[i].back()+form[i].back()));
 
+            out1 << W[i].back()<< '\t';
+            out2 << CW[i].back()<< '\t' << CY[i].back() << '\t';
         }
-        Cbs.push_back(p_con/mass);
-        Cyws.push_back(-(p+cy/57.3*q*S)/mass);
-        Cwws.push_back((-cy/57.3*q*S*x1)/iner);
-        Cyys.push_back((cy/57.3*q*S)/(mass*vel));
-        Cwys.push_back((cy/57.3*q*S*x1)/iner/vel);
-        Cwbs.push_back(p_con*x2/iner);
-
+        file1.putChar('\n');
+        file2.putChar('\n');
+        // по тангажу
+        Cbs.push_back(p_con/mass); // как по рысканию
+        Cyws.push_back(-(p+cy/57.3*q*S)/mass); // как по рысканию, но со знаком "-"
+        Cwws.push_back((-cy/57.3*q*S*x1)/iner); // как по рысканию, но со знаком "-"
+        Cyys.push_back((cy/57.3*q*S)/(mass*vel));  // как по рысканию
+        Cwys.push_back((cy/57.3*q*S*x1)/iner/vel); // как по рысканию
+        Cwbs.push_back(p_con*x2/iner); // как по рысканию
         Csbs.push_back(p_con/iner);
+
     }
 
     void DC::data_calculating(double P, double I, double D)
