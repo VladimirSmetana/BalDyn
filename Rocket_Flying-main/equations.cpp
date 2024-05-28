@@ -1,16 +1,7 @@
 #include "equations.h"
     equations::equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind)
-    {
-        this->po = po;
-        this->S = S;
-        this->g = g;
-        this->m = m;
-        this->CX = CX;
-        this->CY= CY;
-        this->PENG = PENG;
-        this->alpha = alpha;
-        this->wind = wind;
-    }
+    :po(po),S(S), g(g), m(m), CX(CX), CY(CY), PENG(PENG), alpha(alpha), wind(wind)
+    {}
 
     // Баллистические уравнения
     double equations::fdV(double vv, double ii)

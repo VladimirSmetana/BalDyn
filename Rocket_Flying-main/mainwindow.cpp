@@ -21,6 +21,7 @@ MainWindow::~MainWindow()
 void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
 QVector<double> X1, double x0 , double xk)
 {
+    ui->widget->legend->setVisible(true);
     ui->widget->clearGraphs();
     ui->widget->addGraph();
     ui->widget->graph(0)->setData(X1, Y1);
@@ -237,11 +238,9 @@ void MainWindow::on_Xmoment_Button_clicked()
     drawing(P->lin, 0, P->Ixmax, P->xn, 0, P->MaxTime);
 }
 
-// Управление ПИД
+// Динамика
 void MainWindow::on_action_5_triggered()
 {
-
-
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
     int coun = 0;
     d->const_par(*std::max_element(P->mass_2.begin(),P->mass_2.end()), P->Lmax);
@@ -265,37 +264,42 @@ void MainWindow::on_action_5_triggered()
         }
 
     }
-
-
-
 }
 
 void MainWindow::on_height_Button_2_clicked()
 {
-
+    ui->widget->xAxis->setLabel("Время, с");
+    ui->widget->yAxis->setLabel("Частота, 1/c");
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
     drawing(d->W[0], 0, 90, P->xn, 0, P->MaxTime);
+    ui->widget->graph(0)->setName(QString("%1 Тон").arg(1));
     for (int i=1;i<5;i++)
     {
         ui->widget->addGraph();
         ui->widget->graph(i)->setData(P->xn, d->W[i]);
         ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->graph(i)->setName(QString("%1 Тон").arg(i+1));
         ui->widget->replot();
     }
+
 }
 
 
 void MainWindow::on_height_Button_3_clicked()
 {
+    ui->widget->xAxis->setLabel("Длина, м");
+    ui->widget->yAxis->setLabel("Коэффициент формы, -");
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
     drawing(d->form[0], -1, 1, d->lenght, 0, 64.4);
+
+    ui->widget->graph(0)->setName(QString("%1 Тон").arg(1));
     for (int i=1;i<5;i++)
     {
         ui->widget->addGraph();
         ui->widget->graph(i)->setData(d->lenght, d->form[i]);
         ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->graph(i)->setName(QString("%1 Тон").arg(i+1));
         ui->widget->replot();
-
     }
 
 }
@@ -303,16 +307,21 @@ void MainWindow::on_height_Button_3_clicked()
 
 void MainWindow::on_height_Button_4_clicked()
 {
-
+    ui->widget->xAxis->setLabel("Длина, м");
+    ui->widget->yAxis->setLabel("Коэффициент формы, -");
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
     drawing(d->dform[0], -1, 1, d->lenght, 0, 64.4);
+    ui->widget->graph(0)->setName(QString("%1 Тон").arg(1));
     for (int i=1;i<5;i++)
     {
         ui->widget->addGraph();
         ui->widget->graph(i)->setData(d->lenght, d->dform[i]);
         ui->widget->graph(i)->setPen(QPen(color[i]));
+        ui->widget->graph(i)->setName(QString("%1 Тон").arg(i+1));
         ui->widget->replot();
     }
+
+
 }
 
 

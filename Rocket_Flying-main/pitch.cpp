@@ -22,9 +22,9 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     //
     // Поле локальных переменных
     Smid = M_PI*pow(D,2)/4;
-    fir->V = 0.1;
-    sec->V = 0.6;
-    count =0;
+    fir->V = 0;
+    sec->V = 0;
+    count = 0;
 
     // Определение габаритов ракеты
     M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
@@ -116,7 +116,7 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 
 void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
-    while (sec->tY>0 && sec->V>0)
+    do
     {
         airforce Qus_1 (Mah_1);
         airforce Qus_2 (Mah_2);
@@ -463,4 +463,5 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         count+=1;
         MaxTime = count*h;
     }
+    while (sec->tY>0 && sec->V>0);
 }

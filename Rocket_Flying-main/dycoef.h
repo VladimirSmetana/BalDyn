@@ -10,6 +10,7 @@
 #include "iostream"
 #include <QFile>
 
+
 class DC
 {
 

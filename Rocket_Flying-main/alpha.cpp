@@ -1,16 +1,9 @@
 #include "alpha.h"
 
 alpha::alpha (double Vel, double k1, double k2, double time, double septime, int def, int tv1, int tv2)
-{
-    this->Vel = Vel;
-    this->k1 = k1;
-    this->k2 = k2;
-    this->time = time;
-    this->septime = septime;
-    this->def = def;
-    this->tv1 = tv1;
-    this->tv2 = tv2;
-}
+
+    :Vel(Vel), k1(k1), k2(k2), time(time), septime(septime), def(def), tv1(tv2)
+{}
 
 double alpha::A()
 {

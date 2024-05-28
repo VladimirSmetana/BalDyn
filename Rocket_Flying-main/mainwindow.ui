@@ -722,7 +722,7 @@ color: rgb(0, 0, 88);</string>
 color: black;</string>
     </property>
     <property name="title">
-     <string>ДИНАМИЧЕСКИЕ ПАРАМЕТРЫ</string>
+     <string>ДИНАМИЧЕСКИЕ ПАРАМЕТРЫ МРБ</string>
     </property>
     <property name="flat">
      <bool>false</bool>
