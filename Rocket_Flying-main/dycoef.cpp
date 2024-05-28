@@ -4,19 +4,24 @@
 
 DC::DC()
 {
-    file1.setFileName("dow.txt");
+    file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/freq.txt");
     file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file1.resize(0);
 
-    file2.setFileName("cin.txt");
+    file2.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/oscil_coef.txt");
     file2.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file2.resize(0);
+
+    file3.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/motion_coef.txt");
+    file3.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    file3.resize(0);
 }
 
 DC::~DC()
 {
      file1.close();
      file2.close();
+     file3.close();
 }
 
 double DC::PI()
@@ -77,6 +82,7 @@ void DC::print(double ct, double t)
 
          QTextStream out1(&file1);
          QTextStream out2(&file2);
+         QTextStream out3(&file3);
 
         double D = 4.1;
         double R = D/2;
@@ -106,17 +112,32 @@ void DC::print(double ct, double t)
 
             out1 << W[i].back()<< '\t';
             out2 << CW[i].back()<< '\t' << CY[i].back() << '\t';
+
+
         }
-        file1.putChar('\n');
-        file2.putChar('\n');
+
+
+
         // по тангажу
-        Cbs.push_back(p_con/mass); // как по рысканию
+        Cbs .push_back(p_con/mass); // как по рысканию
         Cyws.push_back(-(p+cy/57.3*q*S)/mass); // как по рысканию, но со знаком "-"
         Cwws.push_back((-cy/57.3*q*S*x1)/iner); // как по рысканию, но со знаком "-"
         Cyys.push_back((cy/57.3*q*S)/(mass*vel));  // как по рысканию
         Cwys.push_back((cy/57.3*q*S*x1)/iner/vel); // как по рысканию
         Cwbs.push_back(p_con*x2/iner); // как по рысканию
         Csbs.push_back(p_con/iner);
+
+        out3 <<  Cbs .back()<< '\t';
+        out3 <<  Cyws.back()<< '\t';
+        out3 <<  Cwws.back()<< '\t';
+        out3 <<  Cyys.back()<< '\t';
+        out3 <<  Cwys.back()<< '\t';
+        out3 <<  Cwbs.back()<< '\t';
+        out3 <<  Csbs.back()<< '\t';
+
+        file1.putChar('\n');
+        file2.putChar('\n');
+        file3.putChar('\n');
 
     }
 

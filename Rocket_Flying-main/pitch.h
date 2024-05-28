@@ -12,9 +12,11 @@
 #include "atmosphere.h"
 #include "eastwind.h"
 #include "alpha.h"
+#include <QFile>
 
 class pitch
 {
+
 private:
 
     mass M;
@@ -77,6 +79,7 @@ private:
     public:
 
     pitch();
+    ~pitch();
 
     std::unique_ptr<block> fir = std::make_unique<block>();
     std::unique_ptr<block> sec = std::make_unique<block>();
@@ -105,7 +108,8 @@ private:
     QVector<double> P1, P2;
     QVector<double> f1;
     QVector<double> Lon, Lonre;
-    QVector<double> w, pc2;
+    QVector<double> vec_wind1, vec_wind2;
+    QVector<double> pc2;
     QVector<double> cy2;
     QVector<double> dyn1, dyn2;
     QVector<double> lenght_R;
@@ -123,6 +127,9 @@ private:
     double mass_function(double time);
     double thrust_function(double time);
     void pitch_calculations(double (&kalph)[3], double (&peng)[2]);
+
+    QFile file1;
+
 };
 
 #endif // PITCH_H

@@ -2,11 +2,19 @@
 
 pitch::pitch()
 {
+    file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/air.txt");
+    file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
+    file1.resize(0);
+}
 
+pitch::~pitch()
+{
+    file1.close();
 }
 
 void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
+
     peng[0] = kpeng[0] * 9.81 * (mpn+mb[0]+mb[1]);
     peng[1] = kpeng[1] * 9.81 * (mpn+mb[1]);
     // Рассчитываемые параметры конструкции
@@ -111,11 +119,14 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     T[1] = T_fuel[0] + T_sep[0];
     T[2] = T_fuel[0] + T_sep[0]+T_fuel[1];
     T[3] = T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1];
+
+
 }
 
 
 void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
+    QTextStream out1(&file1);
     do
     {
         airforce Qus_1 (Mah_1);
@@ -350,6 +361,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 
         Wind1 = W1.WSol();
         Wind2 = W2.WSol();
+        out1 << Wind2 << "\t" << sec->V << "\n";
 
         if (time<120 &&  HSP_1<HSP_p_1 && e<1)
         {
@@ -420,6 +432,7 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             H22 = sec->V* sin(sec->anY);
         }
 
+
         xn.push_back(time);
         yu_1.push_back(HSP_1);
         yu_2.push_back(HSP_2);
@@ -435,7 +448,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         mass_2.push_back(sec->m_t);
         Long_1.push_back(fir->tX/1000);
         Long_2.push_back(sec->tX/1000);
-        w.push_back(Wind2);
+        vec_wind1.push_back(Wind1);
+        vec_wind2.push_back(Wind2);
         H1.push_back(fir->tY/1000);
         H2.push_back(sec->tY/1000);
         angle.push_back(pitch_angle*57.3);

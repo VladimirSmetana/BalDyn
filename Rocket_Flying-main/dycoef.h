@@ -62,6 +62,7 @@ public:
                         double q, double cy, double x1, double x2, double vel, double iner, double len);
         QFile file1;
         QFile file2;
+        QFile file3;
 };
 
 

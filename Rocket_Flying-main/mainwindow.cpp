@@ -329,6 +329,6 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->widget->xAxis->setLabel("Высота, км");
     ui->widget->yAxis->setLabel("Ветер, м/с");
-    drawing(P->w, 0, *std::max_element(P->w.begin(),P->w.end()), P->H2, 0, 95);
+    drawing(P->vec_wind2, 0, *std::max_element(P->vec_wind2.begin(),P->vec_wind2.end()), P->H2, 0, 95);
 }
 
