@@ -10,12 +10,10 @@ CONFIG += staticlib c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    DyEq.cpp \
     airforce.cpp \
     alpha.cpp \
     atmosphere.cpp \
     dycoef.cpp \
-    dynamic_mass.cpp \
     eastwind.cpp \
     equations.cpp \
     focus.cpp \
@@ -31,7 +29,6 @@ HEADERS += \
     atmosphere.h \
     block.h \
     dycoef.h \
-    dynamic_mass.h \
     eastwind.h \
     equations.h \
     focus.h \

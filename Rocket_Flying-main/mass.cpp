@@ -45,7 +45,6 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
 
 
             L_b[i] = L_taC[i]+L_taO[i]+L_engine[i];
-    qDebug() << "Длина " << L_b[i];
             W_taC[i] = 1.25*w_C[i];
             W_taO[i] = 1.25*w_O[i];
             W_Rocket +=  W_taC[i] + W_taO[i];

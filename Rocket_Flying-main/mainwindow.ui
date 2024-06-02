@@ -69,7 +69,7 @@ color: rgb(118, 0, 2);</string>
 color: rgb(0, 0, 88);</string>
      </property>
      <property name="text">
-      <string>-4.3</string>
+      <string>-3.5</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_4">
@@ -86,7 +86,7 @@ color: rgb(0, 0, 88);</string>
 color: rgb(0, 0, 88);</string>
      </property>
      <property name="text">
-      <string>0.0344</string>
+      <string>0.78</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_4">
@@ -129,7 +129,7 @@ color: rgb(0, 0, 88);</string>
 color: rgb(0, 0, 88);</string>
      </property>
      <property name="text">
-      <string>1.7</string>
+      <string>1</string>
      </property>
     </widget>
     <widget class="QLineEdit" name="lineEdit_11">
@@ -146,7 +146,7 @@ color: rgb(0, 0, 88);</string>
 color: rgb(0, 0, 88);</string>
      </property>
      <property name="text">
-      <string>1.1</string>
+      <string>1</string>
      </property>
     </widget>
     <widget class="QLabel" name="label_12">

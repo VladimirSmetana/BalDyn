@@ -28,11 +28,11 @@ private:
     double V2=0, Y2=0, H22=0, X2=0;
     double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
     double zXY = 0, VZ  = 0.3;
-    double mpn=15000;
-    double mb[2] {391000, 107000};
-    double s[2] {7, 10};
+    double mpn=3850;
+    double mb[2] {171300, 58000};
+    double s[2] {20, 25};
     double D = 4.1;
-    double Imp[2] {3300, 3700};
+    double Imp[2] {2556.5, 2922.37};
     double T_sep[2] {3, 3};
     double Ratio = 3.5;
     double h = 0.1;

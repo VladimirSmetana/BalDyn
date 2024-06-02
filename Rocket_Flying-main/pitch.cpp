@@ -15,12 +15,12 @@ pitch::~pitch()
 void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
 
-    peng[0] = kpeng[0] * 9.81 * (mpn+mb[0]+mb[1]);
-    peng[1] = kpeng[1] * 9.81 * (mpn+mb[1]);
+    peng[0] = 2961600;// kpeng[0] * 9.81 * (mpn+mb[0]+mb[1]);
+    peng[1] = 741400;// kpeng[1] * 9.81 * (mpn+mb[1]);
     // Рассчитываемые параметры конструкции
 
 
-    m_furet = 33200/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
+    m_furet = 0/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
     M_Rocket=mpn;
     fir->m_t = M_Rocket;
     sec->m_t = M_Rocket;
@@ -41,13 +41,16 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     L2= 10.5;
 
     // Определение основных мцих
+    m_fuel[0] = 162700;
+    m_fuel[1] = 54700;
     for (int i=0;i<=1;i++)
     {
-        m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
         m_O[i] = m_fuel[i]*Ratio/(Ratio+1);
         m_C[i] = m_fuel[i]*1/(Ratio+1);
         m_dry[i] = mb[i]-m_fuel[i];
     }
+
+
     m_dry[0]-=m_furet;
     M_Rocket+=m_fuel[0]+m_dry[0]+m_fuel[1]+m_dry[1] + m_furet;
 
@@ -398,7 +401,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
             Y1 = B_1.fdY(fir->tY, fir->V, fir->anY);
 
 
-            std::cout << zXY/1000  << std::endl;
+            std::cout << fir->V << " " << fir->tY/1000 << " "  << peng << std::endl;
+
             VX += h*B_1.dVX(velXY, Ott, Na);
             VY += h*B_1.dVY(velXY, Ott, Na);
             VZ += h*B_1.dVZ(velXY, Ott, Na);
