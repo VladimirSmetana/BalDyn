@@ -57,7 +57,7 @@ class atmosphere
         double S = PI*pow(D,2)/4;
 
         public:
-        atmosphere (double H);
+        explicit atmosphere (double H);
 
         double get_T();
         double get_n();

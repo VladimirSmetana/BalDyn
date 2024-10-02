@@ -9,7 +9,7 @@ private:
     double CX;
     double CY;
 public:
-    airforce(double Mah);
+    explicit airforce(double Mah);
     double getCX();
     double getCY();
 };
