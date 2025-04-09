@@ -1,17 +1,15 @@
 #include <QDebug>
 #ifndef AIRFORCE_H
 #define AIRFORCE_H
-#include <cmath>
-#define M_PI 3.14159265358979323846
-class airforce
-{
+
+class Airforce {
 private:
-    double CX;
-    double CY;
+    double m_CX;
+    double m_CY;
 public:
-    explicit airforce(double Mah);
-    double getCX();
-    double getCY();
+    explicit Airforce(double Mah);
+    double GetCX();
+    double GetCY();
 };
 
 #endif // AIRFORCE_H

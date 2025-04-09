@@ -6,7 +6,7 @@
 #include <iostream>
 #include <QVector>
 #include "mass.h"
-#include "airforce.h"
+#include "Airforce.h"
 #include "focus.h"
 #include "equations.h"
 #include "atmosphere.h"

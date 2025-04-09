@@ -129,8 +129,8 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
     QTextStream out1(&file1);
     do
     {
-        airforce Qus_1 (Mah_1);
-        airforce Qus_2 (Mah_2);
+        Airforce Qus_1 (Mah_1);
+        Airforce Qus_2 (Mah_2);
 
         focus F;
 
@@ -337,10 +337,10 @@ void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
         Mah_2 = sec->V/Atm_2.get_SV();
 
         fir->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
-        if (time<T_stage[0]) {CX_1=Qus_1.getCX();  } else {CX_1=0;  }
-        if (time<T_stage[0]) {CY_1=Qus_1.getCY();  } else {CY_1=0;  }
-        CX_2=Qus_2.getCX();
-        CY_2=Qus_2.getCY();
+        if (time<T_stage[0]) {CX_1=Qus_1.GetCX();  } else {CX_1=0;  }
+        if (time<T_stage[0]) {CY_1=Qus_1.GetCY();  } else {CY_1=0;  }
+        CX_2=Qus_2.GetCX();
+        CY_2=Qus_2.GetCY();
         bpr = ((Atm_1.get_density()/2*pow(fir->V,2))*Smid*fir->L*CY_1*fir->alpha)/(fir->Peng_t*(fir->L-fir->gl_c));
 
         equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), fir->m_t, CX_1, CY_1, fir->Peng_t, alph_1.A(), Wind1);

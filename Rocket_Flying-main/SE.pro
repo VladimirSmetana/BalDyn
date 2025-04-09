@@ -1,7 +1,7 @@
 QT       += core gui printsupport
 QT       += sql
 QT       += core gui widgets
-CONFIG += c++17
+CONFIG += c++20
 CONFIG += staticlib c++11
 
 #QMAKE_CXXFLAGS += -Wa,-mbig-obj
@@ -11,7 +11,7 @@ CONFIG += staticlib c++11
 
 SOURCES += \
     DyEq.cpp \
-    airforce.cpp \
+    Airforce.cpp \
     alpha.cpp \
     atmosphere.cpp \
     dycoef.cpp \
@@ -26,7 +26,7 @@ SOURCES += \
     qcustomplot.cpp
 
 HEADERS += \
-    airforce.h \
+    Airforce.h \
     alpha.h \
     atmosphere.h \
     block.h \
