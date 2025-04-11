@@ -1,6 +1,7 @@
 #ifndef FLIGHTSOLVER_H
 #define FLIGHTSOLVER_H
 
+#include "FlightInit.h"
 #include "block.h"
 #include <cmath>
 #include <iostream>
@@ -14,7 +15,7 @@
 #include "alpha.h"
 #include <QFile>
 
-class FlightSolver
+class FlightSolver : public FlightInit
 {
 
 private:
@@ -126,11 +127,15 @@ private:
     double Iz, Izmax, Sx, Ix, Ixmax;
     double amax;
 
-    void start_calculations();
     double mass_function(double time);
     double thrust_function(double time);
     void pitch_calculations();
     void calculate_initial_values(double (&kpeng)[2]);
+    void calculate_length();
+    void calculate_mass_parameters();
+    void calculate_inertia();
+    void calculate_area_and_inertia();
+    void initialize_time_parameters();
 
     QFile file1;
 

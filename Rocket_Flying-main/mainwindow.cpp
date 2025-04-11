@@ -85,7 +85,6 @@ void MainWindow::on_action_triggered()
     double kpeng [2] {p1.toDouble(), p2.toDouble()};
     double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
     P = std::make_unique<FlightSolver>(coef_alpha, kpeng);
-    P->start_calculations();
     P->pitch_calculations();
 
 

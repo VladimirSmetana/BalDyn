@@ -12,6 +12,7 @@ CONFIG += staticlib c++11
 SOURCES += \
     DyEq.cpp \
     Airforce.cpp \
+    FlightInit.cpp \
     FlightSolver.cpp \
     alpha.cpp \
     atmosphere.cpp \
@@ -28,6 +29,7 @@ SOURCES += \
 HEADERS += \
     Airforce.h \
     Constants.h \
+    FlightInit.h \
     FlightSolver.h \
     alpha.h \
     atmosphere.h \
