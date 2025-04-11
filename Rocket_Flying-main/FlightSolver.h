@@ -1,5 +1,5 @@
-#ifndef PITCH_H
-#define PITCH_H
+#ifndef FLIGHTSOLVER_H
+#define FLIGHTSOLVER_H
 
 #include "block.h"
 #include <cmath>
@@ -14,7 +14,7 @@
 #include "alpha.h"
 #include <QFile>
 
-class pitch
+class FlightSolver
 {
 
 private:
@@ -78,8 +78,8 @@ private:
 
     public:
 
-    pitch();
-    ~pitch();
+    FlightSolver();
+    ~FlightSolver();
 
     std::unique_ptr<block> fir = std::make_unique<block>();
     std::unique_ptr<block> sec = std::make_unique<block>();
@@ -132,4 +132,4 @@ private:
 
 };
 
-#endif // PITCH_H
+#endif // FLIGHTSOLVER_H

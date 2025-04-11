@@ -12,6 +12,7 @@ CONFIG += staticlib c++11
 SOURCES += \
     DyEq.cpp \
     Airforce.cpp \
+    FlightSolver.cpp \
     alpha.cpp \
     atmosphere.cpp \
     dycoef.cpp \
@@ -22,11 +23,12 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mass.cpp \
-    pitch.cpp \
     qcustomplot.cpp
 
 HEADERS += \
     Airforce.h \
+    Constants.h \
+    FlightSolver.h \
     alpha.h \
     atmosphere.h \
     block.h \
@@ -38,7 +40,6 @@ HEADERS += \
     mainwindow.h \
     mass.h \
     pid_file.h \
-    pitch.h \
     qcustomplot.h
 
 FORMS += \

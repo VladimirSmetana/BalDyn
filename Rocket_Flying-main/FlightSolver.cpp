@@ -1,34 +1,45 @@
-#include "pitch.h"
+#include "FlightSolver.h"
 
-pitch::pitch()
+#include "Constants.h"
+
+FlightSolver::FlightSolver()
 {
     file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/air.txt");
     file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file1.resize(0);
 }
 
-pitch::~pitch()
+FlightSolver::~FlightSolver()
 {
     file1.close();
 }
 
-void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
+namespace {
+constexpr auto components_ratio = 4.5;
+constexpr auto first_block_lenght = 42.9;
+constexpr auto second_block_lenght = 10.5;
+constexpr auto second_stage_lenght = 21.5;
+constexpr auto extra_mass = 33200; /*2200*/
+}
+
+void FlightSolver::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
+    std::cout << "set start flight parameters\n";
 
-    peng[0] = kpeng[0] * 9.81 * (mpn+mb[0]+mb[1]);
-    peng[1] = kpeng[1] * 9.81 * (mpn+mb[1]);
-    // Рассчитываемые параметры конструкции
+    // Расчет начальных значений
+    peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn+mb[0]+mb[1]);
+    peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn+mb[1]);
 
+    // Расчет массы и параметров конструкции
+    m_furet = extra_mass;
+    m_reC = m_furet*1/components_ratio;
+    m_reO = m_furet*(components_ratio-1)/components_ratio;
 
-    m_furet = 33200/*2200*/, m_reC = m_furet*1/4.5, m_reO = m_furet*3.5/4.5;
     M_Rocket=mpn;
     fir->m_t = M_Rocket;
     sec->m_t = M_Rocket;
     //
-    // Время действия тормозных импульсов
 
-    //
-    // Поле локальных переменных
     Smid = M_PI*pow(D,2)/4;
     fir->V = 0;
     sec->V = 0;
@@ -37,8 +48,8 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     // Определение габаритов ракеты
     M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     Lmax = M.get_lenght();
-    L1= 42.9;
-    L2= 10.5;
+    L1= first_block_lenght;
+    L2= second_block_lenght;
 
     // Определение основных мцих
     for (int i=0;i<=1;i++)
@@ -59,16 +70,16 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 
     fir->S_dry[0] = M.fun_S (M.K[6], M.K[12], m_dry[0]);
     fir->S_dry[1] = M.fun_S (M.K[1], M.K[6], m_dry[1]);
-    sec->S_dry[0] = M.fun_S (M.K[6]-21.5, M.K[12]-21.5, m_dry[0]);
-    sec->S_dry[1] = M.fun_S (M.K[1]-21.5, M.K[6]-21.5, m_dry[1]);
+    sec->S_dry[0] = M.fun_S (M.K[6]-second_stage_lenght, M.K[12]-second_stage_lenght, m_dry[0]);
+    sec->S_dry[1] = M.fun_S (M.K[1]-second_stage_lenght, M.K[6]-second_stage_lenght,  m_dry[1]);
     S_o[0] = M.fun_S (M.K[8], M.K[9], m_O[0]);
     S_c[0] = M.fun_S (M.K[10], M.K[11], m_C[0]);
     S_o[1] = M.fun_S (M.K[3], M.K[4], m_O[1]);
     S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
     fir->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
     fir->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
-    sec->S_reO = M.fun_S (M.K[9 ]-21.5, M.K[10]-21.5, m_reO);
-    sec->S_reC = M.fun_S (M.K[11]-21.5, M.K[13]-21.5, m_reC);
+    sec->S_reO = M.fun_S (M.K[9 ]-second_stage_lenght, M.K[10]-second_stage_lenght, m_reO);
+    sec->S_reC = M.fun_S (M.K[11]-second_stage_lenght, M.K[13]-second_stage_lenght, m_reC);
 
     fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
     Sx = fir->Ssumm;
@@ -86,8 +97,8 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
     fir->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
     fir->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
-    sec->I_reO = M.fun_I (M.K[9 ]-21.5, M.K[10]-21.5, m_reO, D);
-    sec->I_reC = M.fun_I (M.K[11]-21.5, M.K[13]-21.5, m_reC, D);
+    sec->I_reO = M.fun_I (M.K[9 ]-second_stage_lenght, M.K[10]-second_stage_lenght, m_reO, D);
+    sec->I_reC = M.fun_I (M.K[11]-second_stage_lenght, M.K[13]-second_stage_lenght, m_reC, D);
     fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
     Iz = fir->Isumm;
     Izmax = Iz;
@@ -119,12 +130,10 @@ void pitch::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     T[1] = T_fuel[0] + T_sep[0];
     T[2] = T_fuel[0] + T_sep[0]+T_fuel[1];
     T[3] = T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1];
-
-
 }
 
 
-void pitch::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
+void FlightSolver::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
 {
     QTextStream out1(&file1);
     do

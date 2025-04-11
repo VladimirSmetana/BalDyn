@@ -11,7 +11,7 @@
 #include "alpha.h"
 #include "focus.h"
 #include "dycoef.h"
-#include "pitch.h"
+#include "FlightSolver.h"
 #include <thread>
 #include <QtSql>
 #include <QDebug>
@@ -31,19 +31,8 @@ public:
     ~MainWindow();
 public:
     // Создание объектов
-//    std::unique_ptr<block> first = std::make_unique<block>();
-//    std::unique_ptr<block> second = std::make_unique<block>();
-    std::unique_ptr<pitch> P = std::make_unique<pitch>();
+    std::unique_ptr<FlightSolver> P = std::make_unique<FlightSolver>();
     std::unique_ptr<DC> d = std::make_unique<DC>();
-    //block first;
-//    block second;
-    // Исходные данные РН
-
-
-
-
-
-
 
     void drawing(QVector<double> Y1,
                  QVector<double> Y2, double y0,  double yk,
@@ -84,8 +73,6 @@ private slots:
     void on_Q_Button_clicked();
 
     void on_center_Button_clicked();
-
-
 
     void on_thrust_Button_clicked();
 
