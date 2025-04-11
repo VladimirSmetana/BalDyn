@@ -78,8 +78,11 @@ private:
 
     public:
 
-    FlightSolver();
+    FlightSolver(double (&kalph_)[3], double (&kpeng_)[2]);
     ~FlightSolver();
+
+    double kalph[3];
+    double kpeng[2];
 
     std::unique_ptr<block> fir = std::make_unique<block>();
     std::unique_ptr<block> sec = std::make_unique<block>();
@@ -123,10 +126,11 @@ private:
     double Iz, Izmax, Sx, Ix, Ixmax;
     double amax;
 
-    void start_calculations(double (&kalph)[3], double (&peng)[2]);
+    void start_calculations();
     double mass_function(double time);
     double thrust_function(double time);
-    void pitch_calculations(double (&kalph)[3], double (&peng)[2]);
+    void pitch_calculations();
+    void calculate_initial_values(double (&kpeng)[2]);
 
     QFile file1;
 

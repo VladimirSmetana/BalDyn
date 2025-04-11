@@ -84,8 +84,9 @@ void MainWindow::on_action_triggered()
 
     double kpeng [2] {p1.toDouble(), p2.toDouble()};
     double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
-    P->start_calculations(coef_alpha, kpeng);
-    P->pitch_calculations(coef_alpha, kpeng);
+    P = std::make_unique<FlightSolver>(coef_alpha, kpeng);
+    P->start_calculations();
+    P->pitch_calculations();
 
 
     QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);

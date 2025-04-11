@@ -132,7 +132,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
     {
         return S_Rocket;
     }
-    double mass::get_lenght()
+    double mass::get_length()
     {
         return L_Rocket;
     }

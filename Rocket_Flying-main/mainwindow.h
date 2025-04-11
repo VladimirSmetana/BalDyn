@@ -31,7 +31,7 @@ public:
     ~MainWindow();
 public:
     // Создание объектов
-    std::unique_ptr<FlightSolver> P = std::make_unique<FlightSolver>();
+    std::unique_ptr<FlightSolver> P;
     std::unique_ptr<DC> d = std::make_unique<DC>();
 
     void drawing(QVector<double> Y1,

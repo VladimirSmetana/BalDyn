@@ -70,7 +70,7 @@ class  mass
     double get_CM();
     double get_I();
     double get_S();
-    double get_lenght();
+    double get_length();
     double get_lst1();
     double get_lst2();
     double get_SGO();

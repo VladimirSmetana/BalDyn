@@ -2,11 +2,19 @@
 
 #include "Constants.h"
 
-FlightSolver::FlightSolver()
-{
+FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2])
+    : kalph()
+    , kpeng() {
+
+    std::copy(std::begin(kalph_), std::end(kalph_), std::begin(kalph));
+    std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
+
     file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/air.txt");
     file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file1.resize(0);
+
+    calculate_initial_values(kpeng);
+    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
 }
 
 FlightSolver::~FlightSolver()
@@ -16,40 +24,39 @@ FlightSolver::~FlightSolver()
 
 namespace {
 constexpr auto components_ratio = 4.5;
-constexpr auto first_block_lenght = 42.9;
-constexpr auto second_block_lenght = 10.5;
-constexpr auto second_stage_lenght = 21.5;
+constexpr auto first_block_length = 42.9;
+constexpr auto second_block_length = 10.5;
+constexpr auto second_stage_length = 21.5;
 constexpr auto extra_mass = 33200; /*2200*/
 }
 
-void FlightSolver::start_calculations(double (&kalph)[3], double (&kpeng)[2])
-{
-    std::cout << "set start flight parameters\n";
+void FlightSolver::calculate_initial_values(double (&kpeng)[2]) {
+    peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn + mb[0] + mb[1]);
+    peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn + mb[1]);
 
-    // Расчет начальных значений
-    peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn+mb[0]+mb[1]);
-    peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn+mb[1]);
-
-    // Расчет массы и параметров конструкции
     m_furet = extra_mass;
-    m_reC = m_furet*1/components_ratio;
-    m_reO = m_furet*(components_ratio-1)/components_ratio;
-
-    M_Rocket=mpn;
+    m_reC = m_furet / components_ratio;
+    m_reO = m_furet * (components_ratio - 1) / components_ratio;
+    M_Rocket = mpn;
     fir->m_t = M_Rocket;
     sec->m_t = M_Rocket;
-    //
-
-    Smid = M_PI*pow(D,2)/4;
+    Smid = M_PI * pow(D, 2) / 4;
     fir->V = 0;
     sec->V = 0;
     count = 0;
+}
+
+
+
+void FlightSolver::start_calculations()
+{
+    std::cout << "set start flight parameters\n";
 
     // Определение габаритов ракеты
-    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
-    Lmax = M.get_lenght();
-    L1= first_block_lenght;
-    L2= second_block_lenght;
+
+    Lmax = M.get_length();
+    L1= first_block_length;
+    L2= second_block_length;
 
     // Определение основных мцих
     for (int i=0;i<=1;i++)
@@ -70,16 +77,16 @@ void FlightSolver::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 
     fir->S_dry[0] = M.fun_S (M.K[6], M.K[12], m_dry[0]);
     fir->S_dry[1] = M.fun_S (M.K[1], M.K[6], m_dry[1]);
-    sec->S_dry[0] = M.fun_S (M.K[6]-second_stage_lenght, M.K[12]-second_stage_lenght, m_dry[0]);
-    sec->S_dry[1] = M.fun_S (M.K[1]-second_stage_lenght, M.K[6]-second_stage_lenght,  m_dry[1]);
+    sec->S_dry[0] = M.fun_S (M.K[6]-second_stage_length, M.K[12]-second_stage_length, m_dry[0]);
+    sec->S_dry[1] = M.fun_S (M.K[1]-second_stage_length, M.K[6]-second_stage_length,  m_dry[1]);
     S_o[0] = M.fun_S (M.K[8], M.K[9], m_O[0]);
     S_c[0] = M.fun_S (M.K[10], M.K[11], m_C[0]);
     S_o[1] = M.fun_S (M.K[3], M.K[4], m_O[1]);
     S_c[1] = M.fun_S (M.K[5], M.K[6], m_C[1]);
     fir->S_reO = M.fun_S (M.K[9], M.K[10], m_reO);
     fir->S_reC = M.fun_S (M.K[11], M.K[13], m_reC);
-    sec->S_reO = M.fun_S (M.K[9 ]-second_stage_lenght, M.K[10]-second_stage_lenght, m_reO);
-    sec->S_reC = M.fun_S (M.K[11]-second_stage_lenght, M.K[13]-second_stage_lenght, m_reC);
+    sec->S_reO = M.fun_S (M.K[9 ]-second_stage_length, M.K[10]-second_stage_length, m_reO);
+    sec->S_reC = M.fun_S (M.K[11]-second_stage_length, M.K[13]-second_stage_length, m_reC);
 
     fir->Ssumm  = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
     Sx = fir->Ssumm;
@@ -97,8 +104,8 @@ void FlightSolver::start_calculations(double (&kalph)[3], double (&kpeng)[2])
     I_c[1] = M.fun_I (M.K[5], M.K[6], m_C[1], D);
     fir->I_reO = M.fun_I (M.K[9], M.K[10], m_reO, D);
     fir->I_reC = M.fun_I (M.K[11], M.K[13], m_reC, D);
-    sec->I_reO = M.fun_I (M.K[9 ]-second_stage_lenght, M.K[10]-second_stage_lenght, m_reO, D);
-    sec->I_reC = M.fun_I (M.K[11]-second_stage_lenght, M.K[13]-second_stage_lenght, m_reC, D);
+    sec->I_reO = M.fun_I (M.K[9 ]-second_stage_length, M.K[10]-second_stage_length, m_reO, D);
+    sec->I_reC = M.fun_I (M.K[11]-second_stage_length, M.K[13]-second_stage_length, m_reC, D);
     fir->Isumm  = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket*pow(gl_cmax,2);
     Iz = fir->Isumm;
     Izmax = Iz;
@@ -133,7 +140,8 @@ void FlightSolver::start_calculations(double (&kalph)[3], double (&kpeng)[2])
 }
 
 
-void FlightSolver::pitch_calculations(double (&kalph)[3], double (&kpeng)[2])
+
+void FlightSolver::pitch_calculations()
 {
     QTextStream out1(&file1);
     do
