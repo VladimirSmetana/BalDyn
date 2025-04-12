@@ -82,9 +82,9 @@ void MainWindow::on_action_triggered()
     QString al1=ui->lineEdit_5->text();
     QString al2=ui->lineEdit_4->text();
 
-    double kpeng [2] {p1.toDouble(), p2.toDouble()};
-    double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
-    P = std::make_unique<FlightSolver>(coef_alpha, kpeng);
+    double thrust_to_weght [2] {p1.toDouble(), p2.toDouble()};
+    double attack_value [3] {0, al1.toDouble(), al2.toDouble()};
+    P = std::make_unique<FlightSolver>(attack_value, thrust_to_weght);
     P->pitch_calculations();
 
 
