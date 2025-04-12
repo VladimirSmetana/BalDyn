@@ -20,7 +20,6 @@ class FlightSolver : public FlightInit
 
 private:
 
-
     double Na=0.1, Mah_1, Mah_2,  time = 0;
     int e=0;
     int uj=0;
@@ -29,9 +28,6 @@ private:
     double V2=0, Y2=0, H22=0, X2=0;
     double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
     double zXY = 0, VZ  = 0.3;
-
-
-
 
     double gl_cmax;
     double Wind1;
@@ -43,8 +39,6 @@ private:
     double k4 = 440;
     double kk1 = 0.2;
     double kk2 = 0.22;
-
-
 
     double Ott;
     double CX_1, CY_1;
@@ -61,7 +55,6 @@ private:
     double X_oneC;
     double X_twoC;
 
-
     public:
 
     FlightSolver(double (&kalph_)[3], double (&kpeng_)[2]);
@@ -69,8 +62,6 @@ private:
 
     double kalph[3];
     double kpeng[2];
-
-
 
     QVector<double>lin;
     QVector<double>sinn;

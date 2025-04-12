@@ -1,6 +1,5 @@
 #include "focus.h"
 
-
 double focus::Focus (double Mah, double D, double Lgo, double wgo, double CIL, double CILCON)
     {
         KM = (pow(abs(1 - pow(Mah, 2)), 0.5)) / CIL;

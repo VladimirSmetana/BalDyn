@@ -8,11 +8,21 @@
 #include "Constants.h"
 
 namespace {
-constexpr auto components_ratio = 4.5;
-constexpr auto first_block_length = 42.9;
-constexpr auto second_block_length = 10.5;
-constexpr auto second_stage_length = 21.5;
-constexpr auto extra_mass = 33200; /*2200*/
+constexpr auto c_components_ratio = 3.5;
+constexpr auto c_first_block_length = 42.9;
+constexpr auto c_second_block_length = 10.5;
+constexpr auto c_second_stage_length = 21.5;
+constexpr auto c_extra_mass = 33200; /*2200*/
+constexpr auto c_payload_mass = 15000;
+constexpr auto c_first_block_mass = 391000;
+constexpr auto c_second_block_mass = 107000;
+constexpr auto c_first_exhaust_velocity = 3300;
+constexpr auto c_second_exhaust_velocity = 3700;
+constexpr auto c_maximum_diameter = 4.1;
+constexpr auto c_step = 0.1;
+constexpr auto c_test_mass = 0;
+constexpr auto c_first_structural_value = 7;
+constexpr auto c_second_structural_value = 10;
 }
 
 FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
@@ -32,11 +42,24 @@ void FlightInit::m_calculate_initial_values() {
     std::cout << "" << kalph[2] << "\n";
     std::cout << "" << kpeng[0] << "\n";
     std::cout << "" << kpeng[1] << "\n";
+
+    mpn = c_payload_mass;
+    Ratio = c_components_ratio;
+    mb[0] = c_first_block_mass;
+    mb[1] = c_second_block_mass;
+    Imp[0] = c_first_exhaust_velocity;
+    Imp[1] = c_second_exhaust_velocity;
+    D = c_maximum_diameter;
+    h = c_step;
+    zap = c_test_mass;
+    s[0] = c_first_structural_value;
+    s[1] = c_second_structural_value;
+
     peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn + mb[0] + mb[1]);
     peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn + mb[1]);
-    m_furet = extra_mass;
-    m_reC = m_furet / components_ratio;
-    m_reO = m_furet * (components_ratio - 1) / components_ratio;
+    m_furet = c_extra_mass;
+    m_reC = m_furet / (Ratio+1);
+    m_reO = m_furet * (Ratio) / (Ratio+1);
     M_Rocket = mpn;
     fir->m_t = M_Rocket;
     sec->m_t = M_Rocket;
@@ -79,8 +102,8 @@ void FlightInit::initialize_time_parameters() {
 void FlightInit::calculate_length() {
     // Определение габаритов ракеты
     Lmax = M.get_length();
-    L1 = first_block_length;
-    L2 = second_block_length;
+    L1 = c_first_block_length;
+    L2 = c_second_block_length;
 }
 
 void FlightInit::m_calculate_mass_parameters() {
@@ -101,8 +124,8 @@ void FlightInit::m_calculate_mass_parameters() {
 void FlightInit::calculate_area_and_inertia() {
     fir->S_dry[0] = M.fun_S(M.K[6], M.K[12], m_dry[0]);
     fir->S_dry[1] = M.fun_S(M.K[1], M.K[6], m_dry[1]);
-    sec->S_dry[0] = M.fun_S(M.K[6] - second_stage_length, M.K[12] - second_stage_length, m_dry[0]);
-    sec->S_dry[1] = M.fun_S(M.K[1] - second_stage_length, M.K[6] - second_stage_length, m_dry[1]);
+    sec->S_dry[0] = M.fun_S(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0]);
+    sec->S_dry[1] = M.fun_S(M.K[1] - c_second_stage_length, M.K[6] - c_second_stage_length, m_dry[1]);
 
     // Calculate areas for oxygen and carbon
     S_o[0] = M.fun_S(M.K[8], M.K[9], m_O[0]);
@@ -112,8 +135,8 @@ void FlightInit::calculate_area_and_inertia() {
 
     fir->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
     fir->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
-    sec->S_reO = M.fun_S(M.K[9] - second_stage_length, M.K[10] - second_stage_length, m_reO);
-    sec->S_reC = M.fun_S(M.K[11] - second_stage_length, M.K[13] - second_stage_length, m_reC);
+    sec->S_reO = M.fun_S(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO);
+    sec->S_reC = M.fun_S(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC);
 
     fir->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
 
@@ -123,7 +146,7 @@ void FlightInit::calculate_area_and_inertia() {
 void FlightInit::calculate_inertia() {
     fir->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], D);
     fir->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], D);
-    sec->I_dry[0] = M.fun_I(M.K[6] - second_stage_length, M.K[12] - second_stage_length, m_dry[0], D);
+    sec->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0], D);
 
     I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], D);
     I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], D);
@@ -132,8 +155,8 @@ void FlightInit::calculate_inertia() {
 
     fir->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, D);
     fir->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, D);
-    sec->I_reO = M.fun_I(M.K[9] - second_stage_length, M.K[10] - second_stage_length, m_reO, D);
-    sec->I_reC = M.fun_I(M.K[11] - second_stage_length, M.K[13] - second_stage_length, m_reC, D);
+    sec->I_reO = M.fun_I(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO, D);
+    sec->I_reC = M.fun_I(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC, D);
 
     fir->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket * pow(fir->gl_c, 2);
     Iz = fir->Isumm;

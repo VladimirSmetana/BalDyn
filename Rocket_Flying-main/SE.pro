@@ -29,6 +29,7 @@ SOURCES += \
 HEADERS += \
     Airforce.h \
     Constants.h \
+    DataVector.h \
     FlightInit.h \
     FlightSolver.h \
     alpha.h \

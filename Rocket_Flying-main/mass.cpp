@@ -1,17 +1,14 @@
 #include "mass.h"
 #include <QDebug>
 
-double mass::fun_S(double X_l, double X_b, double mass)
-    {
+double mass::fun_S(double X_l, double X_b, double mass) {
         return 0.5 * mass * (X_l+X_b);
     }
-double mass::fun_I(double X_l, double X_b, double mass, double D)
-    {
+double mass::fun_I(double X_l, double X_b, double mass, double D) {
         return 0.25 * mass * ( pow(X_l+X_b, 2) + 0.333 * pow(X_b - X_l, 2)+pow((D/2),2) );
     }
 
-    void  mass::MCI_f (double time,double h,double payload, double D,double m_block1, double m_block2,double s1, double s2,double P1, double P2)
-    {
+    void  mass::MCI_f (double time,double h,double payload, double D,double m_block1, double m_block2,double s1, double s2,double P1, double P2) {
         mb[0] = m_block1; mb[1] = m_block2;
         M_Rocket = mb[0] + mb[1] + payload;
         s[0] = s1; s[1] = s2;
@@ -26,8 +23,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         L_instrument = 0.1;
         L_Rocket += L_headunit + L_instrument;
 
-        for (int i=0;i<=1;i++)
-        {
+        for (int i=0;i<=1;i++) {
             m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
             m_dry[i] = mb[i]-m_fuel[i];
             w_dry[i]=m_dry[i]/po_dry;
@@ -120,51 +116,40 @@ double mass::fun_I(double X_l, double X_b, double mass, double D)
         return;
     }
 
-    double mass::get_CM()
-    {
+    double mass::get_CM() {
         return m_center;
     }
-    double mass::get_I()
-    {
+    double mass::get_I() {
         return I_Rocket;
     }
-    double mass::get_S()
-    {
+    double mass::get_S() {
         return S_Rocket;
     }
-    double mass::get_length()
-    {
+    double mass::get_length() {
         return L_Rocket;
     }
-    double mass::get_lst1()
-    {
+    double mass::get_lst1() {
         return L_b[0];
     }
-    double mass::get_lst2()
-    {
+    double mass::get_lst2() {
         return L_b[1];
     }
-    double mass::get_SGO()
-    {
+    double mass::get_SGO() {
         return S_headunit;
     }
-    double mass::get_IGO()
-    {
+    double mass::get_IGO() {
         return I_headunit;
     }
 
-    double mass::get_wgo()
-    {
+    double mass::get_wgo() {
         return w_headunit;
     }
 
-    double mass::get_lengo()
-    {
+    double mass::get_lengo() {
         return L_headunit;
     }
 
-    double mass::get_CIL()
-    {
+    double mass::get_CIL() {
         return CIL;
     }
 
