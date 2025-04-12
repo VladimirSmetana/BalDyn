@@ -5,6 +5,7 @@
 #include "block.h"
 #include <cmath>
 #include <iostream>
+#include <QVector>
 #include "mass.h"
 #include "Airforce.h"
 #include "focus.h"
@@ -19,6 +20,7 @@ class FlightSolver : public FlightInit
 
 private:
 
+    mass M;
     double Na=0.1, Mah_1, Mah_2,  time = 0;
     int e=0;
     int uj=0;
@@ -28,7 +30,7 @@ private:
     double xXY = 0, yXY = 0,  VX = 0.3, VY = 0.3, velXY = 0.3, trjXY = M_PI/2, norXY = 0;
     double zXY = 0, VZ  = 0.3;
 
-
+    double Imp[2] {3300, 3700};
 
 
     double gl_cmax;
@@ -41,7 +43,8 @@ private:
     double k4 = 440;
     double kk1 = 0.2;
     double kk2 = 0.22;
-
+    double M_stage[2];
+    double T_stage [2];
     double Ott;
     double CX_1, CY_1;
     double CX_2, CY_2;
@@ -56,12 +59,17 @@ private:
     double deo, dec;
     double X_oneC;
     double X_twoC;
-
+    double T[4];
 
     public:
 
-    FlightSolver(double (&attackValue)[3], double (&thrustToWeight)[2]);
+    FlightSolver(double (&kalph_)[3], double (&kpeng_)[2]);
     ~FlightSolver();
+
+    double kalph[3];
+    double kpeng[2];
+
+
 
     QVector<double>lin;
     QVector<double>sinn;
@@ -80,8 +88,9 @@ private:
     QVector<double>yu_2;
     QVector<double>mass_1;
     QVector<double>mass_2;
+    QVector<double> xn;
     QVector<double> v_1, v_2, v_3;
-    QVector<double> Long_1, Long_2, H3;
+    QVector<double> Long_1, Long_2, H1, H2, H3;
     QVector<double> angle, b1, b2;
     QVector<double> P1, P2;
     QVector<double> f1;
@@ -95,21 +104,23 @@ private:
     double dep;
     double Ott_1, Ott_2 ;
     double MHSP_1, MHSP_2, VHSP_2;
-
+    double Lmax;
     double MaxTime;
-
-
+    double T_fuel[2];
+    double Iz, Izmax, Sx, Ix, Ixmax;
     double amax;
 
     double mass_function(double time);
     double thrust_function(double time);
     void pitch_calculations();
-
+    void calculate_length();
+    void calculate_mass_parameters();
+    void calculate_inertia();
+    void calculate_area_and_inertia();
+    void initialize_time_parameters();
 
     QFile file1;
 
-private:
-    double m_attack_value[2];
 };
 
 #endif // FLIGHTSOLVER_H

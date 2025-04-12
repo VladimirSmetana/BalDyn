@@ -2,18 +2,30 @@
 
 #include "Constants.h"
 
+namespace {
+constexpr auto components_ratio = 4.5;
+constexpr auto first_block_length = 42.9;
+constexpr auto second_block_length = 10.5;
+constexpr auto second_stage_length = 21.5;
+constexpr auto extra_mass = 33200; /*2200*/
+}
 
-
-FlightSolver::FlightSolver(double (&attackValue)[3], double (&thrustToWeight)[2])
-    : FlightInit(thrustToWeight)
+FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2])
+    : FlightInit(kalph_, kpeng_)
  {
 
-    std::copy(std::begin(m_attack_value), std::end(m_attack_value), std::begin(attackValue));
+    std::copy(std::begin(kalph_), std::end(kalph_), std::begin(kalph));
+    std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
 
     file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/air.txt");
     file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file1.resize(0);
 
+    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
+    calculate_length();
+    calculate_mass_parameters();
+    calculate_area_and_inertia();
+    initialize_time_parameters();
 }
 
 FlightSolver::~FlightSolver()
@@ -21,15 +33,104 @@ FlightSolver::~FlightSolver()
     file1.close();
 }
 
+void FlightSolver::calculate_length() {
+    // Определение габаритов ракеты
+    Lmax = M.get_length();
+    L1 = first_block_length;
+    L2 = second_block_length;
+}
+
+void FlightSolver::calculate_mass_parameters() {
+    for (int i = 0; i <= 1; i++) {
+        m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
+        m_O[i] = m_fuel[i] * Ratio / (Ratio + 1);
+        m_C[i] = m_fuel[i] / (Ratio + 1);
+        m_dry[i] = mb[i] - m_fuel[i];
+    }
+    m_dry[0] -= m_furet;
+    M_Rocket += m_fuel[0] + m_dry[0] + m_fuel[1] + m_dry[1] + m_furet;
+    m_dry[1] += zap;
+
+    M_stage[0] = M_Rocket;
+    M_stage[1] = M_Rocket - mb[0];
+}
+
+void FlightSolver::calculate_area_and_inertia() {
+    fir->S_dry[0] = M.fun_S(M.K[6], M.K[12], m_dry[0]);
+    fir->S_dry[1] = M.fun_S(M.K[1], M.K[6], m_dry[1]);
+    sec->S_dry[0] = M.fun_S(M.K[6] - second_stage_length, M.K[12] - second_stage_length, m_dry[0]);
+    sec->S_dry[1] = M.fun_S(M.K[1] - second_stage_length, M.K[6] - second_stage_length, m_dry[1]);
+
+    // Calculate areas for oxygen and carbon
+    S_o[0] = M.fun_S(M.K[8], M.K[9], m_O[0]);
+    S_c[0] = M.fun_S(M.K[10], M.K[11], m_C[0]);
+    S_o[1] = M.fun_S(M.K[3], M.K[4], m_O[1]);
+    S_c[1] = M.fun_S(M.K[5], M.K[6], m_C[1]);
+
+    fir->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
+    fir->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
+    sec->S_reO = M.fun_S(M.K[9] - second_stage_length, M.K[10] - second_stage_length, m_reO);
+    sec->S_reC = M.fun_S(M.K[11] - second_stage_length, M.K[13] - second_stage_length, m_reC);
+
+    fir->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+
+    calculate_inertia();
+}
+
+void FlightSolver::calculate_inertia() {
+    fir->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], D);
+    fir->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], D);
+    sec->I_dry[0] = M.fun_I(M.K[6] - second_stage_length, M.K[12] - second_stage_length, m_dry[0], D);
+
+    I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], D);
+    I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], D);
+    I_o[1] = M.fun_I(M.K[3], M.K[4], m_O[1], D);
+    I_c[1] = M.fun_I(M.K[5], M.K[6], m_C[1], D);
+
+    fir->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, D);
+    fir->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, D);
+    sec->I_reO = M.fun_I(M.K[9] - second_stage_length, M.K[10] - second_stage_length, m_reO, D);
+    sec->I_reC = M.fun_I(M.K[11] - second_stage_length, M.K[13] - second_stage_length, m_reC, D);
+
+    fir->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket * pow(fir->gl_c, 2);
+    Iz = fir->Isumm;
+    Ix = M_Rocket * pow(D / 2, 2);
+    Izmax = Iz;
+    Ixmax = Ix;
+}
+
+void FlightSolver::initialize_time_parameters() {
+    std::cout << "set start flight parameters\n";
+
+    T_fuel[0] = m_fuel[0]/(peng [0]/Imp[0]);
+    T_stage [0] = T_fuel [0] + T_sep [0];
+    T_fuel[1] = m_fuel[1]/(peng [1]/Imp[1]);
+    T_stage [1] = T_fuel [1] + T_sep [1];
+    // ИД итеративного расчета
+    fir->m_t = M_Rocket;
+    sec->m_t = M_Rocket;
+    fir->anY = M_PI/2;
+    sec->anY = M_PI/2;
+    //double p_ground = 101325;
+    sec->tY = 1;
+    //
+    // Итеративный расчет
+    H1.clear();
+    H2.clear();
+    xn.clear();
+    count = 0;
+    fir->tY = 0;
+    sec->tX = 0;
+    d_O[1] = 0;
+    T[0] = T_fuel[0];
+    T[1] = T_fuel[0] + T_sep[0];
+    T[2] = T_fuel[0] + T_sep[0]+T_fuel[1];
+    T[3] = T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1];
+}
+
 
 void FlightSolver::pitch_calculations()
 {
-    std::cout << "Fuel mass (1 sg): " << m_fuel[0] << "\n";
-    std::cout << "Fuel mass (2 sg): " << m_fuel[1] << "\n";
-    std::cout << "Dry mass (1 sg): " << m_dry[0] << "\n";
-    std::cout << "Dry mass (2 sg): " << m_dry[1] << "\n";
-    std::cout << "Extra mass (landing): " << m_furet << "\n";
-    std::cout << "Full rocket mass: " << M_Rocket << "\n";
     QTextStream out1(&file1);
     do
     {
@@ -229,8 +330,8 @@ void FlightSolver::pitch_calculations()
         }
 
         // Программа угла атаки
-        alpha alph_1 (fir->V,  m_attack_value [1], m_attack_value [2], time, T_stage [0], 0, k2, k3);
-        alpha alph_2 (sec->V,  m_attack_value [1],                  0, time, 200, 180, k2, k3);
+        alpha alph_1 (fir->V,  kalph [1], kalph [2], time, T_stage [0], 0, k2, k3);
+        alpha alph_2 (sec->V, kalph [1],              0, time, 200, 180, k2, k3);
 
         // Учет параметров атмосферы
         HSP_p_1 = HSP_1;
@@ -300,6 +401,7 @@ void FlightSolver::pitch_calculations()
             H11 = fir->V* sin(fir->anY);
             V1 = B_1.fdV(fir->V, fir->anY);
             Y1 = B_1.fdY(fir->tY, fir->V, fir->anY);
+
 
             VX += h*B_1.dVX(velXY, Ott, Na);
             VY += h*B_1.dVY(velXY, Ott, Na);
