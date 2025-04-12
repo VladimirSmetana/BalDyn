@@ -10,8 +10,9 @@ constexpr auto second_stage_length = 21.5;
 constexpr auto extra_mass = 33200; /*2200*/
 }
 
-FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2])
+FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2], std::shared_ptr<Dataset> dataSet)
     : FlightInit(kalph_, kpeng_)
+    , m_dataset(dataSet)
  {
 
     std::copy(std::begin(kalph_), std::end(kalph_), std::begin(kalph));
@@ -339,49 +340,53 @@ void FlightSolver::pitch_calculations()
         }
 
 
-        xn.push_back(time);
-        yu_1.push_back(HSP_1);
-        yu_2.push_back(HSP_2);
-        center_1.push_back(fir->gl_c);
-        center_2.push_back(sec->gl_c);
-        v_1.push_back(fir->V);
-        v_2.push_back(sec->V);
-        sinn.push_back(fir->Ssumm);
-        jinn.push_back(fir->Isumm);
-        jinn2.push_back(sec->Isumm);
-        CM.push_back(fir->Ssumm/fir->m_t);
-        mass_1.push_back(fir->m_t);
-        mass_2.push_back(sec->m_t);
-        Long_1.push_back(fir->tX/1000);
-        Long_2.push_back(sec->tX/1000);
-        vec_wind1.push_back(Wind1);
-        vec_wind2.push_back(Wind2);
-        H1.push_back(fir->tY/1000);
-        H2.push_back(sec->tY/1000);
-        angle.push_back(pitch_angle*57.3);
-        b1.push_back(HSP_1*Smid*CX_1);
-        b2.push_back(HSP_2*Smid*CX_2);
-        lin.push_back(Ix);
-        ALI_1.push_back(alph_1.A());
-        ALI_2.push_back(alph_2.A());
-        res.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
-        TET_1.push_back(fir->anY*57.3);
-        TET_2.push_back(sec->anY*57.3);
-        be.push_back(bpr*57.3);
-        pi.push_back(pitch_angle*57.3);
-        P1.push_back(fir->Peng_t);
-        P2.push_back(sec->Peng_t);
-        f1.push_back(fir->focus);
-        Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
-        Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
-        pc2.push_back(sec->Peng_control);
-        cy2.push_back(CY_2);
-        dyn1.push_back(X_oneC);
-        dyn2.push_back(X_twoC);
-        lenght_R.push_back(sec->L);
+        m_dataset -> xn.push_back(time);
+        m_dataset -> yu_1.push_back(HSP_1);
+        m_dataset -> yu_2.push_back(HSP_2);
+        m_dataset -> center_1.push_back(fir->gl_c);
+        m_dataset -> center_2.push_back(sec->gl_c);
+        m_dataset -> v_1.push_back(fir->V);
+        m_dataset -> v_2.push_back(sec->V);
+        m_dataset -> sinn.push_back(fir->Ssumm);
+        m_dataset -> jinn.push_back(fir->Isumm);
+        m_dataset -> jinn2.push_back(sec->Isumm);
+        m_dataset -> CM.push_back(fir->Ssumm/fir->m_t);
+        m_dataset -> mass_1.push_back(fir->m_t);
+        m_dataset -> mass_2.push_back(sec->m_t);
+        m_dataset -> Long_1.push_back(fir->tX/1000);
+        m_dataset -> Long_2.push_back(sec->tX/1000);
+        m_dataset -> vec_wind1.push_back(Wind1);
+        m_dataset -> vec_wind2.push_back(Wind2);
+        m_dataset -> H1.push_back(fir->tY/1000);
+        m_dataset -> H2.push_back(sec->tY/1000);
+        m_dataset -> angle.push_back(pitch_angle*57.3);
+        m_dataset -> b1.push_back(HSP_1*Smid*CX_1);
+        m_dataset -> b2.push_back(HSP_2*Smid*CX_2);
+        m_dataset -> lin.push_back(Ix);
+        m_dataset -> ALI_1.push_back(alph_1.A());
+        m_dataset -> ALI_2.push_back(alph_2.A());
+        m_dataset -> res.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
+        m_dataset -> TET_1.push_back(fir->anY*57.3);
+        m_dataset -> TET_2.push_back(sec->anY*57.3);
+        m_dataset -> be.push_back(bpr*57.3);
+        m_dataset -> pi.push_back(pitch_angle*57.3);
+        m_dataset -> P1.push_back(fir->Peng_t);
+        m_dataset -> P2.push_back(sec->Peng_t);
+        m_dataset -> f1.push_back(fir->focus);
+        m_dataset -> Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
+        m_dataset -> Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
+        m_dataset -> pc2.push_back(sec->Peng_control);
+        m_dataset -> cy2.push_back(CY_2);
+        m_dataset -> dyn1.push_back(X_oneC);
+        m_dataset -> dyn2.push_back(X_twoC);
+        m_dataset -> lenght_R.push_back(sec->L);
         amax = alph_1.A();
         count+=1;
         MaxTime = count*h;
     }
     while (sec->tY>0 && sec->V>0);
+}
+
+std::shared_ptr<Dataset> FlightSolver::GetDataset() {
+    return m_dataset;
 }

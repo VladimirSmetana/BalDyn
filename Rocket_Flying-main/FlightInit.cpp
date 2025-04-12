@@ -86,9 +86,6 @@ void FlightInit::initialize_time_parameters() {
     sec->tY = 1;
     //
     // Итеративный расчет
-    H1.clear();
-    H2.clear();
-    xn.clear();
     count = 0;
     fir->tY = 0;
     sec->tX = 0;

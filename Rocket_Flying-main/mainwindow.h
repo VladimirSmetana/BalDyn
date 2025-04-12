@@ -17,6 +17,7 @@
 #include <QDebug>
 #include <cmath>
 #include <iostream>
+#include "DataVector.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -33,6 +34,7 @@ public:
     // Создание объектов
     std::unique_ptr<FlightSolver> P;
     std::unique_ptr<DC> d = std::make_unique<DC>();
+    std::shared_ptr<Dataset> dataSet = std::make_unique<Dataset>();
 
     void drawing(QVector<double> Y1,
                  QVector<double> Y2, double y0,  double yk,
@@ -101,6 +103,6 @@ private:
     QCustomPlot *wGraphic;
     QCPCurve *verticalLine;
     QCPItemTracer *tracer;
-
+    std::shared_ptr<Dataset> m_drow_data;
 };
 #endif // MAINWINDOW_H

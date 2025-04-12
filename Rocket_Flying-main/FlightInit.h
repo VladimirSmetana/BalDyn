@@ -5,13 +5,13 @@
 #include "block.h"
 #include "mass.h"
 
+
 class FlightInit
 {
 public:
     FlightInit(double (&kalph_)[3], double (&kpeng_)[2]);
     std::unique_ptr<block> fir = std::make_unique<block>();
     std::unique_ptr<block> sec = std::make_unique<block>();
-    QVector<double> H1, H2, xn;
     double Lmax;
     double Sx;
     double Iz;
