@@ -1,14 +1,8 @@
 #include "FlightSolver.h"
 
-#include "Constants.h"
-
-namespace {
-constexpr auto components_ratio = 4.5;
-constexpr auto first_block_length = 42.9;
-constexpr auto second_block_length = 10.5;
-constexpr auto second_stage_length = 21.5;
-constexpr auto extra_mass = 33200; /*2200*/
-}
+#include "focus.h"
+#include "equations.h"
+#include "mass.h"
 
 FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2], std::shared_ptr<Dataset> dataSet)
     : FlightInit(kalph_, kpeng_)
@@ -21,16 +15,12 @@ FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2], std::shared
     file1.setFileName("C:/Users/smeta/OneDrive/Рабочий стол/M/BalDyn/output/air.txt");
     file1.open(QIODevice::WriteOnly | QIODevice::Text | QIODevice::Truncate);
     file1.resize(0);
-
-
 }
 
 FlightSolver::~FlightSolver()
 {
     file1.close();
 }
-
-
 
 void FlightSolver::pitch_calculations()
 {

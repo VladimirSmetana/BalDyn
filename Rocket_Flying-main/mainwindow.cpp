@@ -2,8 +2,6 @@
 #include "ui_mainwindow.h"
 #include "FlightSolver.h"
 
-
-
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
@@ -15,8 +13,6 @@ MainWindow::~MainWindow()
 {
     delete ui;
 }
-
-
 
 // Перегруженная функция отрисовки
 void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,

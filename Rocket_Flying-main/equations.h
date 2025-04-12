@@ -4,17 +4,8 @@
 #define M_PI 3.14159265358979323846
 class equations
 {
-    private:
-    double po;
-    double S;
-    double g, m, I;
-    double CX, CY;
-    double PENG, alpha;
-    double F_P, F_Z, F_Y, F_X, F_G, F_W;
-    double wind;
-    double const  R = 6371000;
 
-    public: 
+public:
     equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind);
     // Баллистические уравнения
     double fdV(double vv, double ii);
@@ -28,6 +19,15 @@ class equations
     double dVY(double vv, double ii, double N);
     double dVZ(double vv, double ii, double N);
 
+private:
+    double R = 6371000;
+    double po;
+    double S;
+    double g, m, I;
+    double CX, CY;
+    double PENG, alpha;
+    double F_P, F_Z, F_Y, F_X, F_G, F_W;
+    double wind;
 };
 
 #endif // EQUATIONS_H

@@ -1,4 +1,5 @@
 #include "equations.h"
+#include "Constants.h"
     equations::equations (double po, double S, double g, double m, double CX, double CY, double PENG, double alpha, double wind)
     :po(po),S(S), g(g), m(m), CX(CX), CY(CY), PENG(PENG), alpha(alpha), wind(wind)
     {}
@@ -47,7 +48,7 @@
     {
         F_P = (PENG * sin((M_PI * alpha) / 180));
         F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2);
-        return (F_P+ F_Y)/ (m*vv)  - ((g  * cos(ii))) * (1-pow(vv,2)/(g*(R+hh))) /vv;
+        return (F_P+ F_Y)/ (m*vv)  - ((g  * cos(ii))) * (1-pow(vv,2)/(g*(constants::earth_radius+hh))) /vv;
     }
 
     double equations::returndV(double vv, double ii)
@@ -61,12 +62,12 @@
     {
         F_P = (PENG * sin((M_PI * alpha) / 180));
         F_Y = (CY * ((M_PI * alpha) / 180) * S * (po * pow(vv, 2)) / 2);
-        return (-F_P+ F_Y)/ (m*vv)  - ((g  * cos(ii))) * (1-pow(vv,2)/(g*(R+hh))) /vv;
+        return (-F_P+ F_Y)/ (m*vv)  - ((g  * cos(ii))) * (1-pow(vv,2)/(g*(constants::earth_radius+hh))) /vv;
     }
 
     double equations::fdN(double hh, double vv, double ii)
     {
-        return (vv /(R+hh)) * cos(ii);
+        return (vv /(constants::earth_radius+hh)) * cos(ii);
     }
 
     double equations::fdH(double vv, double ii)

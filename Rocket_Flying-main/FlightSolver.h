@@ -2,25 +2,21 @@
 #define FLIGHTSOLVER_H
 
 #include "FlightInit.h"
-#include "block.h"
 #include <cmath>
-#include <iostream>
+
 #include <QVector>
-#include "mass.h"
+
 #include "Airforce.h"
-#include "focus.h"
-#include "equations.h"
+
 #include "atmosphere.h"
 #include "eastwind.h"
 #include "alpha.h"
 #include <QFile>
 #include "DataVector.h"
 
-class FlightSolver : public FlightInit
-{
+class FlightSolver : public FlightInit {
 
 private:
-
     double Na=0.1, Mah_1, Mah_2,  time = 0;
     int e=0;
     int uj=0;
@@ -67,8 +63,6 @@ private:
     double kalph[3];
     double kpeng[2];
 
-
-
     double dep;
     double Ott_1, Ott_2 ;
     double MHSP_1, MHSP_2, VHSP_2;
@@ -79,10 +73,6 @@ private:
     double mass_function(double time);
     double thrust_function(double time);
     void pitch_calculations();
-
-    void calculate_mass_parameters();
-
-    void initialize_time_parameters();
 
     QFile file1;
 

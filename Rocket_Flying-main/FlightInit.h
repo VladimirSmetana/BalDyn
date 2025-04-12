@@ -6,8 +6,7 @@
 #include "mass.h"
 
 
-class FlightInit
-{
+class FlightInit {
 public:
     FlightInit(double (&kalph_)[3], double (&kpeng_)[2]);
     std::unique_ptr<block> fir = std::make_unique<block>();
