@@ -6,6 +6,7 @@
 #include <iterator>
 
 #include "Constants.h"
+#include <QDebug>
 
 namespace {
 constexpr auto c_components_ratio = 3.5;
@@ -30,18 +31,19 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
     std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
 
     m_calculate_initial_values();
-    M.MCI_f(0, h, mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
+    M.MCI_f(mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     calculate_length();
     m_calculate_mass_parameters();
     initialize_time_parameters();
+    calculate_area_and_inertia();
 }
 
 void FlightInit::m_calculate_initial_values() {
-    std::cout << "" << kalph[0] << "\n";
-    std::cout << "" << kalph[1] << "\n";
-    std::cout << "" << kalph[2] << "\n";
-    std::cout << "" << kpeng[0] << "\n";
-    std::cout << "" << kpeng[1] << "\n";
+    qDebug() << "\n" << "-- INITIAL DATA --" << "\n";
+    qDebug() << "1st attack coefficient:" << kalph[1];
+    qDebug() << "2d attack coefficient :"  << kalph[2];
+    qDebug() << "1st thrust-to-weight coefficient:" << kpeng[0];
+    qDebug() << "2d thrust-to-weight coefficient :"  << kpeng[1];
 
     mpn = c_payload_mass;
     Ratio = c_components_ratio;
@@ -82,9 +84,7 @@ void FlightInit::initialize_time_parameters() {
     sec->m_t = M_Rocket;
     fir->anY = M_PI/2;
     sec->anY = M_PI/2;
-    //double p_ground = 101325;
     sec->tY = 1;
-    //
     // Итеративный расчет
     count = 0;
     fir->tY = 0;
@@ -137,7 +137,13 @@ void FlightInit::calculate_area_and_inertia() {
 
     fir->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
 
+
+    Sx = fir->Ssumm;
     calculate_inertia();
+    qDebug() << "\n" << "-- INERCIA --" << "\n";
+    qDebug() << "Sx: " << Sx;
+    qDebug() << "Ix: " << Ix;
+    qDebug() << "Iz: " << Iz;
 }
 
 void FlightInit::calculate_inertia() {
@@ -158,6 +164,7 @@ void FlightInit::calculate_inertia() {
     fir->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket * pow(fir->gl_c, 2);
     Iz = fir->Isumm;
     Ix = M_Rocket * pow(D / 2, 2);
+
     Izmax = Iz;
     Ixmax = Ix;
 }

@@ -44,9 +44,6 @@ public:
     void drawing(QVector<double> Y1, double y0,  double yk,
                  QVector<double> X1, double x0 , double xk);
 
-    void dirty_drawing(QVector<double> Y1, double y0,  double yk,
-                                   QVector<double> X1, double x0 , double xk);
-
     double Runge_Kutt(double func(double, double),
                     double XX, double YY,
                     double h);

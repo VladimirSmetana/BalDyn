@@ -6,7 +6,6 @@
 #include <QSqlRecord>
 #include <cmath>
 #include <QtSql>
-#include "pid_file.h"
 #include "iostream"
 #include <QFile>
 
@@ -57,7 +56,7 @@ public:
                       QVector<double> jinn2);
 
     void data_calculating(double P, double I, double D);
-    void const_par(double mass, double len);
+    void const_par(double len);
     void ver_par(double mass, double p, double p_con,
                         double q, double cy, double x1, double x2, double vel, double iner, double len);
         QFile file1;

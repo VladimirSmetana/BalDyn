@@ -8,7 +8,7 @@ double mass::fun_I(double X_l, double X_b, double mass, double D) {
         return 0.25 * mass * ( pow(X_l+X_b, 2) + 0.333 * pow(X_b - X_l, 2)+pow((D/2),2) );
     }
 
-    void  mass::MCI_f (double time,double h,double payload, double D,double m_block1, double m_block2,double s1, double s2,double P1, double P2) {
+    void  mass::MCI_f (double payload, double D,double m_block1, double m_block2,double s1, double s2,double P1, double P2) {
         mb[0] = m_block1; mb[1] = m_block2;
         M_Rocket = mb[0] + mb[1] + payload;
         s[0] = s1; s[1] = s2;
@@ -41,7 +41,6 @@ double mass::fun_I(double X_l, double X_b, double mass, double D) {
 
 
             L_b[i] = L_taC[i]+L_taO[i]+L_engine[i];
-    qDebug() << "Длина " << L_b[i];
             W_taC[i] = 1.25*w_C[i];
             W_taO[i] = 1.25*w_O[i];
             W_Rocket +=  W_taC[i] + W_taO[i];

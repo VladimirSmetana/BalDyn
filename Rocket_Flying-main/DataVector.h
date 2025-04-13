@@ -4,7 +4,7 @@
 #include <QVector>
 
 struct Dataset {
-    QVector<double> H1{};
+    QVector<double> altitude_1{};
     QVector<double> jinn{};
     QVector<double>ALI_1{};
     QVector<double>TET_1{};
@@ -18,7 +18,7 @@ struct Dataset {
     QVector<double> v_1{};
     QVector<double> vec_wind1{};
 
-    QVector<double> H2{};
+    QVector<double> altitude_2{};
     QVector<double> jinn2{};
     QVector<double>ALI_2{};
     QVector<double>TET_2{};
@@ -33,21 +33,20 @@ struct Dataset {
     QVector<double> vec_wind2{};
 
     QVector<double> xn{};
-    QVector<double> c{};
+
     QVector<double>lin{};
     QVector<double>sinn{};
     QVector<double>CM{};
-    QVector<double>res{};
     QVector<double>be{};
     QVector<double>pi{};
     QVector<double> v_3{};
-    QVector<double> H3{};
     QVector<double> angle{};
     QVector<double> f1{};
     QVector<double> Lon{}, Lonre{};
     QVector<double> pc2{};
     QVector<double> cy2{};
     QVector<double> lenght_R{};
+
 };
 
 #endif // DATAVECTOR_H

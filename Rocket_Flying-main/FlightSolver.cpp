@@ -3,6 +3,11 @@
 #include "focus.h"
 #include "equations.h"
 #include "mass.h"
+#include "qdebug.h"
+#include "Constants.h"
+
+#include <QDebug>
+
 
 FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2], std::shared_ptr<Dataset> dataSet)
     : FlightInit(kalph_, kpeng_)
@@ -41,12 +46,9 @@ void FlightSolver::pitch_calculations()
         // Участок работы ДУ-1
         if (time<=T[0])
         {
-            //if (m_t > M_Rocket-onefu )
-            //{
             fir->Peng_t = peng[0];
             sec->Peng_t = peng[0];
             sec->Peng_control = sec->Peng_t/2;
-            //+ (p_ground - P.get_pressure()) * Smid/2;
             Imp_t = Imp[0];
             CF = fir->Peng_t/Imp_t;
             fir-> m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
@@ -54,8 +56,8 @@ void FlightSolver::pitch_calculations()
             m_O[0] = Ratio*m_fuel[0]/(Ratio+1);
             m_C[0] = m_fuel[0]/(Ratio+1);
             m_fuel[0] -= CF*h;
-            d_O[0] += Ratio*CF*h/(1100*Smid)/(Ratio+1);
-            d_C[0] += CF*h/(440*Smid)/(Ratio+1);
+            d_O[0] += Ratio*CF*h/(constants::density::liquid_oxygen*Smid)/(Ratio+1);
+            d_C[0] += CF*h/(constants::density::kerosene*Smid)/(Ratio+1);
             S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
             S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], m_C[0]);
             // fir в sec->e не ошибка, а условность СК
@@ -70,9 +72,6 @@ void FlightSolver::pitch_calculations()
 
             sec->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reC +fir->I_reO - sec->m_t*pow(sec->gl_c,2);
             Ix = fir->m_t * pow(D/2, 2);
-            //}
-            //else T_fuel[0] = time;
-            //if (abs(m_t - (M_Rocket-m_fuel[0])) < 100) T_fuel[0] = time;
             fir->L  = Lmax;
             sec->L = Lmax;
             Ott_1 = fir->anY;
@@ -120,13 +119,13 @@ void FlightSolver::pitch_calculations()
             m_C[1] = 1*m_fuel[1]/(Ratio+1);
 
             m_fuel[1] -= CF*h;
-            d_O[1] += CF*h *Ratio/(1100*Smid)/(Ratio+1);
-            d_C[1] += CF*h /(440*Smid)/(Ratio+1);
+            d_O[1] += CF*h *Ratio/(constants::density::liquid_oxygen*Smid)/(Ratio+1);
+            d_C[1] += CF*h /(constants::density::kerosene*Smid)/(Ratio+1);
             S_o[1] = M.fun_S (M.K[3]+d_O[1], M.K[4], m_O[1]);
             S_c[1] = M.fun_S (M.K[5]+d_C[1], M.K[6], m_C[1]);
             fir->Ssumm = M.get_SGO() + fir->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
 
-            // std::cout << CF*h *Ratio/(1100*Smid)/(Ratio+1) << CF << std::endl;
+            // std::cout << CF*h *Ratio/(constants::density::liquid_oxygen*Smid)/(Ratio+1) << CF << std::endl;
 
             sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
             fir->gl_c = fir->Ssumm/fir->m_t;
@@ -199,12 +198,12 @@ void FlightSolver::pitch_calculations()
                 sec->Peng_control = sec->Peng_t;
                 Imp_t = Imp[0];
                 CF = sec->Peng_t/Imp_t;
-                m_reC -= CF*h * 1/(3.5+1);
-                m_reO -= CF*h * 3.5/(3.5+1);
+                m_reC -= CF*h * 1/(Ratio+1);
+                m_reO -= CF*h * Ratio/(Ratio+1);
                 m_furet = m_reC + m_reO;
                 sec->m_t = m_dry[0] + m_reC + m_reO;
-                deo += CF*h *Ratio/(1100*Smid)/(Ratio+1);
-                dec += CF*h /(440*Smid)/(Ratio+1);
+                deo += CF*h *Ratio/(constants::density::liquid_oxygen*Smid)/(Ratio+1);
+                dec += CF*h /(constants::density::kerosene*Smid)/(Ratio+1);
                 sec->S_reO = M.fun_S (M.K[9 ]-21.5 + deo, M.K[10]-21.5, m_reO);
                 sec->S_reC = M.fun_S (M.K[11]-21.5 + dec, M.K[13]-21.5, m_reC);
                 sec->Ssumm = sec->S_dry[0] + sec->S_reC + sec->S_reO;
@@ -223,8 +222,8 @@ void FlightSolver::pitch_calculations()
         }
 
         // Программа угла атаки
-        alpha alph_1 (fir->V,  kalph [1], kalph [2], time, T_stage [0], 0, k2, k3);
-        alpha alph_2 (sec->V, kalph [1],              0, time, 200, 180, k2, k3);
+        alpha alph_1 (fir->V,  kalph [1], kalph [2], time, T_stage [0], 0, k3);
+        alpha alph_2 (sec->V, kalph [1],              0, time, 200, 180, k3);
 
         // Учет параметров атмосферы
         HSP_p_1 = HSP_1;
@@ -329,6 +328,10 @@ void FlightSolver::pitch_calculations()
             H22 = sec->V* sin(sec->anY);
         }
 
+        m_dataset -> sinn.push_back(fir->Ssumm);
+        m_dataset -> jinn.push_back(fir->Isumm);
+        m_dataset -> jinn2.push_back(sec->Isumm);
+        m_dataset -> lin.push_back(Ix);
 
         m_dataset -> xn.push_back(time);
         m_dataset -> yu_1.push_back(HSP_1);
@@ -337,9 +340,6 @@ void FlightSolver::pitch_calculations()
         m_dataset -> center_2.push_back(sec->gl_c);
         m_dataset -> v_1.push_back(fir->V);
         m_dataset -> v_2.push_back(sec->V);
-        m_dataset -> sinn.push_back(fir->Ssumm);
-        m_dataset -> jinn.push_back(fir->Isumm);
-        m_dataset -> jinn2.push_back(sec->Isumm);
         m_dataset -> CM.push_back(fir->Ssumm/fir->m_t);
         m_dataset -> mass_1.push_back(fir->m_t);
         m_dataset -> mass_2.push_back(sec->m_t);
@@ -347,15 +347,13 @@ void FlightSolver::pitch_calculations()
         m_dataset -> Long_2.push_back(sec->tX/1000);
         m_dataset -> vec_wind1.push_back(Wind1);
         m_dataset -> vec_wind2.push_back(Wind2);
-        m_dataset -> H1.push_back(fir->tY/1000);
-        m_dataset -> H2.push_back(sec->tY/1000);
+        m_dataset -> altitude_1.push_back(fir->tY/1000);
+        m_dataset -> altitude_2.push_back(sec->tY/1000);
         m_dataset -> angle.push_back(pitch_angle*57.3);
         m_dataset -> b1.push_back(HSP_1*Smid*CX_1);
         m_dataset -> b2.push_back(HSP_2*Smid*CX_2);
-        m_dataset -> lin.push_back(Ix);
         m_dataset -> ALI_1.push_back(alph_1.A());
         m_dataset -> ALI_2.push_back(alph_2.A());
-        m_dataset -> res.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
         m_dataset -> TET_1.push_back(fir->anY*57.3);
         m_dataset -> TET_2.push_back(sec->anY*57.3);
         m_dataset -> be.push_back(bpr*57.3);
@@ -377,6 +375,6 @@ void FlightSolver::pitch_calculations()
     while (sec->tY>0 && sec->V>0);
 }
 
-std::shared_ptr<Dataset> FlightSolver::GetDataset() {
+std::shared_ptr<Dataset> FlightSolver::GetDataset()   {
     return m_dataset;
 }

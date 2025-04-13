@@ -3,6 +3,7 @@ QT       += sql
 QT       += core gui widgets
 CONFIG += c++20
 CONFIG += staticlib c++11
+#QMAKE_CXXFLAGS += -Wunused -Werror
 
 #QMAKE_CXXFLAGS += -Wa,-mbig-obj
 # You can make your code fail to compile if it uses deprecated APIs.
@@ -42,7 +43,6 @@ HEADERS += \
     focus.h \
     mainwindow.h \
     mass.h \
-    pid_file.h \
     qcustomplot.h
 
 FORMS += \

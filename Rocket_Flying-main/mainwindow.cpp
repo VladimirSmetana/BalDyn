@@ -1,6 +1,7 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "FlightSolver.h"
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,16 +29,6 @@ QVector<double> X1, double x0 , double xk)
     ui->widget->replot();
 }
 
-void MainWindow::dirty_drawing(QVector<double> Y1, double y0,  double yk,
-                         QVector<double> X1, double x0 , double xk)
-{
-    ui->widget->addGraph();
-    ui->widget->graph(0)->setData(X1, Y1);
-    ui->widget->graph(0)->setPen(QPen(Qt::red));
-    ui->widget->xAxis->setRange(x0, xk);
-    ui->widget->yAxis->setRange(y0, yk);
-    ui->widget->replot();
-}
 // -
 void MainWindow::drawing(QVector<double> Y1,
                          QVector<double> Y2, double y0,  double yk,
@@ -118,7 +109,7 @@ void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(m_drow_data->H1, m_drow_data->H2, 0, 230, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+50);
+    drawing(m_drow_data->altitude_1, m_drow_data->altitude_2, 0, 230, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+50);
 }
 
 // График высоты
@@ -126,7 +117,7 @@ void MainWindow::on_trj_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Дальность, км");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(m_drow_data->H1, m_drow_data->H2, 0, 230, m_drow_data->Long_1, m_drow_data->Long_2, 0, 1600);
+    drawing(m_drow_data->altitude_1, m_drow_data->altitude_2, 0, 230, m_drow_data->Long_1, m_drow_data->Long_2, 0, 1600);
 }
 
 // График дальности
@@ -236,7 +227,7 @@ void MainWindow::on_action_5_triggered()
 {
     //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
     int coun = 0;
-    d->const_par(*std::max_element(m_drow_data->mass_2.begin(),m_drow_data->mass_2.end()), P->Lmax);
+    d->const_par(P->Lmax);
 
 
     for (int i=0;i<m_drow_data->xn.size(); i++)
@@ -250,7 +241,8 @@ void MainWindow::on_action_5_triggered()
         {
             if (coun==0 && m_drow_data->lenght_R[i]< m_drow_data->lenght_R[i-1])
             {
-                d->const_par(*std::max_element(m_drow_data->mass_2.begin(),m_drow_data->mass_2.end()), m_drow_data->lenght_R[i]); coun++;
+                d->const_par(
+                    m_drow_data->lenght_R[i]); coun++;
             }
             d->ver_par(m_drow_data->mass_2[i], m_drow_data->P2[i], m_drow_data->pc2[i], m_drow_data->yu_2[i], m_drow_data->cy2[i],
             m_drow_data->dyn1[i], m_drow_data->dyn2[i], m_drow_data->v_2[i], m_drow_data->jinn2[i], m_drow_data->lenght_R[i]);
@@ -322,6 +314,6 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->widget->xAxis->setLabel("Высота, км");
     ui->widget->yAxis->setLabel("Ветер, м/с");
-    drawing(m_drow_data->vec_wind2, 0, *std::max_element(m_drow_data->vec_wind2.begin(),m_drow_data->vec_wind2.end()), m_drow_data->H2, 0, 95);
+    drawing(m_drow_data->vec_wind2, 0, *std::max_element(m_drow_data->vec_wind2.begin(),m_drow_data->vec_wind2.end()), m_drow_data->altitude_2, 0, 95);
 }
 

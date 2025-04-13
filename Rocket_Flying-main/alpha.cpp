@@ -1,6 +1,7 @@
 #include "alpha.h"
+#include <cmath>
 
-alpha::alpha (double Vel, double k1, double k2, double time, double septime, int def, int tv1, int tv2)
+alpha::alpha (double Vel, double k1, double k2, double time, double septime, int def, int tv2)
 
     :Vel(Vel), k1(k1), k2(k2), time(time), septime(septime), def(def), tv1(tv2)
 {}

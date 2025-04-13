@@ -34,9 +34,8 @@ void DC::print(double ct, double t)
     std::cout << ct <<" at the moment "<< t << std::endl;
 }
 
-    void DC::const_par(double mass, double len)
+    void DC::const_par(double len)
     {
-
         double a [5];
         double K[3], Y[5];
         double f[5];
@@ -85,7 +84,6 @@ void DC::print(double ct, double t)
          QTextStream out3(&file3);
 
         double D = 4.1;
-        double R = D/2;
         double bb = 0.004;
         double E = 70000;
         double I = M_PI*pow(D,4)/64 - M_PI*pow(D-2*bb,4)/64;

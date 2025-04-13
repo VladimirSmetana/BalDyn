@@ -59,9 +59,8 @@ class  mass
     double fun_S(double X_l, double X_b, double mass);
     double fun_I(double X_l, double X_b, double mass, double D);
 
-    void MCI_f
-        (
-            double time,double h,double payload, double D,
+    void MCI_f (
+            double payload, double D,
             double m_block1, double m_block2,
             double s1, double s2,
             double P1, double P2
@@ -78,9 +77,6 @@ class  mass
     double get_wgo();
     double get_lengo();
     double get_CIL();
-
-
-
 };
 
 
