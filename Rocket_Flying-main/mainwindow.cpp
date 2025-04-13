@@ -2,6 +2,7 @@
 #include "ui_mainwindow.h"
 #include "FlightSolver.h"
 #include <QDebug>
+#include <filesystem>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,8 +17,13 @@ MainWindow::~MainWindow()
 }
 
 // Перегруженная функция отрисовки
-void MainWindow::drawing(QVector<double> Y1, double y0,  double yk,
-QVector<double> X1, double x0 , double xk)
+
+void MainWindow::drawing(QVector<double>& Y1,
+                         const double& y0,
+                         const double& yk,
+                         QVector<double>& X1,
+                         const double& x0 ,
+                         const double& xk)
 {
     ui->widget->legend->setVisible(true);
     ui->widget->clearGraphs();
@@ -30,10 +36,14 @@ QVector<double> X1, double x0 , double xk)
 }
 
 // -
-void MainWindow::drawing(QVector<double> Y1,
-                         QVector<double> Y2, double y0,  double yk,
-                         QVector<double> X1,
-                         QVector<double> X2, double x0 , double xk)
+void MainWindow::drawing(QVector<double>& Y1,
+                         QVector<double>& Y2,
+                         const double& y0,
+                         const double& yk,
+                         QVector<double>& X1,
+                         QVector<double>& X2,
+                         const double& x0 ,
+                         const double& xk)
 {
     ui->widget->clearGraphs();
     ui->widget->addGraph();
@@ -76,6 +86,13 @@ void MainWindow::on_action_triggered()
     P->pitch_calculations();
     m_insertion_data = P->GetInsertionData();
     m_recovery_data  = P->GetRecoveryData();
+
+    std::filesystem::path baldyn = std::filesystem::current_path().parent_path().parent_path().parent_path();
+    std::filesystem::path to_insertion_csv = "output/insertion_dataset.csv";
+    std::filesystem::path to_recovery_csv  = "output/recovery_dataset.csv";
+
+    m_insertion_data->saveToCSV(baldyn/to_insertion_csv);
+    m_recovery_data ->saveToCSV(baldyn/to_recovery_csv);
 
     QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
     QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);

@@ -2,6 +2,12 @@
 #define DATAVECTOR_H
 
 #include <QVector>
+#include <QDebug>
+#include <QString>
+#include <QFile>
+#include <QTextStream>
+
+namespace fs = std::filesystem;
 
 struct Dataset {
     QVector<double> time{};
@@ -27,6 +33,8 @@ struct Dataset {
     QVector<double> drug_coefficient{};
     QVector<double> rocket_length{};
     QVector<double> lift_force{};
+
+    bool saveToCSV(const fs::path& filename) const;
 };
 
 #endif // DATAVECTOR_H

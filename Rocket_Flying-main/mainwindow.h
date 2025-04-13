@@ -35,13 +35,21 @@ public:
     std::unique_ptr<FlightSolver> P;
     std::unique_ptr<DC> d = std::make_unique<DC>();
 
-    void drawing(QVector<double> Y1,
-                 QVector<double> Y2, double y0,  double yk,
-                 QVector<double> X1,
-                 QVector<double> X2, double x0 , double xk);
+    void drawing(QVector<double>& Y1,
+                 QVector<double>& Y2,
+                 const double& y0,
+                 const double& yk,
+                 QVector<double>& X1,
+                 QVector<double>& X2,
+                 const double& x0 ,
+                 const double& xk);
 
-    void drawing(QVector<double> Y1, double y0,  double yk,
-                 QVector<double> X1, double x0 , double xk);
+    void drawing(QVector<double>& Y1,
+                 const double& y0,
+                 const double& yk,
+                 QVector<double>& X1,
+                 const double& x0 ,
+                 const double& xk);
 
     double Runge_Kutt(double func(double, double),
                     double XX, double YY,
