@@ -51,13 +51,15 @@ private:
     double deo, dec;
     double X_oneC;
     double X_twoC;
-    std::shared_ptr<Dataset> m_dataset;
+
+    std::shared_ptr<Dataset> m_insertion_data = std::make_shared<Dataset>();
+    std::shared_ptr<Dataset> m_recovery_data = std::make_shared<Dataset>();
 
     public:
 
+
     FlightSolver(double (&kalph_)[3],
-                 double (&kpeng_)[2],
-                 std::shared_ptr<Dataset> dataSet);
+                 double (&kpeng_)[2]);
     ~FlightSolver();
 
     double kalph[3];
@@ -74,9 +76,11 @@ private:
     double thrust_function(double time);
     void pitch_calculations();
 
+    std::shared_ptr<Dataset> GetInsertionData();
+    std::shared_ptr<Dataset> GetRecoveryData();
+
     QFile file1;
 
-    std::shared_ptr<Dataset>GetDataset();
 };
 
 #endif // FLIGHTSOLVER_H

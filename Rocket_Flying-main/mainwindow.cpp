@@ -72,10 +72,10 @@ void MainWindow::on_action_triggered()
 
     double kpeng [2] {p1.toDouble(), p2.toDouble()};
     double coef_alpha [3] {0, al1.toDouble(), al2.toDouble()};
-    P = std::make_unique<FlightSolver>(coef_alpha, kpeng, dataSet);
+    P = std::make_unique<FlightSolver>(coef_alpha, kpeng);
     P->pitch_calculations();
-    m_drow_data = P->GetDataset();
-
+    m_insertion_data = P->GetInsertionData();
+    m_recovery_data  = P->GetRecoveryData();
 
     QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
     QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
@@ -92,8 +92,6 @@ void MainWindow::on_action_triggered()
     ui->label_4->show();
     ui->label_5->show();
     ui->action_2->setEnabled(true);
-
-
 }
 
 // График перегрузки
@@ -101,7 +99,14 @@ void MainWindow::on_NX_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Продольная перегрузка");
-    drawing(m_drow_data->Lon, m_drow_data->Lonre, 0, 10, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->g_force,
+            m_recovery_data->g_force,
+            0,
+            10,
+            m_insertion_data->time,
+            m_recovery_data->time,
+            0,
+            P->MaxTime);
 }
 
 // График траектории
@@ -109,7 +114,14 @@ void MainWindow::on_height_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(m_drow_data->altitude_1, m_drow_data->altitude_2, 0, 230, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+50);
+    drawing(m_insertion_data->altitude,
+            m_recovery_data->altitude,
+            0,
+            230,
+            m_insertion_data->time,
+            m_recovery_data->time,
+            0,
+            P->MaxTime+50);
 }
 
 // График высоты
@@ -117,7 +129,14 @@ void MainWindow::on_trj_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Дальность, км");
     ui->widget->yAxis->setLabel("Высота, км");
-    drawing(m_drow_data->altitude_1, m_drow_data->altitude_2, 0, 230, m_drow_data->Long_1, m_drow_data->Long_2, 0, 1600);
+    drawing(m_insertion_data->altitude,
+            m_recovery_data ->altitude,
+            0,
+            230,
+            m_insertion_data->longitude,
+            m_recovery_data ->longitude,
+            0,
+            1600);
 }
 
 // График дальности
@@ -125,7 +144,13 @@ void MainWindow::on_distance_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Дальность, км");
-    drawing(m_drow_data->Long_1, m_drow_data->Long_2, 0, 1600, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->longitude,
+            m_recovery_data ->longitude,
+            0, 1600,
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime);
 }
 
 // График скорости
@@ -133,7 +158,14 @@ void MainWindow::on_velocity_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скорость, м/с");
-    drawing(m_drow_data->v_1, m_drow_data->v_2, 0, P->fir->V+10, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+10);
+    drawing(m_insertion_data->velocity,
+            m_recovery_data ->velocity,
+            0,
+            P->fir->V+10,
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime+10);
 }
 
 // График угла атаки
@@ -141,7 +173,14 @@ void MainWindow::on_alpha_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол атаки, град");
-    drawing(m_drow_data->ALI_1, m_drow_data->ALI_2, -5, 91, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+20);
+    drawing(m_insertion_data->attack_angle,
+            m_recovery_data ->attack_angle,
+            -5,
+            91,
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime+20);
 }
 
 // График угла наклона траектории
@@ -149,7 +188,14 @@ void MainWindow::on_T_angle_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Угол наклона траектории, град");
-    drawing(m_drow_data->TET_1, m_drow_data->TET_2, -90, 90, m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime+10);
+    drawing(m_insertion_data->trajectory_angle,
+            m_recovery_data ->trajectory_angle,
+            -90,
+            90,
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime+10);
 }
 
 // График скоростного напора
@@ -157,7 +203,14 @@ void MainWindow::on_Q_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Скоростной напор, Па");
-    drawing(m_drow_data->yu_1, m_drow_data->yu_2, 0, *std::max_element(m_drow_data->yu_2.begin(),m_drow_data->yu_2.end()), m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->dynamic_pressure,
+            m_recovery_data ->dynamic_pressure,
+            0,
+            *std::max_element(m_recovery_data ->dynamic_pressure.begin(),m_recovery_data ->dynamic_pressure.end()),
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime);
 }
 
 // График центра масс
@@ -165,7 +218,12 @@ void MainWindow::on_center_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Центр масс РН, м");
-    drawing(m_drow_data->center_1, 0, *std::max_element(m_drow_data->center_1.begin(),m_drow_data->center_1.end()), m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->center_of_mass,
+            0,
+            *std::max_element(m_insertion_data->center_of_mass.begin(),m_insertion_data->center_of_mass.end()),
+            m_insertion_data->time,
+            0,
+            P->MaxTime);
 }
 
 // График тяги
@@ -173,7 +231,14 @@ void MainWindow::on_thrust_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Тяга ДУ, кН");
-    drawing(m_drow_data->P1, m_drow_data->P2, 0, *std::max_element(m_drow_data->P1.begin(),m_drow_data->P1.end()), m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->thrust,
+            m_recovery_data ->thrust,
+            0,
+            *std::max_element(m_insertion_data->thrust.begin(),m_insertion_data->thrust.end()),
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime);
 }
 
 // График массы
@@ -181,7 +246,14 @@ void MainWindow::on_mass_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Масса, кг");
-    drawing(m_drow_data->mass_1, m_drow_data->mass_2, 0, *std::max_element(m_drow_data->mass_1.begin(),m_drow_data->mass_1.end()), m_drow_data->xn, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->mass,
+            m_recovery_data ->mass,
+            0,
+            *std::max_element(m_insertion_data->mass.begin(),m_insertion_data->mass.end()),
+            m_insertion_data->time,
+            m_recovery_data ->time,
+            0,
+            P->MaxTime);
 }
 
 // Файл->Выход
@@ -195,7 +267,12 @@ void MainWindow::on_fokus_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Фокус, м");
-    drawing(m_drow_data->f1, 0, 15, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->focus,
+            0,
+            15,
+            m_insertion_data->time,
+            0,
+            P->MaxTime);
 }
 
 // График стат момента
@@ -203,7 +280,12 @@ void MainWindow::on_static_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Стат момент X, кг м");
-    drawing(m_drow_data->sinn, 0, P->Sx, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->static_moment,
+            0,
+            P->Sx,
+            m_insertion_data->time,
+            0,
+            P->MaxTime);
 }
 
 // График момента инерции Y или Z
@@ -211,7 +293,12 @@ void MainWindow::on_YZmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции Y/Z,   кг м2");
-    drawing(m_drow_data->jinn, 0, P->Iz, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->yz_moment,
+            0,
+            P->Iz,
+            m_insertion_data->time,
+            0,
+            P->MaxTime);
 }
 
 // График момента инерции Х
@@ -219,33 +306,53 @@ void MainWindow::on_Xmoment_Button_clicked()
 {
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Момент инерции X, кг м2");
-    drawing(m_drow_data->lin, 0, P->Ixmax, m_drow_data->xn, 0, P->MaxTime);
+    drawing(m_insertion_data->x_moment,
+            0,
+            P->Ixmax,
+            m_insertion_data->time,
+            0,
+            P->MaxTime);
 }
 
 // Динамика
 void MainWindow::on_action_5_triggered()
 {
-    //d->data_writing(P->xn, P->v_2, P->H2, P->w, P->mass_2, P->P2, P->pc2, P->yu_2, P->ALI_2, P->cy2, P->dyn1, P->dyn2, P->jinn2);
     int coun = 0;
     d->const_par(P->Lmax);
 
 
-    for (int i=0;i<m_drow_data->xn.size(); i++)
+    for (int i=0;i<m_recovery_data ->time.size(); i++)
     {
-        if (m_drow_data->xn[i] < P->T_fuel[0])
+        if (m_recovery_data ->time[i] < P->T_fuel[0])
         {
-            d->ver_par(m_drow_data->mass_2[i], m_drow_data->P2[i], m_drow_data->pc2[i], m_drow_data->yu_2[i], m_drow_data->cy2[i],
-                       m_drow_data->dyn1[i], m_drow_data->dyn2[i], m_drow_data->v_2[i], m_drow_data->jinn2[i], m_drow_data->lenght_R[i]);
+            d->ver_par(m_recovery_data ->mass[i],
+                       m_recovery_data ->thrust[i],
+                       m_recovery_data ->control_thrust[i],
+                       m_recovery_data ->dynamic_pressure[i],
+                       m_recovery_data ->drug_coefficient[i],
+                       m_insertion_data ->stability_margin[i],
+                       m_recovery_data ->stability_margin[i],
+                       m_recovery_data ->velocity[i],
+                       m_recovery_data ->yz_moment[i],
+                       m_recovery_data ->rocket_length[i]);
         }
         else
         {
-            if (coun==0 && m_drow_data->lenght_R[i]< m_drow_data->lenght_R[i-1])
+            if (coun==0 && m_recovery_data ->rocket_length[i]< m_recovery_data ->rocket_length[i-1])
             {
                 d->const_par(
-                    m_drow_data->lenght_R[i]); coun++;
+                    m_recovery_data ->rocket_length[i]); coun++;
             }
-            d->ver_par(m_drow_data->mass_2[i], m_drow_data->P2[i], m_drow_data->pc2[i], m_drow_data->yu_2[i], m_drow_data->cy2[i],
-            m_drow_data->dyn1[i], m_drow_data->dyn2[i], m_drow_data->v_2[i], m_drow_data->jinn2[i], m_drow_data->lenght_R[i]);
+            d->ver_par(m_recovery_data ->mass[i],
+                       m_recovery_data ->thrust[i],
+                       m_recovery_data ->control_thrust[i],
+                       m_recovery_data ->dynamic_pressure[i],
+                       m_recovery_data ->drug_coefficient[i],
+                       m_insertion_data ->stability_margin[i],
+                       m_recovery_data ->stability_margin[i],
+                       m_recovery_data ->velocity[i],
+                       m_recovery_data ->yz_moment[i],
+                       m_recovery_data ->rocket_length[i]);
         }
 
     }
@@ -256,12 +363,12 @@ void MainWindow::on_height_Button_2_clicked()
     ui->widget->xAxis->setLabel("Время, с");
     ui->widget->yAxis->setLabel("Частота, 1/c");
     QColor color [5] {Qt::red ,Qt::green, Qt::yellow, Qt::blue, Qt::black};
-    drawing(d->W[0], 0, 90, m_drow_data->xn, 0, P->MaxTime);
+    drawing(d->W[0], 0, 90, m_insertion_data->time, 0, P->MaxTime);
     ui->widget->graph(0)->setName(QString("%1 Тон").arg(1));
     for (int i=1;i<5;i++)
     {
         ui->widget->addGraph();
-        ui->widget->graph(i)->setData(m_drow_data->xn, d->W[i]);
+        ui->widget->graph(i)->setData(m_insertion_data->time, d->W[i]);
         ui->widget->graph(i)->setPen(QPen(color[i]));
         ui->widget->graph(i)->setName(QString("%1 Тон").arg(i+1));
         ui->widget->replot();
@@ -314,6 +421,12 @@ void MainWindow::on_pushButton_clicked()
 {
     ui->widget->xAxis->setLabel("Высота, км");
     ui->widget->yAxis->setLabel("Ветер, м/с");
-    drawing(m_drow_data->vec_wind2, 0, *std::max_element(m_drow_data->vec_wind2.begin(),m_drow_data->vec_wind2.end()), m_drow_data->altitude_2, 0, 95);
+    drawing(m_recovery_data ->wind_velocity,
+            0,
+            *std::max_element(m_recovery_data ->wind_velocity.begin(),
+                              m_recovery_data ->wind_velocity.end()),
+                              m_recovery_data ->altitude,
+                              0,
+                              95);
 }
 

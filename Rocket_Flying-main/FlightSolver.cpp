@@ -9,9 +9,9 @@
 #include <QDebug>
 
 
-FlightSolver::FlightSolver(double (&kalph_)[3], double (&kpeng_)[2], std::shared_ptr<Dataset> dataSet)
+FlightSolver::FlightSolver(double (&kalph_)[3],
+                           double (&kpeng_)[2])
     : FlightInit(kalph_, kpeng_)
-    , m_dataset(dataSet)
  {
 
     std::copy(std::begin(kalph_), std::end(kalph_), std::begin(kalph));
@@ -30,6 +30,8 @@ FlightSolver::~FlightSolver()
 void FlightSolver::pitch_calculations()
 {
     QTextStream out1(&file1);
+
+    qDebug() << "start of flight";
     do
     {
         Airforce Qus_1 (Mah_1);
@@ -327,47 +329,56 @@ void FlightSolver::pitch_calculations()
             Y2 = B_2.fdY(sec->tY, sec->V, sec->anY);
             H22 = sec->V* sin(sec->anY);
         }
+        qDebug() << time;
+         m_insertion_data -> time.push_back(time);
+         m_insertion_data -> altitude.push_back(fir->tY/1000);
+         m_insertion_data -> x_moment.push_back(Ix);
+         m_insertion_data -> attack_angle.push_back(alph_1.A());
+         m_insertion_data -> trajectory_angle.push_back(fir->anY*57.3);
+         m_insertion_data -> center_of_mass.push_back(fir->gl_c);
+         m_insertion_data -> dynamic_pressure.push_back(HSP_1);
+         m_insertion_data -> mass.push_back(fir->m_t);
+         m_insertion_data -> stability_margin.push_back(X_oneC);
+         m_insertion_data -> thrust.push_back(fir->Peng_t);
+         m_insertion_data -> longitude.push_back(fir->tX/1000);
+         m_insertion_data -> velocity.push_back(fir->V);
+         m_insertion_data -> wind_velocity.push_back(Wind1);
+         m_insertion_data -> g_force.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
+         m_insertion_data -> yz_moment.push_back(fir->Isumm);
+         m_insertion_data -> static_moment.push_back(fir->Ssumm);
+         m_insertion_data -> engine_angle.push_back(bpr*57.3);
+         m_insertion_data -> pitch_angle.push_back(pitch_angle*57.3);
+         m_insertion_data -> focus.push_back(fir->focus);
+         //m_insertion_data -> control_thrust;
+         //m_insertion_data -> drug_coefficient;
+         //m_insertion_data -> rocket_lenght;
+         m_insertion_data -> lift_force.push_back(HSP_1*Smid*CX_1);
 
-        m_dataset -> sinn.push_back(fir->Ssumm);
-        m_dataset -> jinn.push_back(fir->Isumm);
-        m_dataset -> jinn2.push_back(sec->Isumm);
-        m_dataset -> lin.push_back(Ix);
+         m_recovery_data -> time.push_back(time);
+         m_recovery_data -> altitude.push_back(sec->tY/1000);
+         //m_recovery_data -> x_moment;
+         m_recovery_data -> attack_angle.push_back(alph_2.A());
+         m_recovery_data -> trajectory_angle.push_back(sec->anY*57.3);
+         m_recovery_data -> center_of_mass.push_back(sec->gl_c);
+         m_recovery_data -> dynamic_pressure.push_back(HSP_2);
+         m_recovery_data -> mass.push_back(sec->m_t);
+         m_recovery_data -> stability_margin.push_back(X_twoC);
+         m_recovery_data -> thrust.push_back(sec->Peng_t);
+         m_recovery_data -> longitude.push_back(sec->tX/1000);
+         m_recovery_data -> velocity.push_back(sec->V);
+         m_recovery_data -> wind_velocity.push_back(Wind2);
+         m_recovery_data -> g_force.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
+         m_recovery_data -> yz_moment.push_back(sec->Isumm);
+         //m_recovery_data -> static_moment;
+         //m_recovery_data -> engine_angle;
+         //m_recovery_data -> pitch_angle;
+         //m_recovery_data -> focus;
+         m_recovery_data -> control_thrust.push_back(sec->Peng_control);
+         m_recovery_data -> drug_coefficient.push_back(CY_2);
+         m_recovery_data -> rocket_length.push_back(sec->L);
+         m_recovery_data -> lift_force.push_back(HSP_2*Smid*CX_2);
 
-        m_dataset -> xn.push_back(time);
-        m_dataset -> yu_1.push_back(HSP_1);
-        m_dataset -> yu_2.push_back(HSP_2);
-        m_dataset -> center_1.push_back(fir->gl_c);
-        m_dataset -> center_2.push_back(sec->gl_c);
-        m_dataset -> v_1.push_back(fir->V);
-        m_dataset -> v_2.push_back(sec->V);
-        m_dataset -> CM.push_back(fir->Ssumm/fir->m_t);
-        m_dataset -> mass_1.push_back(fir->m_t);
-        m_dataset -> mass_2.push_back(sec->m_t);
-        m_dataset -> Long_1.push_back(fir->tX/1000);
-        m_dataset -> Long_2.push_back(sec->tX/1000);
-        m_dataset -> vec_wind1.push_back(Wind1);
-        m_dataset -> vec_wind2.push_back(Wind2);
-        m_dataset -> altitude_1.push_back(fir->tY/1000);
-        m_dataset -> altitude_2.push_back(sec->tY/1000);
-        m_dataset -> angle.push_back(pitch_angle*57.3);
-        m_dataset -> b1.push_back(HSP_1*Smid*CX_1);
-        m_dataset -> b2.push_back(HSP_2*Smid*CX_2);
-        m_dataset -> ALI_1.push_back(alph_1.A());
-        m_dataset -> ALI_2.push_back(alph_2.A());
-        m_dataset -> TET_1.push_back(fir->anY*57.3);
-        m_dataset -> TET_2.push_back(sec->anY*57.3);
-        m_dataset -> be.push_back(bpr*57.3);
-        m_dataset -> pi.push_back(pitch_angle*57.3);
-        m_dataset -> P1.push_back(fir->Peng_t);
-        m_dataset -> P2.push_back(sec->Peng_t);
-        m_dataset -> f1.push_back(fir->focus);
-        m_dataset -> Lon.push_back(fir->Peng_t/(fir->m_t*Atm_1.get_AOG()));
-        m_dataset -> Lonre.push_back(sec->Peng_t/(sec->m_t*Atm_2.get_AOG()));
-        m_dataset -> pc2.push_back(sec->Peng_control);
-        m_dataset -> cy2.push_back(CY_2);
-        m_dataset -> dyn1.push_back(X_oneC);
-        m_dataset -> dyn2.push_back(X_twoC);
-        m_dataset -> lenght_R.push_back(sec->L);
+
         amax = alph_1.A();
         count+=1;
         MaxTime = count*h;
@@ -375,6 +386,10 @@ void FlightSolver::pitch_calculations()
     while (sec->tY>0 && sec->V>0);
 }
 
-std::shared_ptr<Dataset> FlightSolver::GetDataset()   {
-    return m_dataset;
+std::shared_ptr<Dataset> FlightSolver::GetInsertionData()   {
+    return m_insertion_data;
+}
+
+std::shared_ptr<Dataset> FlightSolver::GetRecoveryData()   {
+    return m_recovery_data;
 }
