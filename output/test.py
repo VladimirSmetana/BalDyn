@@ -9,6 +9,10 @@ stiffness = []
 
 L = [4.73,  7.853, 10.996, 14.137, 17.279]
 
+def absmax(iterable):
+    return max(iterable, key=abs)
+
+
 
 def calculate_sum(base):
     sum = [0] * len(base)
@@ -22,6 +26,7 @@ def calculate_sum(base):
 def calculate_multi(one, second):
     return [a * b for a, b in zip(one, second)]
 
+
 # Чтение данных из CSV-файла
 n = 0
 with open('rocket_body.csv', newline='') as csvfile:
@@ -34,6 +39,16 @@ with open('rocket_body.csv', newline='') as csvfile:
         stiffness.append(float(row[2]))
         n+=1
 
+def delta_vector(previous, actual):
+    f_12 = [x ** 2 for x in previous]
+    mf_12 = calculate_multi(f_12, mass)
+    sum_mf_12 = calculate_sum(mf_12)
+    f1_f20 = calculate_multi(previous, actual)
+    f1_f20_mass = calculate_multi(f1_f20, mass)
+    f1_f20_mass_summ = calculate_sum(f1_f20_mass)
+    delta12 = - f1_f20_mass_summ[-1]/sum_mf_12[-1]
+    delta12f = [x * delta12 for x in previous]
+    return delta12f
 
 m_N = [a * b for a, b in zip(numeric, mass)]
 
@@ -65,132 +80,93 @@ f_stiffness = [0] * 5
 f_mass = [0] * 5
 w_calc = [0] * 5
 for i in range(len(f_zero)):
-    f_zero[i] = [((m.sin(a[i]*x)+m.sinh(a[i]*x))*Y[i]+(m.cos(a[i]*x)+m.cosh(a[i]*x)))/2 for x in numeric]
+    f_zero[i] = list(((m.sin(a[i]*x)+m.sinh(a[i]*x))*Y[i]+(m.cos(a[i]*x)+m.cosh(a[i]*x)))/2 for x in numeric)
 
 w_zero = [m.sqrt(max(stiffness)/(rocket_mass*(10**3)/rocket_length*pow(rocket_length,4)))*(x**2)/(2*m.pi) for x in L]
+for w in w_zero:
+    print("w[homogeneous] = " + str(w))
 
 
-m_f1 = calculate_multi(mass, f_zero[0])
-sum_m_f1 = calculate_sum(m_f1)
+def calculate_form(index, delta12f):
+    m_f1 = calculate_multi(mass, f_zero[index])
+    sum_m_f1 = calculate_sum(m_f1)
 
-value_6_11 = calculate_multi(m_f1, N_Nm)
-sum_value_6_11 = calculate_sum(value_6_11)
+    value_6_11 = calculate_multi(m_f1, N_Nm)
+    sum_value_6_11 = calculate_sum(value_6_11)
 
-D1 = - sum_value_6_11[-1]/In[-1]
-D2 = - sum_m_f1[-1]/sum_m[-1]
+    D1 = - sum_value_6_11[-1]/In[-1]
+    D2 = - sum_m_f1[-1]/sum_m[-1]
 
-D1_6 = [x*D1 for x in N_Nm]
-D2_15 = [D2+x  for x in D1_6]
-f1_16 = [a + b for a, b in zip(D2_15, f_zero[0])]
+    D1_6 = [x*D1 for x in N_Nm]
+    D2_15 = [D2+x  for x in D1_6]
+    f1_16 = [a + b + c for a, b, c in zip(D2_15, f_zero[index], delta12f)]
 
-f_mass[0] = [x/max(f1_16) for x in f1_16]
+    f_mass[index] = [x/max(f1_16) for x in f1_16]
+    plt.plot(numeric, f_mass[index], 'g')
 
-m_f1 = calculate_multi(mass, f_mass[0])
-sum_m_f1 = calculate_sum(m_f1)
-double_sum_m_f1 = calculate_sum(sum_m_f1)
-dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
-sum_M1x_E = calculate_sum(M1x_E)
-double_sum_M1x_E = calculate_sum(sum_M1x_E)
-double_sum_M1x_E_mass = calculate_multi(double_sum_M1x_E, mass)
-summ_13 = calculate_sum(double_sum_M1x_E_mass)
+    m_f1 = calculate_multi(mass, f_mass[index])
+    sum_m_f1 = calculate_sum(m_f1)
+    double_sum_m_f1 = calculate_sum(sum_m_f1)
+    dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
+    M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
+    M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
+    sum_M1x_E = calculate_sum(M1x_E)
+    double_sum_M1x_E = calculate_sum(sum_M1x_E)
+    double_sum_M1x_E_mass = calculate_multi(double_sum_M1x_E, mass)
+    summ_13 = calculate_sum(double_sum_M1x_E_mass)
 
-value_13_15 = [a * b for a, b in zip(double_sum_M1x_E_mass, N_Nm)]
-sum_13_15 = calculate_sum(value_13_15)
+    value_13_15 = [a * b for a, b in zip(double_sum_M1x_E_mass, N_Nm)]
+    sum_13_15 = calculate_sum(value_13_15)
 
-D1 = - sum_13_15[-1]/In[-1]
-D2 = - summ_13[-1]/sum_m[-1]
+    D1 = - sum_13_15[-1]/In[-1]
+    D2 = - summ_13[-1]/sum_m[-1]
 
-D1_15 = [x*D1 for x in N_Nm]
-D2_11 = [a + b + D2 for a, b in zip(double_sum_M1x_E, D1_15)]
+    D1_15 = [x*D1 for x in N_Nm]
 
-f_stiffness[0] = [x/max(D2_11) for x in D2_11]
+    D2_11 = [a + b + D2 for a, b in zip(double_sum_M1x_E, D1_15)]
 
-m_f1 = calculate_multi(mass, f_stiffness[0])
-sum_m_f1 = calculate_sum(m_f1)
-double_sum_m_f1 = calculate_sum(sum_m_f1)
-dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-M1x2 = [x ** 2 for x in M1x]
-M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
-sum_M1x2_E = calculate_sum(M1x2_E)
-f_12 = [x ** 2 for x in f_stiffness[0]]
-mf_12 = calculate_multi(f_12, mass)
-sum_mf_12 = calculate_sum(mf_12)
-w_calc[0] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
+    #f_stiffness = [x/absmax(D2_11) for x in D2_11]
+    f_stiffness = f_mass[index]
 
+    m_f1 = calculate_multi(mass, f_stiffness)
+    sum_m_f1 = calculate_sum(m_f1)
+    double_sum_m_f1 = calculate_sum(sum_m_f1)
+    dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
+    M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
+    M1x2 = [x ** 2 for x in M1x]
+    M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
+    sum_M1x2_E = calculate_sum(M1x2_E)
+    f_12 = [x ** 2 for x in f_stiffness]
+    mf_12 = calculate_multi(f_12, mass)
+    sum_mf_12 = calculate_sum(mf_12)
+    w_calc[index] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
+    print("w["+str(index)+"] = " + str(w_calc[index]))
+    return f_stiffness
+#################################################################
+delta = [0] * 5
+########################################################################
+delta[0] = [0] * len(length)
+f_stiffness[0] = calculate_form(0, delta[0])
 #######################################################################################
-m_f1 = calculate_multi(mass, f_zero[1])
-sum_m_f1 = calculate_sum(m_f1)
-
-value_6_11 = calculate_multi(m_f1, N_Nm)
-sum_value_6_11 = calculate_sum(value_6_11)
-
-
-D1 = - sum_value_6_11[-1]/In[-1]
-D2 = - sum_m_f1[-1]/sum_m[-1]
-
-D1_6 = [x*D1 for x in N_Nm]
-D2_15 = [D2+x  for x in D1_6]
-f1_16 = [a + b for a, b in zip(D2_15, f_zero[1])]
-
-f_mass[1] = [x/max(f1_16) for x in f1_16]
-
-m_f1 = calculate_multi(mass, f_mass[1])
-sum_m_f1 = calculate_sum(m_f1)
-double_sum_m_f1 = calculate_sum(sum_m_f1)
-dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
-sum_M1x_E = calculate_sum(M1x_E)
-double_sum_M1x_E = calculate_sum(sum_M1x_E)
-double_sum_M1x_E_mass = calculate_multi(double_sum_M1x_E, mass)
-summ_13 = calculate_sum(double_sum_M1x_E_mass)
-
-value_13_15 =  calculate_multi(double_sum_M1x_E_mass, N_Nm)
-sum_13_15 = calculate_sum(value_13_15)
-
-D1 = - sum_13_15[-1]/In[-1]
-D2 = - summ_13[-1]/sum_m[-1]
-
-D1_15 = [x*D1 for x in N_Nm]
-
-m_f1_f20 = calculate_multi(f_zero[1], f_stiffness[0])
-m_f1_f20_mass = calculate_multi(m_f1_f20, mass)
-Value_33 = calculate_multi(m_f1_f20_mass, N_Nm)
-sum_Value_33 = calculate_sum(Value_33)
-
-f1_2 = [x**2 for x in f_stiffness[0]]
-m_f1_2 = calculate_multi(f1_2,mass)
-value_temp = calculate_multi(m_f1_2, N_Nm)
-sum_value_temp = calculate_sum(value_temp)
-
-delta = [- a/b if b != 0 else 0 for a, b in zip(sum_Value_33, sum_value_temp)]
-deltaf1 = calculate_multi(delta, f_stiffness[0])
-
-D2_11 = [a + b + D2  for a, b in zip(double_sum_M1x_E, D1_15)]
-newD2_11 = [a + b for a, b in zip(D2_11, deltaf1)]
-
-f_stiffness[1] = [x/max(newD2_11) for x in newD2_11]
+delta[1] = delta_vector(f_stiffness[0], f_zero[1])
+f_stiffness[1] = calculate_form(1, delta[1])
+########################################################################################
+delta[2] = [a + b for a, b in zip(delta_vector(f_stiffness[0], f_zero[2]),
+                                  delta_vector(f_stiffness[1], f_zero[2]))]
+f_stiffness[2] = calculate_form(2, delta[2])
+########################################################################################
+delta[3] = [a + b + c for a, b, c in zip(delta_vector(f_stiffness[0], f_zero[3]),
+                                         delta_vector(f_stiffness[1], f_zero[3]),
+                                         delta_vector(f_stiffness[2], f_zero[3]))]
+f_stiffness[3] = calculate_form(3, delta[3])
+########################################################################################
+delta[4] = [a + b + c + d for a, b, c, d in zip(delta_vector(f_stiffness[0], f_zero[4]),
+                                                delta_vector(f_stiffness[1], f_zero[4]),
+                                                delta_vector(f_stiffness[2], f_zero[4]),
+                                                delta_vector(f_stiffness[3], f_zero[4]))]
+f_stiffness[4] = calculate_form(4, delta[4])
 
 
-m_f1 = calculate_multi(mass, f_stiffness[1])
-sum_m_f1 = calculate_sum(m_f1)
-double_sum_m_f1 = calculate_sum(sum_m_f1)
-dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-M1x2 = [x ** 2 for x in M1x]
-M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
-sum_M1x2_E = calculate_sum(M1x2_E)
-f_12 = [x ** 2 for x in f_stiffness[1]]
-mf_12 = calculate_multi(f_12, mass)
-sum_mf_12 = calculate_sum(mf_12)
-w_calc[1] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
-#################################################################################
 
-print(w_zero[1])
-print(w_calc[1])
-plt.plot(numeric, f_zero[1], 'b')
-plt.plot(numeric, f_stiffness[1], 'g')
+
 plt.show()
