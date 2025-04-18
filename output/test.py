@@ -79,6 +79,7 @@ f_zero = [0] * 5
 f_stiffness = [0] * 5
 f_mass = [0] * 5
 w_calc = [0] * 5
+fi     = [0] * 5
 for i in range(len(f_zero)):
     f_zero[i] = list(((m.sin(a[i]*x)+m.sinh(a[i]*x))*Y[i]+(m.cos(a[i]*x)+m.cosh(a[i]*x)))/2 for x in numeric)
 
@@ -111,8 +112,8 @@ def calculate_form(index, delta12f):
     M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
     M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
     sum_M1x_E = calculate_sum(M1x_E)
-    double_sum_M1x_E = calculate_sum(sum_M1x_E)
-    double_sum_M1x_E_mass = calculate_multi(double_sum_M1x_E, mass)
+    fi[index] = calculate_sum(sum_M1x_E)
+    double_sum_M1x_E_mass = calculate_multi(fi[index], mass)
     summ_13 = calculate_sum(double_sum_M1x_E_mass)
 
     value_13_15 = [a * b for a, b in zip(double_sum_M1x_E_mass, N_Nm)]
@@ -123,12 +124,14 @@ def calculate_form(index, delta12f):
 
     D1_15 = [x*D1 for x in N_Nm]
 
-    D2_11 = [a + b + D2 for a, b in zip(double_sum_M1x_E, D1_15)]
+    D2_11 = [a + b + D2 for a, b in zip(fi[index], D1_15)]
+    if (index > 0):
+        newin = delta_vector(f_stiffness[index - 1], fi[index])
+        D2_11 = [a + b  for a, b in zip(D2_11, newin)]
 
-    #f_stiffness = [x/absmax(D2_11) for x in D2_11]
-    f_stiffness = f_mass[index]
+    f_stiffness_res = [x/absmax(D2_11) for x in D2_11]
 
-    m_f1 = calculate_multi(mass, f_stiffness)
+    m_f1 = calculate_multi(mass, f_stiffness_res)
     sum_m_f1 = calculate_sum(m_f1)
     double_sum_m_f1 = calculate_sum(sum_m_f1)
     dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
@@ -136,12 +139,12 @@ def calculate_form(index, delta12f):
     M1x2 = [x ** 2 for x in M1x]
     M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
     sum_M1x2_E = calculate_sum(M1x2_E)
-    f_12 = [x ** 2 for x in f_stiffness]
+    f_12 = [x ** 2 for x in f_stiffness_res]
     mf_12 = calculate_multi(f_12, mass)
     sum_mf_12 = calculate_sum(mf_12)
     w_calc[index] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
     print("w["+str(index)+"] = " + str(w_calc[index]))
-    return f_stiffness
+    return f_stiffness_res
 #################################################################
 delta = [0] * 5
 ########################################################################
