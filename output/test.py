@@ -125,11 +125,16 @@ def calculate_form(index, delta12f):
     D1_15 = [x*D1 for x in N_Nm]
 
     D2_11 = [a + b + D2 for a, b in zip(fi[index], D1_15)]
-    if (index > 0):
-        newin = delta_vector(f_stiffness[index - 1], fi[index])
-        D2_11 = [a + b  for a, b in zip(D2_11, newin)]
+    accumulated_delta = [0] * len(fi[index])
+    if index > 0:
+        for i in range(index):
+            newin = delta_vector(f_stiffness[index - 1 - i], fi[index])
+            accumulated_delta = [a + b for a, b in zip(accumulated_delta, newin)]
+
+    D2_11 = [a + b for a, b in zip(D2_11, accumulated_delta)]
 
     f_stiffness_res = [x/absmax(D2_11) for x in D2_11]
+
 
     m_f1 = calculate_multi(mass, f_stiffness_res)
     sum_m_f1 = calculate_sum(m_f1)
@@ -151,25 +156,10 @@ delta = [0] * 5
 delta[0] = [0] * len(length)
 f_stiffness[0] = calculate_form(0, delta[0])
 #######################################################################################
-delta[1] = delta_vector(f_stiffness[0], f_zero[1])
-f_stiffness[1] = calculate_form(1, delta[1])
-########################################################################################
-delta[2] = [a + b for a, b in zip(delta_vector(f_stiffness[0], f_zero[2]),
-                                  delta_vector(f_stiffness[1], f_zero[2]))]
-f_stiffness[2] = calculate_form(2, delta[2])
-########################################################################################
-delta[3] = [a + b + c for a, b, c in zip(delta_vector(f_stiffness[0], f_zero[3]),
-                                         delta_vector(f_stiffness[1], f_zero[3]),
-                                         delta_vector(f_stiffness[2], f_zero[3]))]
-f_stiffness[3] = calculate_form(3, delta[3])
-########################################################################################
-delta[4] = [a + b + c + d for a, b, c, d in zip(delta_vector(f_stiffness[0], f_zero[4]),
-                                                delta_vector(f_stiffness[1], f_zero[4]),
-                                                delta_vector(f_stiffness[2], f_zero[4]),
-                                                delta_vector(f_stiffness[3], f_zero[4]))]
-f_stiffness[4] = calculate_form(4, delta[4])
-
-
-
+# Цикл для заполнения оставшихся элементов
+for i in range(1, 5):
+    delta_values = [delta_vector(f_stiffness[j], f_zero[i]) for j in range(i)]
+    delta[i] = [sum(values) for values in zip(*delta_values)]
+    f_stiffness[i] = calculate_form(i, delta[i])
 
 plt.show()
