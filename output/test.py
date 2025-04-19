@@ -12,8 +12,6 @@ L = [4.73,  7.853, 10.996, 14.137, 17.279]
 def absmax(iterable):
     return max(iterable, key=abs)
 
-
-
 def calculate_sum(base):
     sum = [0] * len(base)
     for i in range(len(base)):
@@ -84,82 +82,88 @@ for i in range(len(f_zero)):
     f_zero[i] = list(((m.sin(a[i]*x)+m.sinh(a[i]*x))*Y[i]+(m.cos(a[i]*x)+m.cosh(a[i]*x)))/2 for x in numeric)
 
 w_zero = [m.sqrt(max(stiffness)/(rocket_mass*(10**3)/rocket_length*pow(rocket_length,4)))*(x**2)/(2*m.pi) for x in L]
-for w in w_zero:
-    print("w[homogeneous] = " + str(w))
+
+def calculate_form(index):
+
+    f_start = f_zero[index]
+    tolerance = 1e-8
+    while (True):
+        m_f1 = calculate_multi(mass, f_start)
+        sum_m_f1 = calculate_sum(m_f1)
+
+        value_6_11 = calculate_multi(m_f1, N_Nm)
+        sum_value_6_11 = calculate_sum(value_6_11)
+
+        D1 = - sum_value_6_11[-1]/In[-1]
+        D2 = - sum_m_f1[-1]/sum_m[-1]
+
+        D1_6 = [x*D1 for x in N_Nm]
+        D2_15 = [D2+x  for x in D1_6]
+        accumulated_delta = [0] * len(f_start)
+        if index > 0:
+            for i in range(index):
+                newin = delta_vector(f_mass[index - 1 - i], f_start)
+                accumulated_delta = [a *0.9 + b  for a, b in zip(accumulated_delta, newin)]
+
+        f1_16 = [a + b + c for a, b, c in zip(D2_15, f_start, accumulated_delta)]
+        f_mass[index] = [x/max(f1_16) for x in f1_16]
+
+        m_f1 = calculate_multi(mass, f_mass[index])
+        sum_m_f1 = calculate_sum(m_f1)
+        double_sum_m_f1 = calculate_sum(sum_m_f1)
+        dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
+        M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
+        M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
+        sum_M1x_E = calculate_sum(M1x_E)
+        fi[index] = calculate_sum(sum_M1x_E)
+        double_sum_M1x_E_mass = calculate_multi(fi[index], mass)
+        summ_13 = calculate_sum(double_sum_M1x_E_mass)
+
+        value_13_15 = [a * b for a, b in zip(double_sum_M1x_E_mass, N_Nm)]
+        sum_13_15 = calculate_sum(value_13_15)
+
+        D1 = - sum_13_15[-1]/In[-1]
+        D2 = - summ_13[-1]/sum_m[-1]
+
+        D1_15 = [x*D1 for x in N_Nm]
+
+        D2_11 = [a + b + D2 for a, b in zip(fi[index], D1_15)]
+        accumulated_delta = [0] * len(fi[index])
+        if index > 0:
+            for i in range(index):
+                newin = delta_vector(f_stiffness[index - 1 - i], fi[index])
+                accumulated_delta = [(a*0.9 + b) for a, b in zip(accumulated_delta, newin)]
+
+        D2_11 = [a + b  for a, b in zip(D2_11, accumulated_delta)]
+
+        f_stiffness_res = [x/absmax(D2_11) for x in D2_11]
 
 
-def calculate_form(index, delta12f):
-    m_f1 = calculate_multi(mass, f_zero[index])
-    sum_m_f1 = calculate_sum(m_f1)
+        m_f1 = calculate_multi(mass, f_stiffness_res)
+        sum_m_f1 = calculate_sum(m_f1)
+        double_sum_m_f1 = calculate_sum(sum_m_f1)
+        dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
+        M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
+        M1x2 = [x ** 2 for x in M1x]
+        M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
+        sum_M1x2_E = calculate_sum(M1x2_E)
+        f_12 = [x ** 2 for x in f_stiffness_res]
+        mf_12 = calculate_multi(f_12, mass)
+        sum_mf_12 = calculate_sum(mf_12)
+        w_calc[index] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
 
-    value_6_11 = calculate_multi(m_f1, N_Nm)
-    sum_value_6_11 = calculate_sum(value_6_11)
+        f_start = f_stiffness_res
+        if max(abs(f_stiffness_res[i] - f_start[i]) for i in range(len(f_start))) < tolerance:
+            break
 
-    D1 = - sum_value_6_11[-1]/In[-1]
-    D2 = - sum_m_f1[-1]/sum_m[-1]
-
-    D1_6 = [x*D1 for x in N_Nm]
-    D2_15 = [D2+x  for x in D1_6]
-    f1_16 = [a + b + c for a, b, c in zip(D2_15, f_zero[index], delta12f)]
-
-    f_mass[index] = [x/max(f1_16) for x in f1_16]
-    plt.plot(numeric, f_mass[index], 'g')
-
-    m_f1 = calculate_multi(mass, f_mass[index])
-    sum_m_f1 = calculate_sum(m_f1)
-    double_sum_m_f1 = calculate_sum(sum_m_f1)
-    dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-    M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-    M1x_E = [a/b if b != 0 else 0 for a, b in zip(M1x, stiffness)]
-    sum_M1x_E = calculate_sum(M1x_E)
-    fi[index] = calculate_sum(sum_M1x_E)
-    double_sum_M1x_E_mass = calculate_multi(fi[index], mass)
-    summ_13 = calculate_sum(double_sum_M1x_E_mass)
-
-    value_13_15 = [a * b for a, b in zip(double_sum_M1x_E_mass, N_Nm)]
-    sum_13_15 = calculate_sum(value_13_15)
-
-    D1 = - sum_13_15[-1]/In[-1]
-    D2 = - summ_13[-1]/sum_m[-1]
-
-    D1_15 = [x*D1 for x in N_Nm]
-
-    D2_11 = [a + b + D2 for a, b in zip(fi[index], D1_15)]
-    accumulated_delta = [0] * len(fi[index])
-    if index > 0:
-        for i in range(index):
-            newin = delta_vector(f_stiffness[index - 1 - i], fi[index])
-            accumulated_delta = [a + b for a, b in zip(accumulated_delta, newin)]
-
-    D2_11 = [a + b for a, b in zip(D2_11, accumulated_delta)]
-
-    f_stiffness_res = [x/absmax(D2_11) for x in D2_11]
-
-
-    m_f1 = calculate_multi(mass, f_stiffness_res)
-    sum_m_f1 = calculate_sum(m_f1)
-    double_sum_m_f1 = calculate_sum(sum_m_f1)
-    dm1 = [-x*double_sum_m_f1[-1]/numeric[-1] for x in numeric]
-    M1x = [a + b for a, b in zip(dm1, double_sum_m_f1)]
-    M1x2 = [x ** 2 for x in M1x]
-    M1x2_E = [a/b if b != 0 else 0 for a, b in zip(M1x2, stiffness)]
-    sum_M1x2_E = calculate_sum(M1x2_E)
-    f_12 = [x ** 2 for x in f_stiffness_res]
-    mf_12 = calculate_multi(f_12, mass)
-    sum_mf_12 = calculate_sum(mf_12)
-    w_calc[index] = m.sqrt(sum_mf_12[-1]/(sum_M1x2_E[-1]*1000.0*pow(length[-1]/2,4)))/(2*m.pi)
-    print("w["+str(index)+"] = " + str(w_calc[index]))
     return f_stiffness_res
 #################################################################
-delta = [0] * 5
-########################################################################
-delta[0] = [0] * len(length)
-f_stiffness[0] = calculate_form(0, delta[0])
-#######################################################################################
-# Цикл для заполнения оставшихся элементов
-for i in range(1, 5):
-    delta_values = [delta_vector(f_stiffness[j], f_zero[i]) for j in range(i)]
-    delta[i] = [sum(values) for values in zip(*delta_values)]
-    f_stiffness[i] = calculate_form(i, delta[i])
-
+w_femap = [11.50, 31.16, 58.93, 86.16, 122.64]
+colors = ['g', 'b', 'r', 'c', 'm']
+labels = ['1 Тон', '2 Тон', '3 Тон', '4 Тон', '5 Тон']
+for i in range(0, 5):
+    f_stiffness[i] = calculate_form(i)
+    print("w["+str(i)+"] = " + str(round(w_calc[i])) + " / " + str(round(w_femap[i])) + " -> " + str(abs(round((w_calc[i] - w_femap[i]) * 100 /w_femap[i]))) +" %")
+    plt.plot(numeric, f_stiffness[i], color = colors[i], label = labels[i])
+plt.legend()
 plt.show()
