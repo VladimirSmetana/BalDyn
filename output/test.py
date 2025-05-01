@@ -103,7 +103,7 @@ def calculate_form(index):
         if index > 0:
             for i in range(index):
                 newin = delta_vector(f_mass[index - 1 - i], f_start)
-                accumulated_delta = [a *0.9 + b  for a, b in zip(accumulated_delta, newin)]
+                accumulated_delta = [a  + b  for a, b in zip(accumulated_delta, newin)]
 
         f1_16 = [a + b + c for a, b, c in zip(D2_15, f_start, accumulated_delta)]
         f_mass[index] = [x/max(f1_16) for x in f1_16]
@@ -132,7 +132,7 @@ def calculate_form(index):
         if index > 0:
             for i in range(index):
                 newin = delta_vector(f_stiffness[index - 1 - i], fi[index])
-                accumulated_delta = [(a*0.9 + b) for a, b in zip(accumulated_delta, newin)]
+                accumulated_delta = [(a + b) for a, b in zip(accumulated_delta, newin)]
 
         D2_11 = [a + b  for a, b in zip(D2_11, accumulated_delta)]
 
@@ -158,12 +158,18 @@ def calculate_form(index):
 
     return f_stiffness_res
 #################################################################
-w_femap = [11.50, 31.16, 58.93, 86.16, 122.64]
-colors = ['g', 'b', 'r', 'c', 'm']
-labels = ['1 Тон', '2 Тон', '3 Тон', '4 Тон', '5 Тон']
-for i in range(0, 5):
+w_femap = [11.86, 32.51, 60.66, 86.75, 124.37]
+colors = ['b', 'r', 'm']
+
+for i in range(0, 3):
     f_stiffness[i] = calculate_form(i)
-    print("w["+str(i)+"] = " + str(round(w_calc[i])) + " / " + str(round(w_femap[i])) + " -> " + str(abs(round((w_calc[i] - w_femap[i]) * 100 /w_femap[i]))) +" %")
-    plt.plot(numeric, f_stiffness[i], color = colors[i], label = labels[i])
+    print("w["+str(i)+"] = " + str((w_calc[i])) + " / " + str((w_femap[i])) + " -> " + str(abs(m.floor((w_calc[i] - w_femap[i]) * 100 /w_femap[i]))) +" %")
+    plt.plot(numeric, f_stiffness[i], color = colors[i], label = [f'{i+1} Тон - {round(w_calc[i], 2)} Hz'])
+
+plt.title('Расчет форм и частот колебаний', fontsize=16)
+plt.xlabel('Длина РН, м', fontsize=14)
+plt.ylabel('Форма', fontsize=14)
+plt.grid(True)
 plt.legend()
+plt.tight_layout()
 plt.show()
