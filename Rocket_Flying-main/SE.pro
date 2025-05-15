@@ -35,7 +35,7 @@ HEADERS += \
     FlightInit.h \
     FlightSolver.h \
     FlightType.h \
-    Vehicle.h \
+    rocket/Rocket.h \
     alpha.h \
     atmosphere.h \
     dycoef.h \
@@ -45,7 +45,9 @@ HEADERS += \
     focus.h \
     mainwindow.h \
     mass.h \
-    qcustomplot.h
+    qcustomplot.h \
+    rockets/Rocket.h \
+    rockets/Rockets.h
 
 FORMS += \
     mainwindow.ui

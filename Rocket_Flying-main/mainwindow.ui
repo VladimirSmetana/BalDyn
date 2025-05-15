@@ -856,12 +856,21 @@ color: white</string>
         <property name="text">
          <string>&quot;Ангара-А3&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="1" column="0">
        <widget class="QRadioButton" name="radioButton_9">
+        <property name="acceptDrops">
+         <bool>false</bool>
+        </property>
         <property name="text">
          <string>&quot;Амур&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -870,12 +879,18 @@ color: white</string>
         <property name="text">
          <string>&quot;микроРН&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="4" column="3">
        <widget class="QRadioButton" name="radioButton_13">
         <property name="text">
          <string>&quot;SH-Starship&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -884,6 +899,9 @@ color: white</string>
         <property name="text">
          <string>&quot;Ангара-1.2&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="3">
@@ -891,12 +909,18 @@ color: white</string>
         <property name="text">
          <string>&quot;Ангара-А5&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="0">
        <widget class="QRadioButton" name="radioButton_4">
         <property name="text">
          <string>&quot;Союз-2.1а&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -918,12 +942,18 @@ color: white</string>
         <property name="text">
          <string>&quot;Позитрон&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="3">
        <widget class="QRadioButton" name="radioButton_20">
         <property name="text">
          <string>&quot;Союз-2.1в&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -932,12 +962,18 @@ color: white</string>
         <property name="text">
          <string>&quot;Falcon Heavy&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="1" column="2">
        <widget class="QRadioButton" name="radioButton_15">
         <property name="text">
          <string>&quot;Союз-5&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -946,12 +982,18 @@ color: white</string>
         <property name="text">
          <string>&quot;Falcon-9&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="2">
        <widget class="QRadioButton" name="radioButton_10">
         <property name="text">
          <string>&quot;Союз-2.1б&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -960,12 +1002,18 @@ color: white</string>
         <property name="text">
          <string>&quot;ТРН&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="0" column="4">
        <widget class="QRadioButton" name="radioButton_11">
         <property name="text">
          <string>&quot;Электрон&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>
@@ -981,6 +1029,9 @@ color: white</string>
         <property name="text">
          <string>&quot;SLS&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="3" column="4">
@@ -988,12 +1039,18 @@ color: white</string>
         <property name="text">
          <string>&quot;CZ-12&quot;</string>
         </property>
+        <property name="checkable">
+         <bool>false</bool>
+        </property>
        </widget>
       </item>
       <item row="2" column="4">
        <widget class="QRadioButton" name="radioButton_19">
         <property name="text">
          <string>&quot;Delta IV&quot;</string>
+        </property>
+        <property name="checkable">
+         <bool>false</bool>
         </property>
        </widget>
       </item>

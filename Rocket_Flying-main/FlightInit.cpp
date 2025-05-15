@@ -8,6 +8,8 @@
 #include "Constants.h"
 #include <QDebug>
 
+#include "rockets/RocketConfigurator.h"
+
 namespace {
 constexpr auto c_components_ratio = 3.5;
 constexpr auto c_first_block_length = 42.9;
@@ -20,7 +22,6 @@ constexpr auto c_second_block_mass = 107000;
 constexpr auto c_first_exhaust_velocity = 3300;
 constexpr auto c_second_exhaust_velocity = 3700;
 constexpr auto c_maximum_diameter = 4.1;
-constexpr auto c_step = 0.1;
 constexpr auto c_test_mass = 0;
 constexpr auto c_first_structural_value = 7;
 constexpr auto c_second_structural_value = 10;
@@ -45,17 +46,21 @@ void FlightInit::m_calculate_initial_values() {
     qDebug() << "1st thrust-to-weight coefficient:" << kpeng[0];
     qDebug() << "2d thrust-to-weight coefficient :"  << kpeng[1];
 
-    mpn = c_payload_mass;
-    Ratio = c_components_ratio;
-    mb[0] = c_first_block_mass;
-    mb[1] = c_second_block_mass;
-    Imp[0] = c_first_exhaust_velocity;
-    Imp[1] = c_second_exhaust_velocity;
-    D = c_maximum_diameter;
-    h = c_step;
-    zap = c_test_mass;
-    s[0] = c_first_structural_value;
-    s[1] = c_second_structural_value;
+    RocketType rocketType = RocketType::master;
+    Rocket rocket = RocketConfigurator(rocketType);
+
+    mpn    = rocket.payload_mass;
+    Ratio  = rocket.components_ratio;
+    D      = rocket.maximum_diameter;
+    zap    = rocket.fuel_landing_mass;
+
+    for (int i=0; i<rocket.block_number; i++) {
+        mb[i]  = rocket.block_mass[i];
+        Imp[i] = rocket.exhaust_velocity[i];
+        s[i]   = rocket.structural_value[i];
+    }
+
+    h      = c_step;
 
     peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn + mb[0] + mb[1]);
     peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn + mb[1]);
