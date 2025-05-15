@@ -329,7 +329,7 @@ void FlightSolver::pitch_calculations()
             Y2 = B_2.fdY(sec->tY, sec->V, sec->anY);
             H22 = sec->V* sin(sec->anY);
         }
-        qDebug() << time;
+        //qDebug() << time;
          m_insertion_data -> time.push_back(time);
          m_insertion_data -> altitude.push_back(fir->tY/1000);
          m_insertion_data -> x_moment.push_back(Ix);

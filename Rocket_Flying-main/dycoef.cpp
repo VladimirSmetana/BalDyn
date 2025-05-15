@@ -75,8 +75,8 @@ void DC::print(double ct, double t)
 
     }
 
-    void DC::ver_par(double mass, double p, double p_con,
-                     double q, double cy, double x1, double x2, double vel, double iner, double len)
+    void DC::ver_par(double time, double mass, double p, double p_con,
+                     double q, double cy, double x1, double x2, double vel, double iner, double len, double wind, double center, double focus)
     {
 
          QTextStream out1(&file1);
@@ -108,8 +108,8 @@ void DC::print(double ct, double t)
             CW[i].push_back(-form[i].back()*p_con/mass);
             CY[i].push_back(p_con/iner*((x2-len)*dform[i].back()+form[i].back()));
 
-            out1 << W[i].back()<< '\t';
-            out2 << CW[i].back()<< '\t' << CY[i].back() << '\t';
+            //out1 << W[i].back()<< '\t';
+            //out2 << CW[i].back()<< '\t' << CY[i].back() << '\t';
 
 
         }
@@ -125,17 +125,51 @@ void DC::print(double ct, double t)
         Cwbs.push_back(p_con*x2/iner); // как по рысканию
         Csbs.push_back(p_con/iner);
 
-        out3 <<  Cbs .back()<< '\t';
-        out3 <<  Cyws.back()<< '\t';
-        out3 <<  Cwws.back()<< '\t';
-        out3 <<  Cyys.back()<< '\t';
-        out3 <<  Cwys.back()<< '\t';
-        out3 <<  Cwbs.back()<< '\t';
-        out3 <<  Csbs.back()<< '\t';
+        // out3 <<  Cbs .back()<< '\t';
+        // out3 <<  Cyws.back()<< '\t';
+        // out3 <<  Cwws.back()<< '\t';
+        // out3 <<  Cyys.back()<< '\t';
+        // out3 <<  Cwys.back()<< '\t';
+        // out3 <<  Cwbs.back()<< '\t';
+        // out3 <<  Csbs.back()<< '\t';
 
-        file1.putChar('\n');
-        file2.putChar('\n');
-        file3.putChar('\n');
+        //file1.putChar('\n');
+        //file2.putChar('\n');
+        //file3.putChar('\n');.0
+
+        if ((abs(time - 30.0) < 1e-5) || (abs(time - 0.1) < 1e-5) || (abs(time - 50.0) < 1e-5)) {
+            qDebug()  << "Масса (" << round(time) << ") = " << mass << " кг";
+            qDebug()  << "Тяга (" << round(time) << ") = " << p << " Н";
+            qDebug()  << "Управляющая тяга (" << round(time) << ") = " << p_con << " Н";
+            qDebug()  << "Длина ракеты (" << round(time) << ") = " << len << " м";
+            qDebug()  << "Расстояние от центра масс до приложения центра аэродинамического давления (" << round(time) << ") = " << x1 << " м";
+            qDebug()  << "Расстояние от центра масс до приложения силы P (" << round(time) << ") = " << x2 << " м";
+            qDebug()  << "Скорость (" << round(time) << ") = " << vel << "м/с";
+            qDebug()  << "К-т подъемной силы cya (" << round(time) << ") = " << cy;
+            qDebug()  << "Момент инерции Х (" << round(time) << ") = " << iner << "кгм4";
+            qDebug()  << "Скоростной напор (" << round(time) << ") = " << q << "кг/мс2";
+            qDebug()  << "Скорость ветра (" << round(time) << ") = " << wind << "м/с";
+            qDebug()  << "Центр (" << round(time) << ") = " << center << "м/с";
+            qDebug()  << "Фокус (" << round(time) << ") = " << focus << "м/с";
+
+            qDebug()  << "Cb (" << round(time) << ") = "<< Cbs .back();
+            qDebug()  << "Cyw (" << round(time) << ") = "<< Cyws.back();
+            qDebug()  << "Cww (" << round(time) << ") = "<< Cwws.back();
+            qDebug()  << "Cyy (" << round(time) << ") = "<< Cyys.back();
+            qDebug()  << "Cwy (" << round(time) << ") = "<< Cwys.back();
+            qDebug()  << "Cwb (" << round(time) << ") = "<< Cwbs.back();
+            qDebug()  << "Csb (" << round(time) << ") = "<< Csbs.back();
+            qDebug()  << "------";
+        }
+        // if (time < 55) {
+        //     qDebug()  <<  Cwys.back();
+        //     qDebug()  <<  Cwws.back();
+        //     qDebug()  <<  Cwbs.back();
+        //     qDebug()  <<  Cyys.back();
+        //     qDebug()  <<  Cbs.back();
+        //     qDebug()  <<  Cyws.back();
+        //     qDebug()  <<  wind ;
+        // }
 
     }
 

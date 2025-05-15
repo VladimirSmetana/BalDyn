@@ -34,6 +34,7 @@ HEADERS += \
     DataVector.h \
     FlightInit.h \
     FlightSolver.h \
+    Vehicle.h \
     alpha.h \
     atmosphere.h \
     block.h \

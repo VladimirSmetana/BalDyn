@@ -57,8 +57,8 @@ public:
 
     void data_calculating(double P, double I, double D);
     void const_par(double len);
-    void ver_par(double mass, double p, double p_con,
-                        double q, double cy, double x1, double x2, double vel, double iner, double len);
+    void ver_par(double time, double mass, double p, double p_con,
+                        double q, double cy, double x1, double x2, double vel, double iner, double len, double wind, double center, double focus);
         QFile file1;
         QFile file2;
         QFile file3;

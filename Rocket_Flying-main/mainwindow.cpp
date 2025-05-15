@@ -342,7 +342,8 @@ void MainWindow::on_action_5_triggered()
     {
         if (m_recovery_data ->time[i] < P->T_fuel[0])
         {
-            d->ver_par(m_recovery_data ->mass[i],
+            d->ver_par(m_recovery_data ->time[i],
+                       m_recovery_data ->mass[i],
                        m_recovery_data ->thrust[i],
                        m_recovery_data ->control_thrust[i],
                        m_recovery_data ->dynamic_pressure[i],
@@ -351,26 +352,29 @@ void MainWindow::on_action_5_triggered()
                        m_recovery_data ->stability_margin[i],
                        m_recovery_data ->velocity[i],
                        m_recovery_data ->yz_moment[i],
-                       m_recovery_data ->rocket_length[i]);
+                       m_recovery_data ->rocket_length[i],
+                       m_recovery_data ->wind_velocity[i],
+                       m_insertion_data ->center_of_mass[i],
+                       m_insertion_data ->focus[i]);
         }
-        else
-        {
-            if (coun==0 && m_recovery_data ->rocket_length[i]< m_recovery_data ->rocket_length[i-1])
-            {
-                d->const_par(
-                    m_recovery_data ->rocket_length[i]); coun++;
-            }
-            d->ver_par(m_recovery_data ->mass[i],
-                       m_recovery_data ->thrust[i],
-                       m_recovery_data ->control_thrust[i],
-                       m_recovery_data ->dynamic_pressure[i],
-                       m_recovery_data ->drug_coefficient[i],
-                       m_insertion_data ->stability_margin[i],
-                       m_recovery_data ->stability_margin[i],
-                       m_recovery_data ->velocity[i],
-                       m_recovery_data ->yz_moment[i],
-                       m_recovery_data ->rocket_length[i]);
-        }
+        // else
+        // {
+        //     if (coun==0 && m_recovery_data ->rocket_length[i]< m_recovery_data ->rocket_length[i-1])
+        //     {
+        //         d->const_par(
+        //             m_recovery_data ->rocket_length[i]); coun++;
+        //     }
+        //     d->ver_par(m_recovery_data ->mass[i],
+        //                m_recovery_data ->thrust[i],
+        //                m_recovery_data ->control_thrust[i],
+        //                m_recovery_data ->dynamic_pressure[i],
+        //                m_recovery_data ->drug_coefficient[i],
+        //                m_insertion_data ->stability_margin[i],
+        //                m_recovery_data ->stability_margin[i],
+        //                m_recovery_data ->velocity[i],
+        //                m_recovery_data ->yz_moment[i],
+        //                m_recovery_data ->rocket_length[i]);
+        // }
 
     }
 }
