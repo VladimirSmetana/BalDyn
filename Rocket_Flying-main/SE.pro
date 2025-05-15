@@ -26,7 +26,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mass.cpp \
-    qcustomplot.cpp
+    qcustomplot.cpp \
+    rockets/RocketConfigurator.cpp
 
 HEADERS += \
     Airforce.h \
@@ -47,6 +48,7 @@ HEADERS += \
     mass.h \
     qcustomplot.h \
     rockets/Rocket.h \
+    rockets/RocketConfigurator.h \
     rockets/Rockets.h
 
 FORMS += \

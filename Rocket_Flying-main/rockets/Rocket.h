@@ -17,6 +17,7 @@ struct Rocket {
     QVector<double> block_length;
     QVector<double> exhaust_velocity;
     QVector<double> block_mass;
+    QVector<double> stage_mass;
     QVector<double> structural_value;
 };
 

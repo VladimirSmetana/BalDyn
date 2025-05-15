@@ -50,6 +50,7 @@ void FlightInit::m_calculate_initial_values() {
     Rocket rocket = RocketConfigurator(rocketType);
 
     mpn    = rocket.payload_mass;
+    qDebug() << rocket.payload_mass;
     Ratio  = rocket.components_ratio;
     D      = rocket.maximum_diameter;
     zap    = rocket.fuel_landing_mass;
@@ -58,13 +59,15 @@ void FlightInit::m_calculate_initial_values() {
         mb[i]  = rocket.block_mass[i];
         Imp[i] = rocket.exhaust_velocity[i];
         s[i]   = rocket.structural_value[i];
+        qDebug() << mb[i];
+        qDebug() << Imp[i];
+        qDebug() << s[i];
+        peng[i] = kpeng[i] * constants::acceleration_of_gravity * rocket.stage_mass[i];
     }
 
     h      = c_step;
 
-    peng[0] = kpeng[0] * constants::acceleration_of_gravity * (mpn + mb[0] + mb[1]);
-    peng[1] = kpeng[1] * constants::acceleration_of_gravity * (mpn + mb[1]);
-    m_furet = c_extra_mass;
+    m_furet = rocket.fuel_landing_mass;
     m_reC = m_furet / (Ratio+1);
     m_reO = m_furet * (Ratio) / (Ratio+1);
     M_Rocket = mpn;
