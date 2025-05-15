@@ -1,6 +1,6 @@
 #include "FlightSolver.h"
 
-#include "focus.h"
+#include "aerodynamics/focus.h"
 #include "equations.h"
 #include "mass.h"
 #include "qdebug.h"

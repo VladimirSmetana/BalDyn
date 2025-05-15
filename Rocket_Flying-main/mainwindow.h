@@ -9,7 +9,7 @@
 
 #include "FlightType.h"
 #include "alpha.h"
-#include "focus.h"
+#include "aerodynamics/focus.h"
 #include "dycoef.h"
 #include "FlightSolver.h"
 #include <thread>

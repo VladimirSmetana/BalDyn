@@ -12,17 +12,15 @@ CONFIG += staticlib c++11
 
 SOURCES += \
     DataVector.cpp \
-    DyEq.cpp \
-    Airforce.cpp \
     FlightInit.cpp \
     FlightSolver.cpp \
+    aerodynamics/airforce.cpp \
+    aerodynamics/focus.cpp \
     alpha.cpp \
-    atmosphere.cpp \
+    atmosphere/atmosphere.cpp \
     dycoef.cpp \
-    dynamic_mass.cpp \
     eastwind.cpp \
     equations.cpp \
-    focus.cpp \
     main.cpp \
     mainwindow.cpp \
     mass.cpp \
@@ -30,17 +28,18 @@ SOURCES += \
     rockets/RocketConfigurator.cpp
 
 HEADERS += \
-    Airforce.h \
     Constants.h \
     DataVector.h \
     FlightInit.h \
     FlightSolver.h \
     FlightType.h \
+    aerodynamics/airforce.h \
+    aerodynamics/focus.h \
+    atmosphere/atmosphere.h \
     rocket/Rocket.h \
     alpha.h \
     atmosphere.h \
     dycoef.h \
-    dynamic_mass.h \
     eastwind.h \
     equations.h \
     focus.h \

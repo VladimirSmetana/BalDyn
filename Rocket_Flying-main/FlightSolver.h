@@ -6,9 +6,9 @@
 
 #include <QVector>
 
-#include "Airforce.h"
+#include "aerodynamics/Airforce.h"
 
-#include "atmosphere.h"
+#include "atmosphere/atmosphere.h"
 #include "eastwind.h"
 #include "alpha.h"
 #include <QFile>

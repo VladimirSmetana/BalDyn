@@ -14,18 +14,16 @@ Rocket RocketConfigurator(RocketType type) {
         rocket.block_length       = {10.5, 21.5};
         rocket.exhaust_velocity   = {3300, 3700};
         rocket.structural_value   = {7, 10};
-
-
         break;
 
     case RocketType::cz_2c:
         rocket.block_number       = 2;
         rocket.payload_mass       = 3850;
         rocket.block_mass         = {171300, 58000};
-        rocket.components_ratio   = 4.0;
-        rocket.maximum_diameter   = 4.5;
-        rocket.head_length        = 12;
-        rocket.block_length       = {11.5, 22.5};
+        rocket.components_ratio   = 3.0;
+        rocket.maximum_diameter   = 3.35;
+        rocket.head_length        = 10.243;
+        rocket.block_length       = {25.72, 7.757};
         rocket.exhaust_velocity   = {2556.5, 2922.37};
         rocket.structural_value   = {20, 25};
         break;
