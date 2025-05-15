@@ -34,10 +34,10 @@ HEADERS += \
     DataVector.h \
     FlightInit.h \
     FlightSolver.h \
+    FlightType.h \
     Vehicle.h \
     alpha.h \
     atmosphere.h \
-    block.h \
     dycoef.h \
     dynamic_mass.h \
     eastwind.h \

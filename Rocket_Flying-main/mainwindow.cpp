@@ -94,15 +94,15 @@ void MainWindow::on_action_triggered()
     m_insertion_data->saveToCSV(baldyn/to_insertion_csv);
     m_recovery_data ->saveToCSV(baldyn/to_recovery_csv);
 
-    QString mk2s = QString::number(P->fir->V);        ui->lineEdit  ->setText(mk2s);
-    QString mk1s = QString::number(P->fir->tY/1000);        ui->lineEdit_2->setText(mk1s);
+    QString mk2s = QString::number(P->insertion->V);        ui->lineEdit  ->setText(mk2s);
+    QString mk1s = QString::number(P->insertion->tY/1000);        ui->lineEdit_2->setText(mk1s);
     QString mk3s = QString::number(P->dep);      ui->lineEdit_3->setText(mk3s);
-    QString mk5s = QString::number(P->sec->tX/1000); ui->lineEdit_7->setText(mk5s);
+    QString mk5s = QString::number(P->landing->tX/1000); ui->lineEdit_7->setText(mk5s);
     QString mk6s = QString::number(P->MHSP_1);    ui->lineEdit_6->setText(mk6s);
     QString mk8s = QString::number(57.3*P->Ott_1);       ui->lineEdit_8->setText(mk8s);
     QString mk9s = QString::number(57.3*P->Ott_2);       ui->lineEdit_9->setText(mk9s);
     QString mk12s = QString::number(P->amax);       ui->lineEdit_12->setText(mk12s);
-    QString mk13s = QString::number(57.3*P->sec->anY);       ui->lineEdit_13->setText(mk13s);
+    QString mk13s = QString::number(57.3*P->landing->anY);       ui->lineEdit_13->setText(mk13s);
 
     ui->lineEdit_4->show();
     ui->lineEdit_5->show();
@@ -178,7 +178,7 @@ void MainWindow::on_velocity_Button_clicked()
     drawing(m_insertion_data->velocity,
             m_recovery_data ->velocity,
             0,
-            P->fir->V+10,
+            P->insertion->V+10,
             m_insertion_data->time,
             m_recovery_data ->time,
             0,

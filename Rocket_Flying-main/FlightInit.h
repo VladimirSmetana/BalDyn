@@ -2,15 +2,15 @@
 #define FLIGHTINIT_H
 
 #include <QVector>
-#include "block.h"
+#include "FlightType.h"
 #include "mass.h"
 
 
 class FlightInit {
 public:
     FlightInit(double (&kalph_)[3], double (&kpeng_)[2]);
-    std::unique_ptr<block> fir = std::make_unique<block>();
-    std::unique_ptr<block> sec = std::make_unique<block>();
+    std::unique_ptr<FlightType> insertion = std::make_unique<FlightType>();
+    std::unique_ptr<FlightType> landing = std::make_unique<FlightType>();
     double Lmax;
     double Sx;
     double Iz;

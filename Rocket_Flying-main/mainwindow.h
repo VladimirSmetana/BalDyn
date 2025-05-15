@@ -7,7 +7,7 @@
 #include <QDebug>
 
 
-#include "block.h"
+#include "FlightType.h"
 #include "alpha.h"
 #include "focus.h"
 #include "dycoef.h"

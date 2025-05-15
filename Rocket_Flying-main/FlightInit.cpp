@@ -63,11 +63,11 @@ void FlightInit::m_calculate_initial_values() {
     m_reC = m_furet / (Ratio+1);
     m_reO = m_furet * (Ratio) / (Ratio+1);
     M_Rocket = mpn;
-    fir->m_t = M_Rocket;
-    sec->m_t = M_Rocket;
+    insertion->m_t = M_Rocket;
+    landing->m_t = M_Rocket;
     Smid = M_PI * pow(D, 2) / 4;
-    fir->V = 0;
-    sec->V = 0;
+    insertion->V = 0;
+    landing->V = 0;
     count = 0;
 }
 
@@ -80,15 +80,15 @@ void FlightInit::initialize_time_parameters() {
     T_fuel[1] = m_fuel[1]/(peng [1]/Imp[1]);
     T_stage [1] = T_fuel [1] + T_sep [1];
     // ИД итеративного расчета
-    fir->m_t = M_Rocket;
-    sec->m_t = M_Rocket;
-    fir->anY = M_PI/2;
-    sec->anY = M_PI/2;
-    sec->tY = 1;
+    insertion->m_t = M_Rocket;
+    landing->m_t = M_Rocket;
+    insertion->anY = M_PI/2;
+    landing->anY = M_PI/2;
+    landing->tY = 1;
     // Итеративный расчет
     count = 0;
-    fir->tY = 0;
-    sec->tX = 0;
+    insertion->tY = 0;
+    landing->tX = 0;
     d_O[1] = 0;
     T[0] = T_fuel[0];
     T[1] = T_fuel[0] + T_sep[0];
@@ -119,10 +119,10 @@ void FlightInit::m_calculate_mass_parameters() {
 }
 
 void FlightInit::calculate_area_and_inertia() {
-    fir->S_dry[0] = M.fun_S(M.K[6], M.K[12], m_dry[0]);
-    fir->S_dry[1] = M.fun_S(M.K[1], M.K[6], m_dry[1]);
-    sec->S_dry[0] = M.fun_S(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0]);
-    sec->S_dry[1] = M.fun_S(M.K[1] - c_second_stage_length, M.K[6] - c_second_stage_length, m_dry[1]);
+    insertion->S_dry[0] = M.fun_S(M.K[6], M.K[12], m_dry[0]);
+    insertion->S_dry[1] = M.fun_S(M.K[1], M.K[6], m_dry[1]);
+    landing->S_dry[0] = M.fun_S(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0]);
+    landing->S_dry[1] = M.fun_S(M.K[1] - c_second_stage_length, M.K[6] - c_second_stage_length, m_dry[1]);
 
     // Calculate areas for oxygen and carbon
     S_o[0] = M.fun_S(M.K[8], M.K[9], m_O[0]);
@@ -130,15 +130,15 @@ void FlightInit::calculate_area_and_inertia() {
     S_o[1] = M.fun_S(M.K[3], M.K[4], m_O[1]);
     S_c[1] = M.fun_S(M.K[5], M.K[6], m_C[1]);
 
-    fir->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
-    fir->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
-    sec->S_reO = M.fun_S(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO);
-    sec->S_reC = M.fun_S(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC);
+    insertion->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
+    insertion->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
+    landing->S_reO = M.fun_S(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO);
+    landing->S_reC = M.fun_S(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC);
 
-    fir->Ssumm = M.get_SGO() + fir->S_dry[0] + fir->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + fir->S_reO + fir->S_reC;
+    insertion->Ssumm = M.get_SGO() + insertion->S_dry[0] + insertion->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + insertion->S_reO + insertion->S_reC;
 
 
-    Sx = fir->Ssumm;
+    Sx = insertion->Ssumm;
     calculate_inertia();
     qDebug() << "\n" << "-- INERCIA --" << "\n";
     qDebug() << "Sx: " << Sx;
@@ -147,22 +147,22 @@ void FlightInit::calculate_area_and_inertia() {
 }
 
 void FlightInit::calculate_inertia() {
-    fir->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], D);
-    fir->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], D);
-    sec->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0], D);
+    insertion->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], D);
+    insertion->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], D);
+    landing->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0], D);
 
     I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], D);
     I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], D);
     I_o[1] = M.fun_I(M.K[3], M.K[4], m_O[1], D);
     I_c[1] = M.fun_I(M.K[5], M.K[6], m_C[1], D);
 
-    fir->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, D);
-    fir->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, D);
-    sec->I_reO = M.fun_I(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO, D);
-    sec->I_reC = M.fun_I(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC, D);
+    insertion->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, D);
+    insertion->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, D);
+    landing->I_reO = M.fun_I(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO, D);
+    landing->I_reC = M.fun_I(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC, D);
 
-    fir->Isumm = M.get_IGO() + fir->I_dry[0] + fir->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + fir->I_reO + fir->I_reC - M_Rocket * pow(fir->gl_c, 2);
-    Iz = fir->Isumm;
+    insertion->Isumm = M.get_IGO() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reO + insertion->I_reC - M_Rocket * pow(insertion->gl_c, 2);
+    Iz = insertion->Isumm;
     Ix = M_Rocket * pow(D / 2, 2);
 
     Izmax = Iz;
