@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(ui->radioButton, &QRadioButton::toggled, this, &MainWindow::onRadioButtonToggled);
+    connect(ui->radioButton_2, &QRadioButton::toggled, this, &MainWindow::onRadioButtonToggled);
 }
 
 MainWindow::~MainWindow()
@@ -74,6 +76,7 @@ double  Runge_Kutt(double func(double, double),
 // Кнопка "Баллистика"
 void MainWindow::on_action_triggered()
 {
+
     // Параметры тяги и угла атаки
     QString p1=ui->lineEdit_10->text();
     QString p2=ui->lineEdit_11->text();
@@ -449,5 +452,32 @@ void MainWindow::on_pushButton_clicked()
                               m_recovery_data ->altitude,
                               0,
                               95);
+}
+
+
+// void MainWindow::on_radioButton_toggled(bool checked)
+// {
+//     qDebug() << "Master";
+// }
+
+
+// void MainWindow::on_radioButton_2_toggled(bool checked)
+// {
+//     qDebug() << "CZ-2C";
+// }
+
+
+void MainWindow::onRadioButtonToggled(bool checked) {
+    if (checked) {
+        if (sender() == ui->radioButton) {
+            // Действия для radioButton1
+            qDebug() << "Выбрана RadioButton 1";
+            // Ваш код для RadioButton 1
+        } else if (sender() == ui->radioButton_2) {
+            // Действия для radioButton2
+            qDebug() << "Выбрана RadioButton 2";
+            // Ваш код для RadioButton 2
+        }
+    }
 }
 

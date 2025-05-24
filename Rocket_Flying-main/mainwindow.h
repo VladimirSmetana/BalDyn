@@ -102,6 +102,9 @@ private slots:
 
     void on_pushButton_clicked();
 
+
+    void onRadioButtonToggled(bool checked);
+
 private:
     Ui::MainWindow *ui;
     QCustomPlot *wGraphic;
