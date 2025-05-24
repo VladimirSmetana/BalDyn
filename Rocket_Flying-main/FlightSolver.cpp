@@ -224,8 +224,8 @@ void FlightSolver::pitch_calculations()
         }
 
         // Программа угла атаки
-        alpha alph_1 (insertion->V,  kalph [1], kalph [2], time, T_stage [0], 0, k3);
-        alpha alph_2 (landing->V, kalph [1],              0, time, 200, 180, k3);
+        alpha alph_1 (kalph [1],  kalph [2],  T_stage [0], false);
+        alpha alph_2  (kalph [1], kalph [2],  200.0, true);
 
         // Учет параметров атмосферы
         HSP_p_1 = HSP_1;
@@ -242,8 +242,18 @@ void FlightSolver::pitch_calculations()
         CY_2=Qus_2.GetCY();
         bpr = ((Atm_1.get_density()/2*pow(insertion->V,2))*Smid*insertion->L*CY_1*insertion->alpha)/(insertion->Peng_t*(insertion->L-insertion->gl_c));
 
-        equations B_1 (Atm_1.get_density(), Smid, Atm_1.get_AOG(), insertion->m_t, CX_1, CY_1, insertion->Peng_t, alph_1.A(), Wind1);
-        equations B_2 (Atm_2.get_density(), Smid, Atm_2.get_AOG(), landing->m_t, CX_2, CY_2, landing->Peng_t, alph_2.A(), Wind2);
+        equations B_1 (Atm_1.get_density(),
+                       Smid, Atm_1.get_AOG(),
+                       insertion->m_t, CX_1, CY_1,
+                       insertion->Peng_t,
+                       alph_1.calculate_alpha(insertion->V,  time),
+                       Wind1);
+        equations B_2 (Atm_2.get_density(),
+                       Smid, Atm_2.get_AOG(),
+                       landing->m_t, CX_2, CY_2,
+                       landing->Peng_t,
+                       alph_2.calculate_alpha(insertion->V,  time),
+                       Wind2);
 
         //dV = B_1.fdV(insertion->V, insertion->anY);
         dN = B_1.fdN(insertion->tY, insertion->V, insertion->anY);
@@ -333,7 +343,7 @@ void FlightSolver::pitch_calculations()
          m_insertion_data -> time.push_back(time);
          m_insertion_data -> altitude.push_back(insertion->tY/1000);
          m_insertion_data -> x_moment.push_back(Ix);
-         m_insertion_data -> attack_angle.push_back(alph_1.A());
+         m_insertion_data -> attack_angle.push_back(alph_1.calculate_alpha(insertion->V,  time));
          m_insertion_data -> trajectory_angle.push_back(insertion->anY*57.3);
          m_insertion_data -> center_of_mass.push_back(insertion->gl_c);
          m_insertion_data -> dynamic_pressure.push_back(HSP_1);
@@ -357,7 +367,7 @@ void FlightSolver::pitch_calculations()
          m_recovery_data -> time.push_back(time);
          m_recovery_data -> altitude.push_back(landing->tY/1000);
          //m_recovery_data -> x_moment;
-         m_recovery_data -> attack_angle.push_back(alph_2.A());
+         m_recovery_data -> attack_angle.push_back(alph_2.calculate_alpha(insertion->V,  time));
          m_recovery_data -> trajectory_angle.push_back(landing->anY*57.3);
          m_recovery_data -> center_of_mass.push_back(landing->gl_c);
          m_recovery_data -> dynamic_pressure.push_back(HSP_2);
@@ -379,7 +389,7 @@ void FlightSolver::pitch_calculations()
          m_recovery_data -> lift_force.push_back(HSP_2*Smid*CX_2);
 
 
-        amax = alph_1.A();
+        amax = alph_1.calculate_alpha(insertion->V,  time);
         count+=1;
         MaxTime = count*h;
     }

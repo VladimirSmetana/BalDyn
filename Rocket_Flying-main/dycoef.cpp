@@ -63,16 +63,6 @@ void DC::print(double ct, double t)
             }
         }
 
-//        if(file.open(QIODevice::WriteOnly))
-//        {
-
-//        }
-//        else
-//        {
-//            qDebug() << "Error";
-//        }
-
-
     }
 
     void DC::ver_par(double time, double mass, double p, double p_con,

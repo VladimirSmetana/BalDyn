@@ -20,7 +20,6 @@ public:
     double dVZ(double vv, double ii, double N);
 
 private:
-    double R = 6371000;
     double po;
     double S;
     double g, m, I;
