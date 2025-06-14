@@ -24,6 +24,13 @@ Rocket RocketConfigurator(RocketType type) {
         rocket.exhaust_velocity   = {3300, 3700};
         rocket.structural_value   = {7, 10};
 
+        L_spO.assign(rocket.block_number, 0);
+        L_spC.assign(rocket.block_number, 0);
+        L_O.assign(rocket.block_number, 0);
+        L_C.assign(rocket.block_number, 0);
+        L_engine.assign(rocket.block_number, 0);
+        K.assign(12, 0);
+
         L_headunit = 11;
         L_instrument = 0.1;
         L_spO[1] = 0.6;
@@ -76,35 +83,31 @@ Rocket RocketConfigurator(RocketType type) {
 
         break;
 
-    // case RocketType::cz_2c:
-    //     rocket.block_number       = 2;
-    //     rocket.payload_mass       = 3850;
-    //     rocket.block_mass         = {171300, 58000};
-    //     rocket.components_ratio   = 3.0;
-    //     rocket.maximum_diameter   = 3.35;
-    //     rocket.head_length        = 10.243;
-    //     rocket.block_length       = {25.72, 7.757};
-    //     rocket.exhaust_velocity   = {2556.5, 2922.37};
-    //     rocket.structural_value   = {20, 25};
+    case RocketType::cz_2c:
+        rocket.block_number       = 2;
+        rocket.payload_mass       = 3850;
+        rocket.block_mass         = {171300, 58000};
+        rocket.components_ratio   = 3.0;
+        rocket.maximum_diameter   = 3.35;
+        rocket.head_length        = 10.243;
+        rocket.block_length       = {25.72, 7.757};
+        rocket.exhaust_velocity   = {2556.5, 2922.37};
+        rocket.structural_value   = {20, 25};
 
-    //     if (rocket.block_number!=0) {
-    //         for (int i = 0; i<rocket.block_number; i++) {
-    //             double stage_mass = rocket.payload_mass;
-    //             for (int j = i; j<rocket.block_number; j++) {
-    //                 stage_mass+=rocket.block_mass[j];
-    //             }
-    //             rocket.stage_mass.push_back(stage_mass);
-    //         }
-    //     }
-
-    //     break;
+        if (rocket.block_number!=0) {
+            for (int i = 0; i<rocket.block_number; i++) {
+                double stage_mass = rocket.payload_mass;
+                for (int j = i; j<rocket.block_number; j++) {
+                    stage_mass+=rocket.block_mass[j];
+                }
+                rocket.stage_mass.push_back(stage_mass);
+            }
+        }
+        break;
 
     default:
         rocket.block_number       = 0;
     }
-
-
-
 
     return rocket;
 }

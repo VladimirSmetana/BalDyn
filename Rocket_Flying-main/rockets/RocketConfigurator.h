@@ -6,8 +6,8 @@
 #include "Rocket.h"
 
 enum class RocketType {
-    master
-    //cz_2c
+    master,
+    cz_2c
 };
 
 Rocket RocketConfigurator(RocketType type);
