@@ -13,8 +13,9 @@ struct FlightType
     double tY;
     double tX;
     double anY;
-    double Ssumm;
-    double Isumm;
+    double Sx;
+    double Iyz;
+    double Ix;
     double gl_c;
     double I_reO, I_reC;
     double S_reO, S_reC;

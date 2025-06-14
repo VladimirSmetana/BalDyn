@@ -83,6 +83,7 @@ Rocket RocketConfigurator(RocketType type) {
         rocket.s_elements.emplace_back(K[6], K[12], rocket.s_mass[0], rocket.maximum_diameter);
         rocket.s_elements.emplace_back(K[1], K[6],  rocket.s_mass[1], rocket.maximum_diameter);
 
+
         break;
 
     case RocketType::cz_2c:

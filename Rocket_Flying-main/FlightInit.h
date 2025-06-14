@@ -11,7 +11,7 @@ public:
     FlightInit(double (&kalph_)[3], double (&kpeng_)[2]);
     std::unique_ptr<FlightType> insertion = std::make_unique<FlightType>();
     std::unique_ptr<FlightType> landing = std::make_unique<FlightType>();
-    Rocket rocket;
+    std::unique_ptr<Rocket> rocket;
     double Sx;
     double Iz;
     double Ix;
@@ -19,7 +19,6 @@ public:
     double Izmax;
     double T_fuel[2];
 protected:
-    double m_O[2], m_C[2];
     double d_O[2], d_C[2];
     double S_o[2], S_c[2];
     double I_o[2], I_c[2];
@@ -30,7 +29,6 @@ protected:
 
     double M_Rocket;
     int count;
-    double M_stage[2];
 
     double h;
 
