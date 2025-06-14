@@ -20,7 +20,6 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
 
     m_calculate_initial_values();
     M.MCI_f(mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
-    calculate_length();
     m_calculate_mass_parameters();
     initialize_time_parameters();
     calculate_area_and_inertia();
@@ -86,12 +85,6 @@ void FlightInit::initialize_time_parameters() {
     T[1] = T_fuel[0] + T_sep[0];
     T[2] = T_fuel[0] + T_sep[0]+T_fuel[1];
     T[3] = T_fuel[0] + T_sep[0]+T_fuel[1] + T_sep[1];
-}
-
-void FlightInit::calculate_length() {
-    // Определение габаритов ракеты
-    //L1 = rocket.block_length[0];
-    //L2 = rocket.block_length[1];
 }
 
 void FlightInit::m_calculate_mass_parameters() {

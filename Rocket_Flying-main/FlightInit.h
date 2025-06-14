@@ -54,7 +54,6 @@ private:
     double kpeng[2];
 
     void m_calculate_initial_values();
-    void calculate_length();
     void m_calculate_mass_parameters();
     void calculate_inertia();
     void calculate_area_and_inertia();
