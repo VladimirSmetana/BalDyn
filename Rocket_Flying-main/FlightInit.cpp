@@ -61,8 +61,8 @@ void FlightInit::m_calculate_initial_values() {
 
 void FlightInit::m_calculate_mass_parameters() {
     for (int i = 0; i <= 1; i++) {
-        m_O[i] = rocket.fuel_mass[i] * rocket.components_ratio / (rocket.components_ratio + 1);
-        m_C[i] = rocket.fuel_mass[i] / (rocket.components_ratio + 1);
+        m_O[i] = rocket.o_mass[i];
+        m_C[i] = rocket.c_mass[i];
     }
     rocket.s_mass[0] -= rocket.fuel_landing_mass;
     M_Rocket += rocket.fuel_mass[0] + rocket.s_mass[0] + rocket.fuel_mass[1] + rocket.s_mass[1] + rocket.fuel_landing_mass;
