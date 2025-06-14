@@ -11,8 +11,6 @@
 #include "rockets/RocketConfigurator.h"
 
 namespace {
-constexpr auto c_first_block_length  = 42.9;
-constexpr auto c_second_block_length = 10.5;
 constexpr auto c_second_stage_length = 21.5;
 }
 
@@ -36,7 +34,7 @@ void FlightInit::m_calculate_initial_values() {
     qDebug() << "2d thrust-to-weight coefficient :"  << kpeng[1];
 
     RocketType rocketType = RocketType::master;
-    Rocket rocket = RocketConfigurator(rocketType);
+    rocket = RocketConfigurator(rocketType);
 
     mpn    = rocket.payload_mass;
     qDebug() << rocket.payload_mass;
@@ -92,9 +90,8 @@ void FlightInit::initialize_time_parameters() {
 
 void FlightInit::calculate_length() {
     // Определение габаритов ракеты
-    Lmax = M.get_length();
-    L1 = c_first_block_length;
-    L2 = c_second_block_length;
+    L1 = rocket.block_length[0];
+    L2 = rocket.block_length[1];
 }
 
 void FlightInit::m_calculate_mass_parameters() {

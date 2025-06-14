@@ -4,14 +4,14 @@
 #include <QVector>
 #include "FlightType.h"
 #include "mass.h"
-
+#include "rockets/Rocket.h"
 
 class FlightInit {
 public:
     FlightInit(double (&kalph_)[3], double (&kpeng_)[2]);
     std::unique_ptr<FlightType> insertion = std::make_unique<FlightType>();
     std::unique_ptr<FlightType> landing = std::make_unique<FlightType>();
-    double Lmax;
+    Rocket rocket;
     double Sx;
     double Iz;
     double Ix;

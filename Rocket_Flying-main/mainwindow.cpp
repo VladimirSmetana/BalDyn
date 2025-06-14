@@ -338,7 +338,7 @@ void MainWindow::on_Xmoment_Button_clicked()
 void MainWindow::on_action_5_triggered()
 {
     int coun = 0;
-    d->const_par(P->Lmax);
+    d->const_par(P->rocket.full_length);
 
 
     for (int i=0;i<m_recovery_data ->time.size(); i++)

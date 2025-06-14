@@ -613,11 +613,12 @@ color: white</string>
       <item>
        <widget class="QPushButton" name="Q_Button_2">
         <property name="styleSheet">
-         <string notr="true">background-color: rgb(0, 0, 88);
-color: white</string>
+         <string notr="true">background-color: rgb(0, 85, 0);
+color: white
+</string>
         </property>
         <property name="text">
-         <string>Скоростной напор</string>
+         <string>Лобовое сопротивление</string>
         </property>
        </widget>
       </item>

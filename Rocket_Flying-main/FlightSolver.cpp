@@ -79,7 +79,7 @@ void FlightSolver::pitch_calculations()
             insertion->Isumm -= delta_I;
 
             Ix = insertion->m_t * pow(D/2, 2);
-            insertion->L  = Lmax;
+            insertion->L  = rocket.full_length;
 
             Ott_1 = insertion->anY;
             H_1 = insertion->tY/1000;
@@ -116,7 +116,7 @@ void FlightSolver::pitch_calculations()
             landing->Ssumm = landing->S_dry[0] + landing->S_reC + landing->S_reO;
             insertion->gl_c = insertion->Ssumm/insertion->m_t;
             landing->gl_c = landing->Ssumm/landing->m_t;
-            insertion->L = Lmax - L1;
+            insertion->L = rocket.full_length - L1;
             landing->L = L1;
             CILCON = 3.42;
             X_oneC = 0;
@@ -158,7 +158,7 @@ void FlightSolver::pitch_calculations()
             insertion->Isumm = insertion->Isumm;
             landing->Isumm = landing->Isumm;
             Ix = insertion->m_t * pow(D/2, 2);
-            insertion->L = Lmax - L1;
+            insertion->L = rocket.full_length - L1;
             landing->L = L1;
 
             Ott_2 = insertion->anY;
@@ -180,7 +180,7 @@ void FlightSolver::pitch_calculations()
             landing->Ssumm = landing->S_dry[0] + landing->S_reC + landing->S_reO;
             insertion->gl_c = insertion->Ssumm/insertion->m_t;
             landing->gl_c = landing->Ssumm/landing->m_t;
-            insertion->L = Lmax - L1 - L2;
+            insertion->L = rocket.full_length - L1 - L2;
             landing->L = L1;
 
             CILCON = 1.4;
@@ -200,7 +200,7 @@ void FlightSolver::pitch_calculations()
             insertion->Ssumm = M.get_SGO() + S_o[0] + S_c[0] + S_o[1] + S_c[1];
             landing->Ssumm = landing->S_dry[0] + landing->S_reC + landing->S_reO;
             insertion->gl_c = insertion->Ssumm/insertion->m_t;
-            insertion->L = Lmax - L1 - L2;
+            insertion->L = rocket.full_length - L1 - L2;
             landing->L = L1;
             CILCON = 1.4;
             X_oneC = 0;

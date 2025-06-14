@@ -16,6 +16,8 @@ struct Rocket {
     double maximum_diameter;
     double fuel_landing_mass;
     double head_length;
+    double full_length;
+    double full_mass;
     QVector<double> block_length;
     QVector<double> exhaust_velocity;
     QVector<double> block_mass;

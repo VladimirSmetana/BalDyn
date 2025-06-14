@@ -20,16 +20,16 @@ Rocket RocketConfigurator(RocketType type) {
         rocket.components_ratio   = 3.5;
         rocket.maximum_diameter   = 4.1;
         rocket.head_length        = 11;
-        rocket.block_length       = {10.5, 21.5};
+        rocket.block_length       = {42.0, 10.5};
         rocket.exhaust_velocity   = {3300, 3700};
         rocket.structural_value   = {7, 10};
 
-        L_spO.assign(rocket.block_number, 0);
-        L_spC.assign(rocket.block_number, 0);
-        L_O.assign(rocket.block_number, 0);
-        L_C.assign(rocket.block_number, 0);
+        L_spO   .assign(rocket.block_number, 0);
+        L_spC   .assign(rocket.block_number, 0);
+        L_O     .assign(rocket.block_number, 0);
+        L_C     .assign(rocket.block_number, 0);
         L_engine.assign(rocket.block_number, 0);
-        K.assign(12, 0);
+        K       .assign(12, 0);
 
         L_headunit = 11;
         L_instrument = 0.1;
@@ -59,12 +59,14 @@ Rocket RocketConfigurator(RocketType type) {
         K[13]= K[11]+ 1.3;
         K[12]= K[11]+ L_engine[0];
 
+        rocket.full_length = rocket.head_length;
         if (rocket.block_number!=0) {
             for (int i = 0; i<rocket.block_number; i++) {
                 double stage_mass = rocket.payload_mass;
                 for (int j = i; j<rocket.block_number; j++) {
                     stage_mass+=rocket.block_mass[j];
                 }
+                rocket.full_length += rocket.block_length[i];
                 rocket.stage_mass.push_back(stage_mass);
                 rocket.fuel_mass.push_back(rocket.block_mass[i] * (rocket.structural_value[i] - 1) / rocket.structural_value[i]);
                 rocket.o_mass.push_back(rocket.fuel_mass[i] * rocket.components_ratio / (rocket.components_ratio + 1));
