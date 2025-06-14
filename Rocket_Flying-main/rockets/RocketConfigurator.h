@@ -2,7 +2,7 @@
 #define ROCKETS_H
 
 #include <QDebug>
-
+#include <math.h>
 #include "Rocket.h"
 
 enum class RocketType {

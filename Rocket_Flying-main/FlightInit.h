@@ -27,7 +27,6 @@ protected:
 
     double peng [2];
     double m_fuel[2];
-    double m_dry[2];
     double m_reC, m_reO;
 
     double M_Rocket;
