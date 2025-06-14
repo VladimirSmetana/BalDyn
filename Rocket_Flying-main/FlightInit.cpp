@@ -19,7 +19,14 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
     std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
 
     m_calculate_initial_values();
-    M.MCI_f(rocket.payload_mass, rocket.maximum_diameter, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
+    M.MCI_f(rocket.payload_mass,
+            rocket.maximum_diameter,
+            rocket.block_mass[0],
+            rocket.block_mass[1],
+            rocket.structural_value[0],
+            rocket.structural_value[1],
+            peng[0],
+            peng[1]);
     m_calculate_mass_parameters();
     initialize_time_parameters();
     calculate_area_and_inertia();
@@ -35,20 +42,15 @@ void FlightInit::m_calculate_initial_values() {
     RocketType rocketType = RocketType::master;
     rocket = RocketConfigurator(rocketType);
 
-    zap    = rocket.fuel_landing_mass;
-
     for (int i=0; i<rocket.block_number; i++) {
-        mb[i]  = rocket.block_mass[i];
-        Imp[i] = rocket.exhaust_velocity[i];
-        s[i]   = rocket.structural_value[i];
         peng[i] = kpeng[i] * constants::acceleration_of_gravity * rocket.stage_mass[i];
     }
 
     h  = c_step;
 
-    m_furet = rocket.fuel_landing_mass;
-    m_reC = m_furet / (rocket.components_ratio+1);
-    m_reO = m_furet * (rocket.components_ratio) / (rocket.components_ratio+1);
+    rocket.fuel_landing_mass = rocket.fuel_landing_mass;
+    m_reC = rocket.fuel_landing_mass / (rocket.components_ratio+1);
+    m_reO = rocket.fuel_landing_mass * (rocket.components_ratio) / (rocket.components_ratio+1);
     M_Rocket = rocket.payload_mass;
     insertion->m_t = M_Rocket;
     landing->m_t = M_Rocket;
@@ -62,9 +64,9 @@ void FlightInit::m_calculate_initial_values() {
 void FlightInit::initialize_time_parameters() {
     std::cout << "set start flight parameters\n";
 
-    T_fuel[0] = m_fuel[0]/(peng [0]/Imp[0]);
+    T_fuel[0] = m_fuel[0]/(peng [0]/rocket.exhaust_velocity[0]);
     T_stage [0] = T_fuel [0] + T_sep [0];
-    T_fuel[1] = m_fuel[1]/(peng [1]/Imp[1]);
+    T_fuel[1] = m_fuel[1]/(peng [1]/rocket.exhaust_velocity[1]);
     T_stage [1] = T_fuel [1] + T_sep [1];
     // ИД итеративного расчета
     insertion->m_t = M_Rocket;
@@ -85,17 +87,17 @@ void FlightInit::initialize_time_parameters() {
 
 void FlightInit::m_calculate_mass_parameters() {
     for (int i = 0; i <= 1; i++) {
-        m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
+        m_fuel[i] = rocket.block_mass[i] * (rocket.structural_value[i] - 1) / rocket.structural_value[i];
         m_O[i] = m_fuel[i] * rocket.components_ratio / (rocket.components_ratio + 1);
         m_C[i] = m_fuel[i] / (rocket.components_ratio + 1);
-        m_dry[i] = mb[i] - m_fuel[i];
+        m_dry[i] = rocket.block_mass[i] - m_fuel[i];
     }
-    m_dry[0] -= m_furet;
-    M_Rocket += m_fuel[0] + m_dry[0] + m_fuel[1] + m_dry[1] + m_furet;
-    m_dry[1] += zap;
+    m_dry[0] -= rocket.fuel_landing_mass;
+    M_Rocket += m_fuel[0] + m_dry[0] + m_fuel[1] + m_dry[1] + rocket.fuel_landing_mass;
+    m_dry[1] += rocket.fuel_landing_mass;
 
     M_stage[0] = M_Rocket;
-    M_stage[1] = M_Rocket - mb[0];
+    M_stage[1] = M_Rocket - rocket.block_mass[0];
 }
 
 void FlightInit::calculate_area_and_inertia() {

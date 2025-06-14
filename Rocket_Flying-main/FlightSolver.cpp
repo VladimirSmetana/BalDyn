@@ -32,8 +32,7 @@ void FlightSolver::pitch_calculations()
     QTextStream out1(&file1);
 
     qDebug() << "start of flight";
-    do
-    {
+    do {
         Airforce Qus_1 (Mah_1);
         Airforce Qus_2 (Mah_2);
 
@@ -46,13 +45,12 @@ void FlightSolver::pitch_calculations()
 
 
         // Участок работы ДУ-1
-        if (time<=T[0])
-        {
+        if (time<=T[0]) {
             insertion->Peng_t = peng[0];
 
             insertion->Peng_control = insertion->Peng_t/2;
 
-            Imp_t = Imp[0];
+            Imp_t = rocket.exhaust_velocity[0];
             CF = insertion->Peng_t/Imp_t;
             m_O[0] = rocket.components_ratio*m_fuel[0]/(rocket.components_ratio+1);
             m_C[0] = m_fuel[0]/(rocket.components_ratio+1);
@@ -103,8 +101,7 @@ void FlightSolver::pitch_calculations()
         }
 
         // Участок разделения 1-2
-        if (time >T[0] && time<=T[1])
-        {
+        if (time >T[0] && time<=T[1]) {
             insertion->Peng_t = 0;
             landing->Peng_t = 0;
             landing->Peng_control = landing->Peng_t/2;
@@ -124,12 +121,11 @@ void FlightSolver::pitch_calculations()
         }
 
         // Участок работы ДУ-2
-        if (time>T[1] && time<=T[2])
-        {
+        if (time>T[1] && time<=T[2]) {
             insertion->Peng_t = peng[1];
             landing->Peng_t = 0;
             landing->Peng_control = landing->Peng_t/2;
-            Imp_t = Imp[1];
+            Imp_t = rocket.exhaust_velocity[1];
             CF = insertion->Peng_t/Imp_t;
             insertion->m_t = m_fuel[1]+m_fuel[0]+m_dry[1]+rocket.payload_mass;
             landing->m_t = m_dry[0] + m_reC + m_reO;
@@ -167,8 +163,7 @@ void FlightSolver::pitch_calculations()
             X_twoC = 0;
         }
         // Участок разделения 2-ПН
-        if (time>T[2] && time<=T[3])
-        {
+        if (time>T[2] && time<=T[3]) {
             insertion->Peng_t = 0;
             landing->Peng_t = 0;
             landing->Peng_control = landing->Peng_t/2;
@@ -188,8 +183,7 @@ void FlightSolver::pitch_calculations()
             X_twoC = 0;
         }
         // Участок полета ПН
-        if (time>T[3])
-        {
+        if (time>T[3]) {
             insertion->Peng_t = 0;
             landing->Peng_t = 0;
             landing->Peng_control = landing->Peng_t/2;
@@ -208,18 +202,16 @@ void FlightSolver::pitch_calculations()
         }
         //Участок возвращения
 
-        if ((time>k1 && time<k2) || (time>k3 && time<k4))
-        {
-            if (m_furet>=0)
-            {
+        if ((time>k1 && time<k2) || (time>k3 && time<k4)) {
+            if (rocket.fuel_landing_mass>=0) {
                 if (time>k1 && time<k2) (landing->Peng_t = kk1*peng[0]);
                 if (time>k3 && time<k4) (landing->Peng_t = kk2*peng[0]);
                 landing->Peng_control = landing->Peng_t;
-                Imp_t = Imp[0];
+                Imp_t = rocket.exhaust_velocity[0];
                 CF = landing->Peng_t/Imp_t;
                 m_reC -= CF*h * 1/(rocket.components_ratio+1);
                 m_reO -= CF*h * rocket.components_ratio/(rocket.components_ratio+1);
-                m_furet = m_reC + m_reO;
+                rocket.fuel_landing_mass = m_reC + m_reO;
                 landing->m_t = m_dry[0] + m_reC + m_reO;
                 deo += CF*h *rocket.components_ratio/(constants::density::liquid_oxygen*Smid)/(rocket.components_ratio+1);
                 dec += CF*h /(constants::density::kerosene*Smid)/(rocket.components_ratio+1);
@@ -236,8 +228,6 @@ void FlightSolver::pitch_calculations()
                 X_oneC = landing->gl_c - landing->focus;
                 X_twoC = landing->L - landing->gl_c;
             };
-
-
         }
 
         // Программа угла атаки

@@ -28,16 +28,12 @@ protected:
     double peng [2];
     double m_fuel[2];
     double m_dry[2];
-    double m_furet, m_reC, m_reO;
+    double m_reC, m_reO;
 
     double M_Rocket;
     int count;
     double M_stage[2];
 
-    double mb[2];
-    double Imp[2];
-    double s[2] {7, 10};
-    double zap;
     double h;
 
     double Smid;
