@@ -52,9 +52,9 @@ void FlightSolver::pitch_calculations()
 
             Imp_t = rocket.exhaust_velocity[0];
             CF = insertion->Peng_t/Imp_t;
-            m_O[0] = rocket.components_ratio*m_fuel[0]/(rocket.components_ratio+1);
-            m_C[0] = m_fuel[0]/(rocket.components_ratio+1);
-            m_fuel[0] -= CF*h;
+            m_O[0] = rocket.components_ratio*rocket.fuel_mass[0]/(rocket.components_ratio+1);
+            m_C[0] = rocket.fuel_mass[0]/(rocket.components_ratio+1);
+            rocket.fuel_mass[0] -= CF*h;
             insertion-> m_t -= CF*h;
 
             delta_mO = rocket.components_ratio*CF*h/(rocket.components_ratio+1);
@@ -107,7 +107,7 @@ void FlightSolver::pitch_calculations()
             landing->Peng_control = landing->Peng_t/2;
             Imp_t = 0;
             CF = 0;
-            insertion->m_t = m_fuel[1]+m_fuel[0]+rocket.s_mass[1]+rocket.payload_mass;
+            insertion->m_t = rocket.fuel_mass[1]+rocket.fuel_mass[0]+rocket.s_mass[1]+rocket.payload_mass;
             landing->m_t = rocket.s_mass[0] + m_reC + m_reO;
             insertion->Ssumm  = M.get_SGO() + insertion->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
             landing->Ssumm = landing->S_dry[0] + landing->S_reC + landing->S_reO;
@@ -127,13 +127,13 @@ void FlightSolver::pitch_calculations()
             landing->Peng_control = landing->Peng_t/2;
             Imp_t = rocket.exhaust_velocity[1];
             CF = insertion->Peng_t/Imp_t;
-            insertion->m_t = m_fuel[1]+m_fuel[0]+rocket.s_mass[1]+rocket.payload_mass;
+            insertion->m_t = rocket.fuel_mass[1]+rocket.fuel_mass[0]+rocket.s_mass[1]+rocket.payload_mass;
             landing->m_t = rocket.s_mass[0] + m_reC + m_reO;
 
-            m_O[1] = rocket.components_ratio*m_fuel[1]/(rocket.components_ratio+1);
-            m_C[1] = 1*m_fuel[1]/(rocket.components_ratio+1);
+            m_O[1] = rocket.components_ratio*rocket.fuel_mass[1]/(rocket.components_ratio+1);
+            m_C[1] = 1*rocket.fuel_mass[1]/(rocket.components_ratio+1);
 
-            m_fuel[1] -= CF*h;
+            rocket.fuel_mass[1] -= CF*h;
             d_O[1] += CF*h *rocket.components_ratio/(constants::density::liquid_oxygen*Smid)/(rocket.components_ratio+1);
             d_C[1] += CF*h /(constants::density::kerosene*Smid)/(rocket.components_ratio+1);
             S_o[1] = M.fun_S (M.K[3]+d_O[1], M.K[4], m_O[1]);

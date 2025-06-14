@@ -26,7 +26,6 @@ protected:
     double T_sep[2] {3, 3};
 
     double peng [2];
-    double m_fuel[2];
     double m_reC, m_reO;
 
     double M_Rocket;
