@@ -34,13 +34,11 @@ protected:
     int count;
     double M_stage[2];
 
-    double mpn;
     double mb[2];
     double Imp[2];
     double s[2] {7, 10};
     double D;
     double zap;
-    double Ratio;
     double h;
 
     double Smid;

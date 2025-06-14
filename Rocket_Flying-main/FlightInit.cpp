@@ -35,9 +35,7 @@ void FlightInit::m_calculate_initial_values() {
     RocketType rocketType = RocketType::master;
     rocket = RocketConfigurator(rocketType);
 
-    mpn = rocket.payload_mass;
     qDebug() << rocket.payload_mass;
-    Ratio  = rocket.components_ratio;
     D      = rocket.maximum_diameter;
     zap    = rocket.fuel_landing_mass;
 
@@ -51,8 +49,8 @@ void FlightInit::m_calculate_initial_values() {
     h  = c_step;
 
     m_furet = rocket.fuel_landing_mass;
-    m_reC = m_furet / (Ratio+1);
-    m_reO = m_furet * (Ratio) / (Ratio+1);
+    m_reC = m_furet / (rocket.components_ratio+1);
+    m_reO = m_furet * (rocket.components_ratio) / (rocket.components_ratio+1);
     M_Rocket = rocket.payload_mass;
     insertion->m_t = M_Rocket;
     landing->m_t = M_Rocket;
@@ -90,8 +88,8 @@ void FlightInit::initialize_time_parameters() {
 void FlightInit::m_calculate_mass_parameters() {
     for (int i = 0; i <= 1; i++) {
         m_fuel[i] = mb[i] * (s[i] - 1) / s[i];
-        m_O[i] = m_fuel[i] * Ratio / (Ratio + 1);
-        m_C[i] = m_fuel[i] / (Ratio + 1);
+        m_O[i] = m_fuel[i] * rocket.components_ratio / (rocket.components_ratio + 1);
+        m_C[i] = m_fuel[i] / (rocket.components_ratio + 1);
         m_dry[i] = mb[i] - m_fuel[i];
     }
     m_dry[0] -= m_furet;
