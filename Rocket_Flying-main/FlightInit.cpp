@@ -104,10 +104,10 @@ void FlightInit::calculate_area_and_inertia() {
     landing->S_dry[1] = M.fun_S(M.K[1] - c_second_stage_length, M.K[6] - c_second_stage_length, rocket.s_mass[1]);
 
     // Calculate areas for oxygen and carbon
-    S_o[0] = M.fun_S(M.K[8], M.K[9], m_O[0]);
-    S_c[0] = M.fun_S(M.K[10], M.K[11], m_C[0]);
-    S_o[1] = M.fun_S(M.K[3], M.K[4], m_O[1]);
-    S_c[1] = M.fun_S(M.K[5], M.K[6], m_C[1]);
+    S_o[0] = M.fun_S(M.K[8], M.K[9], rocket.o_mass[0]);
+    S_c[0] = M.fun_S(M.K[10], M.K[11], rocket.c_mass[0]);
+    S_o[1] = M.fun_S(M.K[3], M.K[4], rocket.o_mass[1]);
+    S_c[1] = M.fun_S(M.K[5], M.K[6], rocket.c_mass[1]);
 
     insertion->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
     insertion->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
@@ -130,10 +130,10 @@ void FlightInit::calculate_inertia() {
     insertion->I_dry[1] = M.fun_I(M.K[1], M.K[6], rocket.s_mass[1], rocket.maximum_diameter);
     landing->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, rocket.s_mass[0], rocket.maximum_diameter);
 
-    I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], rocket.maximum_diameter);
-    I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], rocket.maximum_diameter);
-    I_o[1] = M.fun_I(M.K[3], M.K[4], m_O[1], rocket.maximum_diameter);
-    I_c[1] = M.fun_I(M.K[5], M.K[6], m_C[1], rocket.maximum_diameter);
+    I_o[0] = M.fun_I(M.K[8], M.K[9], rocket.o_mass[0], rocket.maximum_diameter);
+    I_c[0] = M.fun_I(M.K[10], M.K[11], rocket.c_mass[0], rocket.maximum_diameter);
+    I_o[1] = M.fun_I(M.K[3], M.K[4], rocket.o_mass[1], rocket.maximum_diameter);
+    I_c[1] = M.fun_I(M.K[5], M.K[6], rocket.c_mass[1], rocket.maximum_diameter);
 
     insertion->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, rocket.maximum_diameter);
     insertion->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, rocket.maximum_diameter);

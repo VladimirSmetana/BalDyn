@@ -52,8 +52,8 @@ void FlightSolver::pitch_calculations()
 
             Imp_t = rocket.exhaust_velocity[0];
             CF = insertion->Peng_t/Imp_t;
-            m_O[0] = rocket.components_ratio*rocket.fuel_mass[0]/(rocket.components_ratio+1);
-            m_C[0] = rocket.fuel_mass[0]/(rocket.components_ratio+1);
+            rocket.o_mass[0] = rocket.components_ratio*rocket.fuel_mass[0]/(rocket.components_ratio+1);
+            rocket.c_mass[0] = rocket.fuel_mass[0]/(rocket.components_ratio+1);
             rocket.fuel_mass[0] -= CF*h;
             insertion-> m_t -= CF*h;
 
@@ -63,16 +63,16 @@ void FlightSolver::pitch_calculations()
             d_C[0] += CF*h/(constants::density::kerosene*Smid)/(rocket.components_ratio+1);
 
             delta_S = S_o[0] + S_c[0];
-            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
-            S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], m_C[0]);
+            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], rocket.o_mass[0]);
+            S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], rocket.c_mass[0]);
             delta_S -= (S_o[0] + S_c[0]);
             insertion->Ssumm  -= delta_S;
 
             insertion->gl_c = insertion->Ssumm/insertion->m_t;
 
             delta_I = I_o[0] + I_c[0];
-            I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], rocket.maximum_diameter);
-            I_c[0] = M.fun_I (M.K[10]+d_C[0], M.K[11], m_C[0], rocket.maximum_diameter);
+            I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], rocket.o_mass[0], rocket.maximum_diameter);
+            I_c[0] = M.fun_I (M.K[10]+d_C[0], M.K[11], rocket.c_mass[0], rocket.maximum_diameter);
             delta_I -= (I_o[0] + I_c[0]);
             insertion->Isumm -= delta_I;
 
@@ -130,14 +130,14 @@ void FlightSolver::pitch_calculations()
             insertion->m_t = rocket.fuel_mass[1]+rocket.fuel_mass[0]+rocket.s_mass[1]+rocket.payload_mass;
             landing->m_t = rocket.s_mass[0] + m_reC + m_reO;
 
-            m_O[1] = rocket.components_ratio*rocket.fuel_mass[1]/(rocket.components_ratio+1);
-            m_C[1] = 1*rocket.fuel_mass[1]/(rocket.components_ratio+1);
+            rocket.o_mass[1] = rocket.components_ratio*rocket.fuel_mass[1]/(rocket.components_ratio+1);
+            rocket.c_mass[1] = 1*rocket.fuel_mass[1]/(rocket.components_ratio+1);
 
             rocket.fuel_mass[1] -= CF*h;
             d_O[1] += CF*h *rocket.components_ratio/(constants::density::liquid_oxygen*Smid)/(rocket.components_ratio+1);
             d_C[1] += CF*h /(constants::density::kerosene*Smid)/(rocket.components_ratio+1);
-            S_o[1] = M.fun_S (M.K[3]+d_O[1], M.K[4], m_O[1]);
-            S_c[1] = M.fun_S (M.K[5]+d_C[1], M.K[6], m_C[1]);
+            S_o[1] = M.fun_S (M.K[3]+d_O[1], M.K[4], rocket.o_mass[1]);
+            S_c[1] = M.fun_S (M.K[5]+d_C[1], M.K[6], rocket.c_mass[1]);
             insertion->Ssumm = M.get_SGO() + insertion->S_dry[1]+ S_o[0] + S_c[0] + S_o[1] + S_c[1];
 
             // std::cout << CF*h *rocket.components_ratio/(constants::density::liquid_oxygen*Smid)/(rocket.components_ratio+1) << CF << std::endl;
@@ -147,8 +147,8 @@ void FlightSolver::pitch_calculations()
             landing->gl_c = landing->Ssumm/landing->m_t;
             insertion->gl_c = insertion->gl_c/2;
             landing->gl_c = landing->gl_c/2;
-            I_o[1] = M.fun_I (M.K[3]+d_O[1], M.K[4], m_O[1], rocket.maximum_diameter);
-            I_c[1] = M.fun_I (M.K[5]+d_C[1], M.K[6], m_C[1], rocket.maximum_diameter);
+            I_o[1] = M.fun_I (M.K[3]+d_O[1], M.K[4], rocket.o_mass[1], rocket.maximum_diameter);
+            I_c[1] = M.fun_I (M.K[5]+d_C[1], M.K[6], rocket.c_mass[1], rocket.maximum_diameter);
             insertion->Isumm = M.get_IGO() +insertion->I_dry[1]+ I_o[0] + I_c[0] + I_o[1] + I_c[1]- insertion->m_t*pow(insertion->gl_c,2);
             landing->Isumm = landing->I_dry[0] + landing->I_reC + landing->I_reO - landing->m_t*pow(landing->gl_c,2);
             insertion->Isumm = insertion->Isumm;
