@@ -24,8 +24,9 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     mass.cpp \
-    qcustomplot.cpp \
-    rockets/RocketConfigurator.cpp
+    libs/qcustomplot.cpp \
+    rockets/RocketConfigurator.cpp \
+    rockets/element.cpp
 
 HEADERS += \
     Constants.h \
@@ -45,10 +46,11 @@ HEADERS += \
     focus.h \
     mainwindow.h \
     mass.h \
-    qcustomplot.h \
+    libs/qcustomplot.h \
     rockets/Rocket.h \
     rockets/RocketConfigurator.h \
-    rockets/Rockets.h
+    rockets/Rockets.h \
+    rockets/element.h
 
 FORMS += \
     mainwindow.ui

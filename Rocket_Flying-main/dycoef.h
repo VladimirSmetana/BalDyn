@@ -9,7 +9,6 @@
 #include "iostream"
 #include <QFile>
 
-
 class DC
 {
 
@@ -19,7 +18,6 @@ public:
     DC();
     ~DC();
     double PI();
-    double const lamb [5] {4.73, 7.853, 10.996, 14.137, 17.279};
     QVector<double> times;
     QVector<double> Cbs;
     QVector<double> Cyws;

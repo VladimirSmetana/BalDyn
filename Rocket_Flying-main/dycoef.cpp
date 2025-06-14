@@ -1,6 +1,8 @@
-#include "dycoef.h"
 #include <QDebug>
 #include <QDataStream>
+
+#include "Constants.h"
+#include "dycoef.h"
 
 DC::DC()
 {
@@ -46,9 +48,9 @@ void DC::print(double ct, double t)
             form[i].clear();
             dform[i].clear();
             lenght.clear();
-            a[i] = lamb [i]/(len);
-            K[0] = cosh(lamb [i]) - cos(lamb [i]);
-            K[1] = sinh(lamb [i]) - sin(lamb [i]);
+            a[i] = constants::lamb [i]/(len);
+            K[0] = cosh(constants::lamb [i]) - cos(constants::lamb [i]);
+            K[1] = sinh(constants::lamb [i]) - sin(constants::lamb [i]);
             K[2] = - K[1];
             Y[i] = K[0]/K[2];
 
@@ -92,7 +94,7 @@ void DC::print(double ct, double t)
             }
             ms_vec[i].push_back(Ms[i]);
 
-            W[i].push_back(sqrt(EI0/I4*pow(lamb[i],4)));
+            W[i].push_back(sqrt(EI0/I4*pow(constants::lamb[i],4)));
 
 
             CW[i].push_back(-form[i].back()*p_con/mass);
@@ -100,11 +102,7 @@ void DC::print(double ct, double t)
 
             //out1 << W[i].back()<< '\t';
             //out2 << CW[i].back()<< '\t' << CY[i].back() << '\t';
-
-
         }
-
-
 
         // по тангажу
         Cbs .push_back(p_con/mass); // как по рысканию

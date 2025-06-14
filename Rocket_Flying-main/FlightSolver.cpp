@@ -49,40 +49,57 @@ void FlightSolver::pitch_calculations()
         if (time<=T[0])
         {
             insertion->Peng_t = peng[0];
-            landing->Peng_t = peng[0];
-            landing->Peng_control = landing->Peng_t/2;
+
+            insertion->Peng_control = insertion->Peng_t/2;
+
             Imp_t = Imp[0];
             CF = insertion->Peng_t/Imp_t;
-            insertion-> m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
-            landing->m_t = m_fuel[0]+m_fuel[1]+m_dry[0]+m_dry[1]+ m_reC + m_reO +mpn;
             m_O[0] = Ratio*m_fuel[0]/(Ratio+1);
             m_C[0] = m_fuel[0]/(Ratio+1);
             m_fuel[0] -= CF*h;
+            insertion-> m_t -= CF*h;
+
+            delta_mO = Ratio*CF*h/(Ratio+1);
+            delta_mC = CF*h/(Ratio+1);
             d_O[0] += Ratio*CF*h/(constants::density::liquid_oxygen*Smid)/(Ratio+1);
             d_C[0] += CF*h/(constants::density::kerosene*Smid)/(Ratio+1);
+
+            delta_S = S_o[0] + S_c[0];
             S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], m_O[0]);
             S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], m_C[0]);
-            // fir в landing->e не ошибка, а условность СК
-            insertion->Ssumm  = M.get_SGO() + insertion->S_dry[0] + insertion->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + insertion->S_reO + insertion->S_reC;
-            landing->Ssumm = M.get_SGO() + insertion->S_dry[0] + insertion->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1] + insertion->S_reO + insertion->S_reC;
-            insertion->gl_c = insertion->Ssumm/insertion->m_t;
-            landing->gl_c = landing->Ssumm/landing->m_t;
+            delta_S -= (S_o[0] + S_c[0]);
+            insertion->Ssumm  -= delta_S;
 
+            insertion->gl_c = insertion->Ssumm/insertion->m_t;
+
+            delta_I = I_o[0] + I_c[0];
             I_o[0] = M.fun_I (M.K[8]+d_O[0], M.K[9], m_O[0], D);
             I_c[0] = M.fun_I (M.K[10]+d_C[0], M.K[11], m_C[0], D);
-            insertion->Isumm  = M.get_IGO() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reC +insertion->I_reO - insertion->m_t*pow (insertion->gl_c,2);
+            delta_I -= (I_o[0] + I_c[0]);
+            insertion->Isumm -= delta_I;
 
-            landing->Isumm = M.get_IGO() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reC +insertion->I_reO - landing->m_t*pow(landing->gl_c,2);
             Ix = insertion->m_t * pow(D/2, 2);
             insertion->L  = Lmax;
-            landing->L = Lmax;
+
             Ott_1 = insertion->anY;
             H_1 = insertion->tY/1000;
             CILCON = 12.88;
-            dep = count*h;
-            landing->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
-            X_oneC = landing->gl_c - landing->focus;
-            X_twoC = landing->L - landing->gl_c;
+
+            insertion->focus = F.Focus(Mah_1, D, M.get_lengo(), M.get_wgo(), M.get_CIL(), CILCON);
+
+            /// TODO:
+            X_oneC = insertion->gl_c - insertion->focus;
+            X_twoC = insertion->L - insertion->gl_c;
+            //
+
+            landing->Peng_t = insertion->Peng_t;
+            landing->Peng_control = insertion->Peng_control;
+            landing->m_t = insertion-> m_t;
+            landing->Ssumm = insertion->Ssumm;
+            landing->Isumm = insertion->Isumm;
+            landing->gl_c = insertion->gl_c;
+            landing->L = insertion->L;
+            landing->focus = insertion->focus;
         }
 
         // Участок разделения 1-2
@@ -382,7 +399,7 @@ void FlightSolver::pitch_calculations()
          //m_recovery_data -> static_moment;
          //m_recovery_data -> engine_angle;
          //m_recovery_data -> pitch_angle;
-         //m_recovery_data -> focus;
+         m_recovery_data -> focus.push_back(landing->focus);;
          m_recovery_data -> control_thrust.push_back(landing->Peng_control);
          m_recovery_data -> drug_coefficient.push_back(CY_2);
          m_recovery_data -> rocket_length.push_back(landing->L);

@@ -55,7 +55,12 @@ private:
     std::shared_ptr<Dataset> m_insertion_data = std::make_shared<Dataset>();
     std::shared_ptr<Dataset> m_recovery_data = std::make_shared<Dataset>();
 
-    public:
+    double delta_S;
+    double delta_I;
+    double delta_mC;
+    double delta_mO;
+
+public:
 
 
     FlightSolver(double (&kalph_)[3],

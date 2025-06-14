@@ -11,7 +11,7 @@
 #include "rockets/RocketConfigurator.h"
 
 namespace {
-constexpr auto c_first_block_length = 42.9;
+constexpr auto c_first_block_length  = 42.9;
 constexpr auto c_second_block_length = 10.5;
 constexpr auto c_second_stage_length = 21.5;
 }
@@ -48,13 +48,10 @@ void FlightInit::m_calculate_initial_values() {
         mb[i]  = rocket.block_mass[i];
         Imp[i] = rocket.exhaust_velocity[i];
         s[i]   = rocket.structural_value[i];
-        qDebug() << mb[i];
-        qDebug() << Imp[i];
-        qDebug() << s[i];
         peng[i] = kpeng[i] * constants::acceleration_of_gravity * rocket.stage_mass[i];
     }
 
-    h      = c_step;
+    h  = c_step;
 
     m_furet = rocket.fuel_landing_mass;
     m_reC = m_furet / (Ratio+1);

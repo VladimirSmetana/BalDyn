@@ -1,7 +1,7 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 #include <QMainWindow>
-#include <qcustomplot.h>
+#include "libs/qcustomplot.h"
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
