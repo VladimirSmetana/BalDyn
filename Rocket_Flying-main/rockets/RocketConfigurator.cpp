@@ -1,6 +1,7 @@
 #include "RocketConfigurator.h"
 
 Rocket RocketConfigurator(RocketType type) {
+
     Rocket rocket;
 
     double L_headunit;
