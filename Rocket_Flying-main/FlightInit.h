@@ -37,7 +37,6 @@ protected:
     double mb[2];
     double Imp[2];
     double s[2] {7, 10};
-    double D;
     double zap;
     double h;
 

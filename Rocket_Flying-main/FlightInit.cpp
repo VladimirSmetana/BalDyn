@@ -19,7 +19,7 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
     std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
 
     m_calculate_initial_values();
-    M.MCI_f(rocket.payload_mass, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
+    M.MCI_f(rocket.payload_mass, rocket.maximum_diameter, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     m_calculate_mass_parameters();
     initialize_time_parameters();
     calculate_area_and_inertia();
@@ -35,8 +35,6 @@ void FlightInit::m_calculate_initial_values() {
     RocketType rocketType = RocketType::master;
     rocket = RocketConfigurator(rocketType);
 
-    qDebug() << rocket.payload_mass;
-    D      = rocket.maximum_diameter;
     zap    = rocket.fuel_landing_mass;
 
     for (int i=0; i<rocket.block_number; i++) {
@@ -54,7 +52,7 @@ void FlightInit::m_calculate_initial_values() {
     M_Rocket = rocket.payload_mass;
     insertion->m_t = M_Rocket;
     landing->m_t = M_Rocket;
-    Smid = M_PI * pow(D, 2) / 4;
+    Smid = M_PI * pow(rocket.maximum_diameter, 2) / 4;
     insertion->V = 0;
     landing->V = 0;
     count = 0;
@@ -129,23 +127,23 @@ void FlightInit::calculate_area_and_inertia() {
 }
 
 void FlightInit::calculate_inertia() {
-    insertion->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], D);
-    insertion->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], D);
-    landing->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0], D);
+    insertion->I_dry[0] = M.fun_I(M.K[6], M.K[12], m_dry[0], rocket.maximum_diameter);
+    insertion->I_dry[1] = M.fun_I(M.K[1], M.K[6], m_dry[1], rocket.maximum_diameter);
+    landing->I_dry[0] = M.fun_I(M.K[6] - c_second_stage_length, M.K[12] - c_second_stage_length, m_dry[0], rocket.maximum_diameter);
 
-    I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], D);
-    I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], D);
-    I_o[1] = M.fun_I(M.K[3], M.K[4], m_O[1], D);
-    I_c[1] = M.fun_I(M.K[5], M.K[6], m_C[1], D);
+    I_o[0] = M.fun_I(M.K[8], M.K[9], m_O[0], rocket.maximum_diameter);
+    I_c[0] = M.fun_I(M.K[10], M.K[11], m_C[0], rocket.maximum_diameter);
+    I_o[1] = M.fun_I(M.K[3], M.K[4], m_O[1], rocket.maximum_diameter);
+    I_c[1] = M.fun_I(M.K[5], M.K[6], m_C[1], rocket.maximum_diameter);
 
-    insertion->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, D);
-    insertion->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, D);
-    landing->I_reO = M.fun_I(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO, D);
-    landing->I_reC = M.fun_I(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC, D);
+    insertion->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, rocket.maximum_diameter);
+    insertion->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, rocket.maximum_diameter);
+    landing->I_reO = M.fun_I(M.K[9] - c_second_stage_length, M.K[10] - c_second_stage_length, m_reO, rocket.maximum_diameter);
+    landing->I_reC = M.fun_I(M.K[11] - c_second_stage_length, M.K[13] - c_second_stage_length, m_reC, rocket.maximum_diameter);
 
     insertion->Isumm = M.get_IGO() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reO + insertion->I_reC - M_Rocket * pow(insertion->gl_c, 2);
     Iz = insertion->Isumm;
-    Ix = M_Rocket * pow(D / 2, 2);
+    Ix = M_Rocket * pow(rocket.maximum_diameter / 2, 2);
 
     Izmax = Iz;
     Ixmax = Ix;
