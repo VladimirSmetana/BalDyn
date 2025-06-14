@@ -19,7 +19,7 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
     std::copy(std::begin(kpeng_), std::end(kpeng_), std::begin(kpeng));
 
     m_calculate_initial_values();
-    M.MCI_f(mpn, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
+    M.MCI_f(rocket.payload_mass, D, mb[0], mb[1], s[0], s[1], peng[0], peng[1]);
     m_calculate_mass_parameters();
     initialize_time_parameters();
     calculate_area_and_inertia();
@@ -35,7 +35,7 @@ void FlightInit::m_calculate_initial_values() {
     RocketType rocketType = RocketType::master;
     rocket = RocketConfigurator(rocketType);
 
-    mpn    = rocket.payload_mass;
+    mpn = rocket.payload_mass;
     qDebug() << rocket.payload_mass;
     Ratio  = rocket.components_ratio;
     D      = rocket.maximum_diameter;
@@ -53,7 +53,7 @@ void FlightInit::m_calculate_initial_values() {
     m_furet = rocket.fuel_landing_mass;
     m_reC = m_furet / (Ratio+1);
     m_reO = m_furet * (Ratio) / (Ratio+1);
-    M_Rocket = mpn;
+    M_Rocket = rocket.payload_mass;
     insertion->m_t = M_Rocket;
     landing->m_t = M_Rocket;
     Smid = M_PI * pow(D, 2) / 4;
