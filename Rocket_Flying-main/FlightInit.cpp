@@ -90,8 +90,8 @@ void FlightInit::initialize_time_parameters() {
 
 void FlightInit::calculate_length() {
     // Определение габаритов ракеты
-    L1 = rocket.block_length[0];
-    L2 = rocket.block_length[1];
+    //L1 = rocket.block_length[0];
+    //L2 = rocket.block_length[1];
 }
 
 void FlightInit::m_calculate_mass_parameters() {

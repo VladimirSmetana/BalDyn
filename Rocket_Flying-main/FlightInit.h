@@ -29,7 +29,6 @@ protected:
     double m_fuel[2];
     double m_dry[2];
     double m_furet, m_reC, m_reO;
-    double L1,L2;
 
     double M_Rocket;
     int count;
