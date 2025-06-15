@@ -30,6 +30,7 @@ FlightInit::FlightInit(double (&kalph_)[3], double (&kpeng_)[2]) {
     m_calculate_mass_parameters();
     initialize_time_parameters();
     calculate_area_and_inertia();
+    calculate_landing_values();
 }
 
 void FlightInit::m_calculate_initial_values() {
@@ -52,10 +53,9 @@ void FlightInit::m_calculate_initial_values() {
     m_reO = rocket->fuel_landing_mass * (rocket->components_ratio) / (rocket->components_ratio+1);
     M_Rocket = rocket->payload_mass;
     insertion->m_t = M_Rocket;
-    landing->m_t = M_Rocket;
     Smid = M_PI * pow(rocket->maximum_diameter, 2) / 4;
     insertion->V = 0;
-    landing->V = 0;
+
     count = 0;
 }
 
@@ -76,14 +76,13 @@ void FlightInit::initialize_time_parameters() {
     T_stage [1] = T_fuel [1] + T_sep [1];
     // ИД итеративного расчета
     insertion->m_t = M_Rocket;
-    landing->m_t = M_Rocket;
+
     insertion->anY = M_PI/2;
-    landing->anY = M_PI/2;
-    landing->tY = 1;
+
     // Итеративный расчет
     count = 0;
     insertion->tY = 0;
-    landing->tX = 0;
+
     d_O[1] = 0;
     T[0] = T_fuel[0];
     T[1] = T_fuel[0] + T_sep[0];
@@ -94,8 +93,7 @@ void FlightInit::initialize_time_parameters() {
 void FlightInit::calculate_area_and_inertia() {
     insertion->S_dry[0] = rocket->s_elements[0].GetSx();
     insertion->S_dry[1] = rocket->s_elements[1].GetSx();
-    landing->S_dry[0]   = insertion->S_dry[0];
-    landing->S_dry[1]   = insertion->S_dry[1];
+
 
     // Calculate areas for oxygen and carbon
     S_o[0] = rocket->o_elements[0].GetSx();
@@ -103,13 +101,12 @@ void FlightInit::calculate_area_and_inertia() {
     S_o[1] = rocket->o_elements[0].GetSx();
     S_c[1] = rocket->c_elements[0].GetSx();
 
-    insertion->S_reO = M.fun_S(M.K[9], M.K[10], m_reO);
-    insertion->S_reC = M.fun_S(M.K[11], M.K[13], m_reC);
+    insertion->S_reO = rocket->re_o_element[0].GetSx();
+    insertion->S_reC = rocket->re_c_element[0].GetSx();
 
-    landing->S_reO = insertion->S_reO;
-    landing->S_reC = insertion->S_reC;
 
-    insertion->Sx = M.get_SGO() + insertion->S_dry[0] + insertion->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1]
+
+    insertion->Sx = rocket->head_unit[0].GetSx() + insertion->S_dry[0] + insertion->S_dry[1] + S_o[0] + S_c[0] + S_o[1] + S_c[1]
                     + insertion->S_reO + insertion->S_reC;
 
     Sx = insertion->Sx;
@@ -121,21 +118,18 @@ void FlightInit::calculate_area_and_inertia() {
 }
 
 void FlightInit::calculate_inertia() {
-    insertion->I_dry[0] = M.fun_I(M.K[6], M.K[12], rocket->s_mass[0], rocket->maximum_diameter);
-    insertion->I_dry[1] = M.fun_I(M.K[1], M.K[6], rocket->s_mass[1], rocket->maximum_diameter);
-    landing->I_dry[0] = insertion->I_dry[0];
+    insertion->I_dry[0] = rocket->s_elements[0].GetIz();
+    insertion->I_dry[1] = rocket->s_elements[1].GetIz();
 
-    I_o[0] = M.fun_I(M.K[8], M.K[9], rocket->o_mass[0], rocket->maximum_diameter);
-    I_c[0] = M.fun_I(M.K[10], M.K[11], rocket->c_mass[0], rocket->maximum_diameter);
-    I_o[1] = M.fun_I(M.K[3], M.K[4], rocket->o_mass[1], rocket->maximum_diameter);
-    I_c[1] = M.fun_I(M.K[5], M.K[6], rocket->c_mass[1], rocket->maximum_diameter);
+    I_o[0] = rocket->o_elements[0].GetIz();
+    I_c[0] = rocket->c_elements[0].GetIz();
+    I_o[1] = rocket->o_elements[1].GetIz();
+    I_c[1] = rocket->c_elements[1].GetIz();
 
-    insertion->I_reO = M.fun_I(M.K[9], M.K[10], m_reO, rocket->maximum_diameter);
-    insertion->I_reC = M.fun_I(M.K[11], M.K[13], m_reC, rocket->maximum_diameter);
-    landing->I_reO = insertion->I_reO;
-    landing->I_reC = insertion->I_reC;
+    insertion->I_reO = rocket->re_o_element[0].GetIz();
+    insertion->I_reC = rocket->re_c_element[0].GetIz();
 
-    insertion->Iyz = M.get_IGO() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reO + insertion->I_reC - M_Rocket * pow(insertion->gl_c, 2);
+    insertion->Iyz =  rocket->head_unit[0].GetIz() + insertion->I_dry[0] + insertion->I_dry[1] + I_o[0] + I_c[0] + I_o[1] + I_c[1] + insertion->I_reO + insertion->I_reC - M_Rocket * pow(insertion->gl_c, 2);
     Iz = insertion->Iyz;
     Ix = M_Rocket * pow(rocket->maximum_diameter / 2, 2);
 
@@ -143,3 +137,18 @@ void FlightInit::calculate_inertia() {
     Ixmax = Ix;
 }
 
+void FlightInit::calculate_landing_values() {
+    landing->m_t = insertion->m_t;
+    landing->V = insertion->V;
+    landing->m_t = insertion->m_t;
+    landing->anY = insertion->anY;
+    landing->tY = 1;
+    landing->S_reO = insertion->S_reO;
+    landing->S_reC = insertion->S_reC;
+    landing->tX = 0;
+    landing->S_dry[0]   = insertion->S_dry[0];
+    landing->S_dry[1]   = insertion->S_dry[1];
+    landing->I_dry[0] = insertion->I_dry[0];
+    landing->I_reO = insertion->I_reO;
+    landing->I_reC = insertion->I_reC;
+}

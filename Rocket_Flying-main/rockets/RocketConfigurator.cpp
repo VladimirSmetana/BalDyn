@@ -6,6 +6,7 @@ Rocket RocketConfigurator(RocketType type) {
 
     double L_headunit;
     double L_instrument;
+    double extra_payload;
     QVector<double> L_spO;
     QVector<double> L_spC;
     QVector<double> L_O;
@@ -76,6 +77,15 @@ Rocket RocketConfigurator(RocketType type) {
 
             }
         }
+
+        rocket.re_c_mass.push_back(rocket.fuel_landing_mass / (rocket.components_ratio+1));
+        rocket.re_o_mass.push_back(rocket.fuel_landing_mass * (rocket.components_ratio) / (rocket.components_ratio+1));
+
+        extra_payload = 1.1*rocket.payload_mass;
+        rocket.head_unit.emplace_back(K[0], K[1],  extra_payload, rocket.maximum_diameter);
+
+        rocket.re_o_element.emplace_back(K[9], K[10],  rocket.re_o_mass[0], rocket.maximum_diameter);
+        rocket.re_c_element.emplace_back(K[11],K[13],  rocket.re_c_mass[0], rocket.maximum_diameter);
 
         rocket.o_elements.emplace_back(K[8], K[9],  rocket.o_mass[0], rocket.maximum_diameter);
         rocket.o_elements.emplace_back(K[3], K[4],  rocket.o_mass[1], rocket.maximum_diameter);

@@ -25,17 +25,17 @@ struct Rocket {
     QVector<double> c_mass;
     QVector<double> s_mass;
 
-    // QVector<double> re_o_mass;
-    // QVector<double> re_c_mass;
-    // QVector<double> re_s_mass;
+    QVector<double> re_o_mass;
+    QVector<double> re_c_mass;
 
-    // QVector<Element> re_s_element;
-    // QVector<Element> re_o_element;
-    // QVector<Element> re_c_element;
+    QVector<Element> re_o_element;
+    QVector<Element> re_c_element;
 
     QVector<double> fuel_mass;
     QVector<double> stage_mass;
     QVector<double> structural_value;
+
+    QVector<Element> head_unit;
     QVector<Element> s_elements;
     QVector<Element> o_elements;
     QVector<Element> c_elements;

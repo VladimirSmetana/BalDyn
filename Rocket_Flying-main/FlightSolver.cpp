@@ -59,12 +59,16 @@ void FlightSolver::pitch_calculations()
 
             delta_mO = rocket->components_ratio*CF*h/(rocket->components_ratio+1);
             delta_mC = CF*h/(rocket->components_ratio+1);
-            d_O[0] += rocket->components_ratio*CF*h/(constants::density::liquid_oxygen*Smid)/(rocket->components_ratio+1);
-            d_C[0] += CF*h/(constants::density::kerosene*Smid)/(rocket->components_ratio+1);
+            d_O[0] = rocket->components_ratio*CF*h/(constants::density::liquid_oxygen*Smid)/(rocket->components_ratio+1);
+            d_C[0] = CF*h/(constants::density::kerosene*Smid)/(rocket->components_ratio+1);
 
             delta_S = S_o[0] + S_c[0];
-            S_o[0] = M.fun_S (M.K[8]+d_O[0], M.K[9], rocket->o_mass[0]);
-            S_c[0] = M.fun_S (M.K[10]+d_C[0], M.K[11], rocket->c_mass[0]);
+            rocket->o_elements[0].ChangeLevel(d_O[0]);
+            rocket->c_elements[0].ChangeLevel(d_C[0]);
+            rocket->o_elements[0].ChangeMass(delta_mO);
+            rocket->c_elements[0].ChangeMass(delta_mC);
+            S_o[0] = rocket->o_elements[0].GetSx();
+            S_c[0] = rocket->c_elements[0].GetSx();
             delta_S -= (S_o[0] + S_c[0]);
             insertion->Sx  -= delta_S;
 

@@ -47,6 +47,7 @@ private:
     void calculate_inertia();
     void calculate_area_and_inertia();
     void initialize_time_parameters();
+    void calculate_landing_values();
 
 };
 
