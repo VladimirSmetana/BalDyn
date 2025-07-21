@@ -4,7 +4,7 @@
 
 #endif // EASTWIND_H
 
-
+// Космодром "Восточный"
 
 class eastwind
 {
